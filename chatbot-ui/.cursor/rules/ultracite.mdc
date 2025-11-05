@@ -1,321 +1,321 @@
 ---
-description: Ultracite Rules - AI-Ready Formatter and Linter
+description: Ultracite 规则 - AI 就绪的格式化器和代码检查器
 globs: "**/*.{ts,tsx,js,jsx}"
 alwaysApply: true
 ---
 
-# Project Context
-Ultracite enforces strict type safety, accessibility standards, and consistent code quality for JavaScript/TypeScript projects using Biome's lightning-fast formatter and linter.
+# 项目上下文
+Ultracite 使用 Biome 的超快速格式化器和代码检查器，为 JavaScript/TypeScript 项目强制执行严格的类型安全、无障碍标准和一致的代码质量。
 
-## Key Principles
-- Zero configuration required
-- Subsecond performance
-- Maximum type safety
-- AI-friendly code generation
+## 核心原则
+- 零配置要求
+- 亚秒级性能
+- 最大化类型安全
+- AI 友好的代码生成
 
-## Before Writing Code
-1. Analyze existing patterns in the codebase
-2. Consider edge cases and error scenarios
-3. Follow the rules below strictly
-4. Validate accessibility requirements
+## 编写代码前
+1. 分析代码库中的现有模式
+2. 考虑边界情况和错误场景
+3. 严格遵循以下规则
+4. 验证无障碍要求
 
-## Rules
+## 规则
 
-### Accessibility (a11y)
-- Don't use `accessKey` attribute on any HTML element.
-- Don't set `aria-hidden="true"` on focusable elements.
-- Don't add ARIA roles, states, and properties to elements that don't support them.
-- Don't use distracting elements like `<marquee>` or `<blink>`.
-- Only use the `scope` prop on `<th>` elements.
-- Don't assign non-interactive ARIA roles to interactive HTML elements.
-- Make sure label elements have text content and are associated with an input.
-- Don't assign interactive ARIA roles to non-interactive HTML elements.
-- Don't assign `tabIndex` to non-interactive HTML elements.
-- Don't use positive integers for `tabIndex` property.
-- Don't include "image", "picture", or "photo" in img alt prop.
-- Don't use explicit role property that's the same as the implicit/default role.
-- Make static elements with click handlers use a valid role attribute.
-- Always include a `title` element for SVG elements.
-- Give all elements requiring alt text meaningful information for screen readers.
-- Make sure anchors have content that's accessible to screen readers.
-- Assign `tabIndex` to non-interactive HTML elements with `aria-activedescendant`.
-- Include all required ARIA attributes for elements with ARIA roles.
-- Make sure ARIA properties are valid for the element's supported roles.
-- Always include a `type` attribute for button elements.
-- Make elements with interactive roles and handlers focusable.
-- Give heading elements content that's accessible to screen readers (not hidden with `aria-hidden`).
-- Always include a `lang` attribute on the html element.
-- Always include a `title` attribute for iframe elements.
-- Accompany `onClick` with at least one of: `onKeyUp`, `onKeyDown`, or `onKeyPress`.
-- Accompany `onMouseOver`/`onMouseOut` with `onFocus`/`onBlur`.
-- Include caption tracks for audio and video elements.
-- Use semantic elements instead of role attributes in JSX.
-- Make sure all anchors are valid and navigable.
-- Ensure all ARIA properties (`aria-*`) are valid.
-- Use valid, non-abstract ARIA roles for elements with ARIA roles.
-- Use valid ARIA state and property values.
-- Use valid values for the `autocomplete` attribute on input elements.
-- Use correct ISO language/country codes for the `lang` attribute.
+### 无障碍性 (a11y)
+- 不要在任何 HTML 元素上使用 `accessKey` 属性。
+- 不要在可聚焦元素上设置 `aria-hidden="true"`。
+- 不要向不支持的元素添加 ARIA 角色、状态和属性。
+- 不要使用分散注意力的元素，如 `<marquee>` 或 `<blink>`。
+- 只在 `<th>` 元素上使用 `scope` 属性。
+- 不要将非交互式 ARIA 角色分配给交互式 HTML 元素。
+- 确保 label 元素有文本内容并与 input 关联。
+- 不要将交互式 ARIA 角色分配给非交互式 HTML 元素。
+- 不要将 `tabIndex` 分配给非交互式 HTML 元素。
+- 不要对 `tabIndex` 属性使用正整数。
+- 不要在 img 的 alt 属性中包含 "image"、"picture" 或 "photo"。
+- 不要使用与隐式/默认角色相同的显式 role 属性。
+- 确保带有点击处理程序的静态元素使用有效的 role 属性。
+- 始终为 SVG 元素包含 `title` 元素。
+- 为所有需要 alt 文本的元素提供对屏幕阅读器有意义的信息。
+- 确保锚点有可被屏幕阅读器访问的内容。
+- 为带有 `aria-activedescendant` 的非交互式 HTML 元素分配 `tabIndex`。
+- 为具有 ARIA 角色的元素包含所有必需的 ARIA 属性。
+- 确保 ARIA 属性对元素支持的角色有效。
+- 始终为 button 元素包含 `type` 属性。
+- 使具有交互式角色和处理程序的元素可聚焦。
+- 为标题元素提供可被屏幕阅读器访问的内容（不要用 `aria-hidden` 隐藏）。
+- 始终在 html 元素上包含 `lang` 属性。
+- 始终为 iframe 元素包含 `title` 属性。
+- `onClick` 应至少伴随以下之一：`onKeyUp`、`onKeyDown` 或 `onKeyPress`。
+- `onMouseOver`/`onMouseOut` 应伴随 `onFocus`/`onBlur`。
+- 为音频和视频元素包含字幕轨道。
+- 在 JSX 中使用语义元素而不是 role 属性。
+- 确保所有锚点都有效且可导航。
+- 确保所有 ARIA 属性 (`aria-*`) 都有效。
+- 为具有 ARIA 角色的元素使用有效的、非抽象的 ARIA 角色。
+- 使用有效的 ARIA 状态和属性值。
+- 为 input 元素的 `autocomplete` 属性使用有效值。
+- 为 `lang` 属性使用正确的 ISO 语言/国家代码。
 
-### Code Complexity and Quality
-- Don't use consecutive spaces in regular expression literals.
-- Don't use the `arguments` object.
-- Don't use primitive type aliases or misleading types.
-- Don't use the comma operator.
-- Don't use empty type parameters in type aliases and interfaces.
-- Don't write functions that exceed a given Cognitive Complexity score.
-- Don't nest describe() blocks too deeply in test files.
-- Don't use unnecessary boolean casts.
-- Don't use unnecessary callbacks with flatMap.
-- Use for...of statements instead of Array.forEach.
-- Don't create classes that only have static members (like a static namespace).
-- Don't use this and super in static contexts.
-- Don't use unnecessary catch clauses.
-- Don't use unnecessary constructors.
-- Don't use unnecessary continue statements.
-- Don't export empty modules that don't change anything.
-- Don't use unnecessary escape sequences in regular expression literals.
-- Don't use unnecessary fragments.
-- Don't use unnecessary labels.
-- Don't use unnecessary nested block statements.
-- Don't rename imports, exports, and destructured assignments to the same name.
-- Don't use unnecessary string or template literal concatenation.
-- Don't use String.raw in template literals when there are no escape sequences.
-- Don't use useless case statements in switch statements.
-- Don't use ternary operators when simpler alternatives exist.
-- Don't use useless `this` aliasing.
-- Don't use any or unknown as type constraints.
-- Don't initialize variables to undefined.
-- Don't use the void operators (they're not familiar).
-- Use arrow functions instead of function expressions.
-- Use Date.now() to get milliseconds since the Unix Epoch.
-- Use .flatMap() instead of map().flat() when possible.
-- Use literal property access instead of computed property access.
-- Don't use parseInt() or Number.parseInt() when binary, octal, or hexadecimal literals work.
-- Use concise optional chaining instead of chained logical expressions.
-- Use regular expression literals instead of the RegExp constructor when possible.
-- Don't use number literal object member names that aren't base 10 or use underscore separators.
-- Remove redundant terms from logical expressions.
-- Use while loops instead of for loops when you don't need initializer and update expressions.
-- Don't pass children as props.
-- Don't reassign const variables.
-- Don't use constant expressions in conditions.
-- Don't use `Math.min` and `Math.max` to clamp values when the result is constant.
-- Don't return a value from a constructor.
-- Don't use empty character classes in regular expression literals.
-- Don't use empty destructuring patterns.
-- Don't call global object properties as functions.
-- Don't declare functions and vars that are accessible outside their block.
-- Make sure builtins are correctly instantiated.
-- Don't use super() incorrectly inside classes. Also check that super() is called in classes that extend other constructors.
-- Don't use variables and function parameters before they're declared.
-- Don't use 8 and 9 escape sequences in string literals.
-- Don't use literal numbers that lose precision.
+### 代码复杂度和质量
+- 不要在正则表达式字面量中使用连续空格。
+- 不要使用 `arguments` 对象。
+- 不要使用原始类型别名或误导性类型。
+- 不要使用逗号运算符。
+- 不要在类型别名和接口中使用空类型参数。
+- 不要编写超过给定认知复杂度分数的函数。
+- 不要在测试文件中过度嵌套 describe() 块。
+- 不要使用不必要的布尔转换。
+- 不要在 flatMap 中使用不必要的回调。
+- 使用 for...of 语句而不是 Array.forEach。
+- 不要创建只有静态成员的类（类似静态命名空间）。
+- 不要在静态上下文中使用 this 和 super。
+- 不要使用不必要的 catch 子句。
+- 不要使用不必要的构造函数。
+- 不要使用不必要的 continue 语句。
+- 不要导出不改变任何内容的空模块。
+- 不要在正则表达式字面量中使用不必要的转义序列。
+- 不要使用不必要的 fragments。
+- 不要使用不必要的标签。
+- 不要使用不必要的嵌套块语句。
+- 不要将导入、导出和解构赋值重命名为相同的名称。
+- 不要使用不必要的字符串或模板字面量连接。
+- 当没有转义序列时，不要在模板字面量中使用 String.raw。
+- 不要在 switch 语句中使用无用的 case 语句。
+- 当存在更简单的替代方案时，不要使用三元运算符。
+- 不要使用无用的 `this` 别名。
+- 不要使用 any 或 unknown 作为类型约束。
+- 不要将变量初始化为 undefined。
+- 不要使用 void 运算符（它们不够熟悉）。
+- 使用箭头函数而不是函数表达式。
+- 使用 Date.now() 获取自 Unix 纪元以来的毫秒数。
+- 尽可能使用 .flatMap() 而不是 map().flat()。
+- 使用字面量属性访问而不是计算属性访问。
+- 当二进制、八进制或十六进制字面量可行时，不要使用 parseInt() 或 Number.parseInt()。
+- 使用简洁的可选链而不是链式逻辑表达式。
+- 尽可能使用正则表达式字面量而不是 RegExp 构造函数。
+- 不要使用非十进制或使用下划线分隔符的数字字面量对象成员名称。
+- 从逻辑表达式中删除冗余项。
+- 当不需要初始化和更新表达式时，使用 while 循环而不是 for 循环。
+- 不要将 children 作为 props 传递。
+- 不要重新分配 const 变量。
+- 不要在条件中使用常量表达式。
+- 当结果是常量时，不要使用 `Math.min` 和 `Math.max` 来限制值。
+- 不要从构造函数返回值。
+- 不要在正则表达式字面量中使用空字符类。
+- 不要使用空解构模式。
+- 不要将全局对象属性作为函数调用。
+- 不要声明在其块外可访问的函数和 vars。
+- 确保内置对象被正确实例化。
+- 不要在类内部不正确地使用 super()。还要检查在扩展其他构造函数的类中调用 super()。
+- 不要在声明之前使用变量和函数参数。
+- 不要在字符串字面量中使用 8 和 9 转义序列。
+- 不要使用会失去精度的字面量数字。
 
-### React and JSX Best Practices
-- Don't use the return value of React.render.
-- Make sure all dependencies are correctly specified in React hooks.
-- Make sure all React hooks are called from the top level of component functions.
-- Don't forget key props in iterators and collection literals.
-- Don't destructure props inside JSX components in Solid projects.
-- Don't define React components inside other components.
-- Don't use event handlers on non-interactive elements.
-- Don't assign to React component props.
-- Don't use both `children` and `dangerouslySetInnerHTML` props on the same element.
-- Don't use dangerous JSX props.
-- Don't use Array index in keys.
-- Don't insert comments as text nodes.
-- Don't assign JSX properties multiple times.
-- Don't add extra closing tags for components without children.
-- Use `<>...</>` instead of `<Fragment>...</Fragment>`.
-- Watch out for possible "wrong" semicolons inside JSX elements.
+### React 和 JSX 最佳实践
+- 不要使用 React.render 的返回值。
+- 确保在 React hooks 中正确指定所有依赖项。
+- 确保所有 React hooks 都从组件函数的顶层调用。
+- 不要忘记在迭代器和集合字面量中使用 key props。
+- 在 Solid 项目中不要在 JSX 组件内部解构 props。
+- 不要在其他组件内部定义 React 组件。
+- 不要在非交互式元素上使用事件处理程序。
+- 不要分配给 React 组件的 props。
+- 不要在同一元素上同时使用 `children` 和 `dangerouslySetInnerHTML` props。
+- 不要使用危险的 JSX props。
+- 不要在 keys 中使用数组索引。
+- 不要将注释插入为文本节点。
+- 不要多次分配 JSX 属性。
+- 不要为没有子元素的组件添加额外的关闭标签。
+- 使用 `<>...</>` 而不是 `<Fragment>...</Fragment>`。
+- 注意 JSX 元素内部可能"错误"的分号。
 
-### Correctness and Safety
-- Don't assign a value to itself.
-- Don't return a value from a setter.
-- Don't compare expressions that modify string case with non-compliant values.
-- Don't use lexical declarations in switch clauses.
-- Don't use variables that haven't been declared in the document.
-- Don't write unreachable code.
-- Make sure super() is called exactly once on every code path in a class constructor before this is accessed if the class has a superclass.
-- Don't use control flow statements in finally blocks.
-- Don't use optional chaining where undefined values aren't allowed.
-- Don't have unused function parameters.
-- Don't have unused imports.
-- Don't have unused labels.
-- Don't have unused private class members.
-- Don't have unused variables.
-- Make sure void (self-closing) elements don't have children.
-- Don't return a value from a function with the return type 'void'
-- Use isNaN() when checking for NaN.
-- Make sure "for" loop update clauses move the counter in the right direction.
-- Make sure typeof expressions are compared to valid values.
-- Make sure generator functions contain yield.
-- Don't use await inside loops.
-- Don't use bitwise operators.
-- Don't use expressions where the operation doesn't change the value.
-- Make sure Promise-like statements are handled appropriately.
-- Don't use __dirname and __filename in the global scope.
-- Prevent import cycles.
-- Don't use configured elements.
-- Don't hardcode sensitive data like API keys and tokens.
-- Don't let variable declarations shadow variables from outer scopes.
-- Don't use the TypeScript directive @ts-ignore.
-- Prevent duplicate polyfills from Polyfill.io.
-- Don't use useless backreferences in regular expressions that always match empty strings.
-- Don't use unnecessary escapes in string literals.
-- Don't use useless undefined.
-- Make sure getters and setters for the same property are next to each other in class and object definitions.
-- Make sure object literals are declared consistently (defaults to explicit definitions).
-- Use static Response methods instead of new Response() constructor when possible.
-- Make sure switch-case statements are exhaustive.
-- Make sure the `preconnect` attribute is used when using Google Fonts.
-- Use `Array#{indexOf,lastIndexOf}()` instead of `Array#{findIndex,findLastIndex}()` when looking for the index of an item.
-- Make sure iterable callbacks return consistent values.
-- Use `with { type: "json" }` for JSON module imports.
-- Use numeric separators in numeric literals.
-- Use object spread instead of `Object.assign()` when constructing new objects.
-- Always use the radix argument when using `parseInt()`.
-- Make sure JSDoc comment lines start with a single asterisk, except for the first one.
-- Include a description parameter for `Symbol()`.
-- Don't use spread (`...`) syntax on accumulators.
-- Don't use the `delete` operator.
-- Don't access namespace imports dynamically.
-- Don't use namespace imports.
-- Declare regex literals at the top level.
-- Don't use `target="_blank"` without `rel="noopener"`.
+### 正确性和安全性
+- 不要将值分配给自身。
+- 不要从 setter 返回值。
+- 不要将修改字符串大小写的表达式与不合规的值进行比较。
+- 不要在 switch 子句中使用词法声明。
+- 不要使用未在文档中声明的变量。
+- 不要编写不可达的代码。
+- 如果类有超类，确保在访问 this 之前在类构造函数的每个代码路径上恰好调用一次 super()。
+- 不要在 finally 块中使用控制流语句。
+- 不要在不允许 undefined 值的地方使用可选链。
+- 不要有未使用的函数参数。
+- 不要有未使用的导入。
+- 不要有未使用的标签。
+- 不要有未使用的私有类成员。
+- 不要有未使用的变量。
+- 确保 void（自闭合）元素没有子元素。
+- 不要从返回类型为 'void' 的函数返回值。
+- 检查 NaN 时使用 isNaN()。
+- 确保 "for" 循环的更新子句按正确方向移动计数器。
+- 确保 typeof 表达式与有效值进行比较。
+- 确保生成器函数包含 yield。
+- 不要在循环内使用 await。
+- 不要使用位运算符。
+- 不要使用操作不改变值的表达式。
+- 确保正确处理类 Promise 语句。
+- 不要在全局作用域中使用 __dirname 和 __filename。
+- 防止导入循环。
+- 不要使用已配置的元素。
+- 不要硬编码敏感数据，如 API 密钥和令牌。
+- 不要让变量声明遮蔽外部作用域的变量。
+- 不要使用 TypeScript 指令 @ts-ignore。
+- 防止来自 Polyfill.io 的重复 polyfills。
+- 不要在正则表达式中使用总是匹配空字符串的无用反向引用。
+- 不要在字符串字面量中使用不必要的转义。
+- 不要使用无用的 undefined。
+- 确保同一属性的 getters 和 setters 在类和对象定义中相邻。
+- 确保对象字面量声明一致（默认为显式定义）。
+- 尽可能使用静态 Response 方法而不是 new Response() 构造函数。
+- 确保 switch-case 语句是详尽的。
+- 使用 Google Fonts 时确保使用 `preconnect` 属性。
+- 查找项目索引时使用 `Array#{indexOf,lastIndexOf}()` 而不是 `Array#{findIndex,findLastIndex}()`。
+- 确保可迭代回调返回一致的值。
+- 对 JSON 模块导入使用 `with { type: "json" }`。
+- 在数字字面量中使用数字分隔符。
+- 构造新对象时使用对象展开而不是 `Object.assign()`。
+- 使用 `parseInt()` 时始终使用 radix 参数。
+- 确保 JSDoc 注释行以单个星号开头，除了第一行。
+- 为 `Symbol()` 包含描述参数。
+- 不要在累加器上使用展开 (`...`) 语法。
+- 不要使用 `delete` 运算符。
+- 不要动态访问命名空间导入。
+- 不要使用命名空间导入。
+- 在顶层声明正则表达式字面量。
+- 不要在没有 `rel="noopener"` 的情况下使用 `target="_blank"`。
 
-### TypeScript Best Practices
-- Don't use TypeScript enums.
-- Don't export imported variables.
-- Don't add type annotations to variables, parameters, and class properties that are initialized with literal expressions.
-- Don't use TypeScript namespaces.
-- Don't use non-null assertions with the `!` postfix operator.
-- Don't use parameter properties in class constructors.
-- Don't use user-defined types.
-- Use `as const` instead of literal types and type annotations.
-- Use either `T[]` or `Array<T>` consistently.
-- Initialize each enum member value explicitly.
-- Use `export type` for types.
-- Use `import type` for types.
-- Make sure all enum members are literal values.
-- Don't use TypeScript const enum.
-- Don't declare empty interfaces.
-- Don't let variables evolve into any type through reassignments.
-- Don't use the any type.
-- Don't misuse the non-null assertion operator (!) in TypeScript files.
-- Don't use implicit any type on variable declarations.
-- Don't merge interfaces and classes unsafely.
-- Don't use overload signatures that aren't next to each other.
-- Use the namespace keyword instead of the module keyword to declare TypeScript namespaces.
+### TypeScript 最佳实践
+- 不要使用 TypeScript 枚举。
+- 不要导出已导入的变量。
+- 不要向使用字面量表达式初始化的变量、参数和类属性添加类型注解。
+- 不要使用 TypeScript 命名空间。
+- 不要使用带有 `!` 后缀运算符的非空断言。
+- 不要在类构造函数中使用参数属性。
+- 不要使用用户定义的类型。
+- 使用 `as const` 而不是字面量类型和类型注解。
+- 一致地使用 `T[]` 或 `Array<T>`。
+- 显式初始化每个枚举成员值。
+- 对类型使用 `export type`。
+- 对类型使用 `import type`。
+- 确保所有枚举成员都是字面量值。
+- 不要使用 TypeScript const 枚举。
+- 不要声明空接口。
+- 不要让变量通过重新赋值演变成 any 类型。
+- 不要使用 any 类型。
+- 不要在 TypeScript 文件中误用非空断言运算符 (!)。
+- 不要在变量声明上使用隐式 any 类型。
+- 不要不安全地合并接口和类。
+- 不要使用不相邻的重载签名。
+- 使用 namespace 关键字而不是 module 关键字来声明 TypeScript 命名空间。
 
-### Style and Consistency
-- Don't use global `eval()`.
-- Don't use callbacks in asynchronous tests and hooks.
-- Don't use negation in `if` statements that have `else` clauses.
-- Don't use nested ternary expressions.
-- Don't reassign function parameters.
-- This rule lets you specify global variable names you don't want to use in your application.
-- Don't use specified modules when loaded by import or require.
-- Don't use constants whose value is the upper-case version of their name.
-- Use `String.slice()` instead of `String.substr()` and `String.substring()`.
-- Don't use template literals if you don't need interpolation or special-character handling.
-- Don't use `else` blocks when the `if` block breaks early.
-- Don't use yoda expressions.
-- Don't use Array constructors.
-- Use `at()` instead of integer index access.
-- Follow curly brace conventions.
-- Use `else if` instead of nested `if` statements in `else` clauses.
-- Use single `if` statements instead of nested `if` clauses.
-- Use `new` for all builtins except `String`, `Number`, and `Boolean`.
-- Use consistent accessibility modifiers on class properties and methods.
-- Use `const` declarations for variables that are only assigned once.
-- Put default function parameters and optional function parameters last.
-- Include a `default` clause in switch statements.
-- Use the `**` operator instead of `Math.pow`.
-- Use `for-of` loops when you need the index to extract an item from the iterated array.
-- Use `node:assert/strict` over `node:assert`.
-- Use the `node:` protocol for Node.js builtin modules.
-- Use Number properties instead of global ones.
-- Use assignment operator shorthand where possible.
-- Use function types instead of object types with call signatures.
-- Use template literals over string concatenation.
-- Use `new` when throwing an error.
-- Don't throw non-Error values.
-- Use `String.trimStart()` and `String.trimEnd()` over `String.trimLeft()` and `String.trimRight()`.
-- Use standard constants instead of approximated literals.
-- Don't assign values in expressions.
-- Don't use async functions as Promise executors.
-- Don't reassign exceptions in catch clauses.
-- Don't reassign class members.
-- Don't compare against -0.
-- Don't use labeled statements that aren't loops.
-- Don't use void type outside of generic or return types.
-- Don't use console.
-- Don't use control characters and escape sequences that match control characters in regular expression literals.
-- Don't use debugger.
-- Don't assign directly to document.cookie.
-- Use `===` and `!==`.
-- Don't use duplicate case labels.
-- Don't use duplicate class members.
-- Don't use duplicate conditions in if-else-if chains.
-- Don't use two keys with the same name inside objects.
-- Don't use duplicate function parameter names.
-- Don't have duplicate hooks in describe blocks.
-- Don't use empty block statements and static blocks.
-- Don't let switch clauses fall through.
-- Don't reassign function declarations.
-- Don't allow assignments to native objects and read-only global variables.
-- Use Number.isFinite instead of global isFinite.
-- Use Number.isNaN instead of global isNaN.
-- Don't assign to imported bindings.
-- Don't use irregular whitespace characters.
-- Don't use labels that share a name with a variable.
-- Don't use characters made with multiple code points in character class syntax.
-- Make sure to use new and constructor properly.
-- Don't use shorthand assign when the variable appears on both sides.
-- Don't use octal escape sequences in string literals.
-- Don't use Object.prototype builtins directly.
-- Don't redeclare variables, functions, classes, and types in the same scope.
-- Don't have redundant "use strict".
-- Don't compare things where both sides are exactly the same.
-- Don't let identifiers shadow restricted names.
-- Don't use sparse arrays (arrays with holes).
-- Don't use template literal placeholder syntax in regular strings.
-- Don't use the then property.
-- Don't use unsafe negation.
-- Don't use var.
-- Don't use with statements in non-strict contexts.
-- Make sure async functions actually use await.
-- Make sure default clauses in switch statements come last.
-- Make sure to pass a message value when creating a built-in error.
-- Make sure get methods always return a value.
-- Use a recommended display strategy with Google Fonts.
-- Make sure for-in loops include an if statement.
-- Use Array.isArray() instead of instanceof Array.
-- Make sure to use the digits argument with Number#toFixed().
-- Make sure to use the "use strict" directive in script files.
+### 风格和一致性
+- 不要使用全局 `eval()`。
+- 不要在异步测试和钩子中使用回调。
+- 不要在有 `else` 子句的 `if` 语句中使用否定。
+- 不要使用嵌套三元表达式。
+- 不要重新分配函数参数。
+- 此规则允许您指定不想在应用程序中使用的全局变量名称。
+- 不要在通过 import 或 require 加载时使用指定的模块。
+- 不要使用值为其名称大写版本的常量。
+- 使用 `String.slice()` 而不是 `String.substr()` 和 `String.substring()`。
+- 如果不需要插值或特殊字符处理，不要使用模板字面量。
+- 当 `if` 块提前中断时，不要使用 `else` 块。
+- 不要使用 yoda 表达式。
+- 不要使用 Array 构造函数。
+- 使用 `at()` 而不是整数索引访问。
+- 遵循大括号约定。
+- 在 `else` 子句中使用 `else if` 而不是嵌套的 `if` 语句。
+- 使用单个 `if` 语句而不是嵌套的 `if` 子句。
+- 对除 `String`、`Number` 和 `Boolean` 之外的所有内置对象使用 `new`。
+- 在类属性和方法上使用一致的可访问性修饰符。
+- 对只分配一次的变量使用 `const` 声明。
+- 将默认函数参数和可选函数参数放在最后。
+- 在 switch 语句中包含 `default` 子句。
+- 使用 `**` 运算符而不是 `Math.pow`。
+- 当需要索引从迭代数组中提取项目时，使用 `for-of` 循环。
+- 使用 `node:assert/strict` 而不是 `node:assert`。
+- 对 Node.js 内置模块使用 `node:` 协议。
+- 使用 Number 属性而不是全局属性。
+- 尽可能使用赋值运算符简写。
+- 使用函数类型而不是带有调用签名的对象类型。
+- 使用模板字面量而不是字符串连接。
+- 抛出错误时使用 `new`。
+- 不要抛出非 Error 值。
+- 使用 `String.trimStart()` 和 `String.trimEnd()` 而不是 `String.trimLeft()` 和 `String.trimRight()`。
+- 使用标准常量而不是近似字面量。
+- 不要在表达式中分配值。
+- 不要使用异步函数作为 Promise 执行器。
+- 不要在 catch 子句中重新分配异常。
+- 不要重新分配类成员。
+- 不要与 -0 进行比较。
+- 不要使用非循环的标记语句。
+- 不要在泛型或返回类型之外使用 void 类型。
+- 不要使用 console。
+- 不要在正则表达式字面量中使用控制字符和匹配控制字符的转义序列。
+- 不要使用 debugger。
+- 不要直接分配给 document.cookie。
+- 使用 `===` 和 `!==`。
+- 不要使用重复的 case 标签。
+- 不要使用重复的类成员。
+- 不要在 if-else-if 链中使用重复的条件。
+- 不要在对象内使用两个相同名称的键。
+- 不要使用重复的函数参数名称。
+- 不要在 describe 块中有重复的钩子。
+- 不要使用空块语句和静态块。
+- 不要让 switch 子句贯穿。
+- 不要重新分配函数声明。
+- 不要允许分配给原生对象和只读全局变量。
+- 使用 Number.isFinite 而不是全局 isFinite。
+- 使用 Number.isNaN 而不是全局 isNaN。
+- 不要分配给导入的绑定。
+- 不要使用不规则的空白字符。
+- 不要使用与变量共享名称的标签。
+- 不要在字符类语法中使用由多个代码点组成的字符。
+- 确保正确使用 new 和构造函数。
+- 当变量出现在两侧时，不要使用简写赋值。
+- 不要在字符串字面量中使用八进制转义序列。
+- 不要直接使用 Object.prototype 内置对象。
+- 不要在同一作用域中重新声明变量、函数、类和类型。
+- 不要有冗余的 "use strict"。
+- 不要比较两侧完全相同的内容。
+- 不要让标识符遮蔽受限制的名称。
+- 不要使用稀疏数组（有孔的数组）。
+- 不要在常规字符串中使用模板字面量占位符语法。
+- 不要使用 then 属性。
+- 不要使用不安全的否定。
+- 不要使用 var。
+- 不要在非严格上下文中使用 with 语句。
+- 确保异步函数实际使用 await。
+- 确保 switch 语句中的 default 子句在最后。
+- 创建内置错误时确保传递消息值。
+- 确保 get 方法始终返回值。
+- 对 Google Fonts 使用推荐的显示策略。
+- 确保 for-in 循环包含 if 语句。
+- 使用 Array.isArray() 而不是 instanceof Array。
+- 确保在 Number#toFixed() 中使用 digits 参数。
+- 确保在脚本文件中使用 "use strict" 指令。
 
-### Next.js Specific Rules
-- Don't use `<img>` elements in Next.js projects.
-- Don't use `<head>` elements in Next.js projects.
-- Don't import next/document outside of pages/_document.jsx in Next.js projects.
-- Don't use the next/head module in pages/_document.js on Next.js projects.
+### Next.js 特定规则
+- 不要在 Next.js 项目中使用 `<img>` 元素。
+- 不要在 Next.js 项目中使用 `<head>` 元素。
+- 不要在 Next.js 项目的 pages/_document.jsx 之外导入 next/document。
+- 不要在 Next.js 项目的 pages/_document.js 中使用 next/head 模块。
 
-### Testing Best Practices
-- Don't use export or module.exports in test files.
-- Don't use focused tests.
-- Make sure the assertion function, like expect, is placed inside an it() function call.
-- Don't use disabled tests.
+### 测试最佳实践
+- 不要在测试文件中使用 export 或 module.exports。
+- 不要使用聚焦测试。
+- 确保断言函数（如 expect）放置在 it() 函数调用内部。
+- 不要使用禁用的测试。
 
-## Common Tasks
-- `npx ultracite init` - Initialize Ultracite in your project
-- `npx ultracite fix` - Format and fix code automatically
-- `npx ultracite check` - Check for issues without fixing
+## 常见任务
+- `npx ultracite init` - 在项目中初始化 Ultracite
+- `npx ultracite fix` - 自动格式化和修复代码
+- `npx ultracite check` - 检查问题但不修复
 
-## Example: Error Handling
+## 示例：错误处理
 ```typescript
-// ✅ Good: Comprehensive error handling
+// ✅ 好：全面的错误处理
 try {
   const result = await fetchData();
   return { success: true, data: result };
@@ -324,7 +324,7 @@ try {
   return { success: false, error: error.message };
 }
 
-// ❌ Bad: Swallowing errors
+// ❌ 坏：吞没错误
 try {
   return await fetchData();
 } catch (e) {
