@@ -1,3 +1,6 @@
+/**
+ * 应用侧边栏
+ */
 "use client";
 
 import Link from "next/link";
@@ -31,35 +34,42 @@ import {
   AlertDialogTitle,
 } from "./ui/alert-dialog";
 
+/**
+ * 应用侧边栏组件
+ */
 export function AppSidebar({ user }: { user: User | undefined }) {
   const router = useRouter();
   const { setOpenMobile } = useSidebar();
   const { mutate } = useSWRConfig();
   const [showDeleteAllDialog, setShowDeleteAllDialog] = useState(false);
 
+  // 删除所有聊天记录
   const handleDeleteAll = () => {
     const deletePromise = fetch("/api/history", {
       method: "DELETE",
     });
 
     toast.promise(deletePromise, {
-      loading: "Deleting all chats...",
+      loading: "删除所有聊天记录中...",
       success: () => {
         mutate(unstable_serialize(getChatHistoryPaginationKey));
         router.push("/");
         setShowDeleteAllDialog(false);
-        return "All chats deleted successfully";
+        return "所有聊天记录删除成功";
       },
-      error: "Failed to delete all chats",
+      error: "所有聊天记录删除失败",
     });
   };
 
+  // 返回应用侧边栏组件
   return (
     <>
       <Sidebar className="group-data-[side=left]:border-r-0">
         <SidebarHeader>
+          {/* 侧边栏菜单 */}
           <SidebarMenu>
             <div className="flex flex-row items-center justify-between">
+              {/* 侧边栏链接，点击后关闭移动端侧边栏并跳转到首页 */}
               <Link
                 className="flex flex-row items-center gap-3"
                 href="/"
@@ -68,12 +78,15 @@ export function AppSidebar({ user }: { user: User | undefined }) {
                 }}
               >
                 <span className="cursor-pointer rounded-md px-2 font-semibold text-lg hover:bg-muted">
-                  Chatbot
+                  Refinex AI
                 </span>
               </Link>
+              {/* 侧边栏按钮 */}
               <div className="flex flex-row gap-1">
+                {/* 用户已登录时显示删除所有聊天记录按钮 */}
                 {user && (
                   <Tooltip>
+                    {/* 删除所有聊天记录按钮 */}
                     <TooltipTrigger asChild>
                       <Button
                         className="h-8 p-1 md:h-fit md:p-2"
@@ -85,11 +98,13 @@ export function AppSidebar({ user }: { user: User | undefined }) {
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent align="end" className="hidden md:block">
-                      Delete All Chats
+                      删除所有聊天记录
                     </TooltipContent>
                   </Tooltip>
                 )}
+                {/* 新建聊天按钮 */}
                 <Tooltip>
+                  {/* 新建聊天按钮 */}
                   <TooltipTrigger asChild>
                     <Button
                       className="h-8 p-1 md:h-fit md:p-2"
@@ -105,7 +120,7 @@ export function AppSidebar({ user }: { user: User | undefined }) {
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent align="end" className="hidden md:block">
-                    New Chat
+                    新建聊天
                   </TooltipContent>
                 </Tooltip>
               </div>
@@ -113,24 +128,28 @@ export function AppSidebar({ user }: { user: User | undefined }) {
           </SidebarMenu>
         </SidebarHeader>
         <SidebarContent>
+          {/* 侧边栏历史聊天记录 */}
           <SidebarHistory user={user} />
         </SidebarContent>
-        <SidebarFooter>{user && <SidebarUserNav user={user} />}</SidebarFooter>
+        <SidebarFooter>
+          {/* 用户已登录时显示用户导航 */}
+          {user && <SidebarUserNav user={user} />}
+        </SidebarFooter>
       </Sidebar>
 
+      {/* 删除所有聊天记录对话框 */}
       <AlertDialog onOpenChange={setShowDeleteAllDialog} open={showDeleteAllDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete all chats?</AlertDialogTitle>
+            <AlertDialogTitle>您确定要删除所有聊天记录吗？</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete all your
-              chats and remove them from our servers.
+              此操作无法撤销。这将永久删除所有您的聊天记录并将其从我们的服务器中删除。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction onClick={handleDeleteAll}>
-              Delete All
+              继续
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

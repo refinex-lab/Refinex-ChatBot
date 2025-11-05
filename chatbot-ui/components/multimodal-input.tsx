@@ -1,3 +1,6 @@
+/**
+ * AI 聊天输入框
+ */
 "use client";
 
 import type { UseChatHelpers } from "@ai-sdk/react";
@@ -360,7 +363,7 @@ function PureMultimodalInput({
             maxHeight={200}
             minHeight={44}
             onChange={handleInput}
-            placeholder="Send a message..."
+            placeholder="发送消息..."
             ref={textareaRef}
             rows={1}
             value={input}

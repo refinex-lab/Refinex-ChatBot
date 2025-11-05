@@ -1,3 +1,4 @@
+// 机器人图标
 export const BotIcon = () => {
   return (
     <svg
@@ -17,6 +18,7 @@ export const BotIcon = () => {
   );
 };
 
+// 用户图标
 export const UserIcon = () => {
   return (
     <svg
@@ -37,6 +39,7 @@ export const UserIcon = () => {
   );
 };
 
+// 附件图标
 export const AttachmentIcon = () => {
   return (
     <svg
@@ -56,6 +59,7 @@ export const AttachmentIcon = () => {
   );
 };
 
+// Vercel 图标
 export const VercelIcon = ({ size = 17 }) => {
   return (
     <svg
@@ -75,6 +79,7 @@ export const VercelIcon = ({ size = 17 }) => {
   );
 };
 
+// GitHub 图标
 export const GitIcon = () => {
   return (
     <svg
@@ -101,6 +106,7 @@ export const GitIcon = () => {
   );
 };
 
+// 盒子图标
 export const BoxIcon = ({ size = 16 }: { size: number }) => {
   return (
     <svg
@@ -120,6 +126,7 @@ export const BoxIcon = ({ size = 16 }: { size: number }) => {
   );
 };
 
+// 首页图标
 export const HomeIcon = ({ size = 16 }: { size: number }) => {
   return (
     <svg
@@ -139,6 +146,7 @@ export const HomeIcon = ({ size = 16 }: { size: number }) => {
   );
 };
 
+// GPS 图标
 export const GPSIcon = ({ size = 16 }: { size: number }) => {
   return (
     <svg
@@ -160,6 +168,7 @@ export const GPSIcon = ({ size = 16 }: { size: number }) => {
   );
 };
 
+// 发票图标
 export const InvoiceIcon = ({ size = 16 }: { size: number }) => {
   return (
     <svg
@@ -179,6 +188,7 @@ export const InvoiceIcon = ({ size = 16 }: { size: number }) => {
   );
 };
 
+// OpenAI 图标
 export const LogoOpenAI = ({ size = 16 }: { size?: number }) => {
   return (
     <svg
@@ -196,6 +206,7 @@ export const LogoOpenAI = ({ size = 16 }: { size?: number }) => {
   );
 };
 
+// Google 图标
 export const LogoGoogle = ({ size = 16 }: { size?: number }) => {
   return (
     <svg
@@ -226,6 +237,7 @@ export const LogoGoogle = ({ size = 16 }: { size?: number }) => {
   );
 };
 
+// Anthropic 图标
 export const LogoAnthropic = () => {
   return (
     <svg
@@ -246,6 +258,7 @@ export const LogoAnthropic = () => {
   );
 };
 
+// 路线图标
 export const RouteIcon = ({ size = 16 }: { size?: number }) => {
   return (
     <svg
@@ -265,6 +278,7 @@ export const RouteIcon = ({ size = 16 }: { size?: number }) => {
   );
 };
 
+// 文件图标
 export const FileIcon = ({ size = 16 }: { size?: number }) => {
   return (
     <svg
@@ -284,6 +298,7 @@ export const FileIcon = ({ size = 16 }: { size?: number }) => {
   );
 };
 
+// 加载图标
 export const LoaderIcon = ({ size = 16 }: { size?: number }) => {
   return (
     <svg
@@ -359,6 +374,7 @@ export const LoaderIcon = ({ size = 16 }: { size?: number }) => {
   );
 };
 
+// 上传图标
 export const UploadIcon = ({ size = 16 }: { size?: number }) => {
   return (
     <svg
@@ -379,6 +395,7 @@ export const UploadIcon = ({ size = 16 }: { size?: number }) => {
   );
 };
 
+// 菜单图标
 export const MenuIcon = ({ size = 16 }: { size?: number }) => {
   return (
     <svg
@@ -398,6 +415,7 @@ export const MenuIcon = ({ size = 16 }: { size?: number }) => {
   );
 };
 
+// 铅笔编辑图标
 export const PencilEditIcon = ({ size = 16 }: { size?: number }) => {
   return (
     <svg
@@ -417,6 +435,7 @@ export const PencilEditIcon = ({ size = 16 }: { size?: number }) => {
   );
 };
 
+// 已选中正方形图标
 export const CheckedSquare = ({ size = 16 }: { size?: number }) => {
   return (
     <svg
@@ -436,6 +455,7 @@ export const CheckedSquare = ({ size = 16 }: { size?: number }) => {
   );
 };
 
+// 未选中正方形图标
 export const UncheckedSquare = ({ size = 16 }: { size?: number }) => {
   return (
     <svg
@@ -458,6 +478,7 @@ export const UncheckedSquare = ({ size = 16 }: { size?: number }) => {
   );
 };
 
+// 更多图标
 export const MoreIcon = ({ size = 16 }: { size?: number }) => {
   return (
     <svg
@@ -477,6 +498,7 @@ export const MoreIcon = ({ size = 16 }: { size?: number }) => {
   );
 };
 
+// 垃圾桶图标
 export const TrashIcon = ({ size = 16 }: { size?: number }) => {
   return (
     <svg
@@ -496,6 +518,7 @@ export const TrashIcon = ({ size = 16 }: { size?: number }) => {
   );
 };
 
+// 信息图标
 export const InfoIcon = ({ size = 16 }: { size?: number }) => {
   return (
     <svg
@@ -515,6 +538,7 @@ export const InfoIcon = ({ size = 16 }: { size?: number }) => {
   );
 };
 
+// 向上箭头图标
 export const ArrowUpIcon = ({
   size = 16,
   ...props
@@ -538,6 +562,7 @@ export const ArrowUpIcon = ({
   );
 };
 
+// 停止图标
 export const StopIcon = ({
   size = 16,
   ...props
@@ -560,6 +585,7 @@ export const StopIcon = ({
   );
 };
 
+// 回形针图标
 export const PaperclipIcon = ({
   size = 16,
   ...props
@@ -584,6 +610,7 @@ export const PaperclipIcon = ({
   );
 };
 
+// 更多水平图标
 export const MoreHorizontalIcon = ({ size = 16 }: { size?: number }) => {
   return (
     <svg
@@ -603,6 +630,7 @@ export const MoreHorizontalIcon = ({ size = 16 }: { size?: number }) => {
   );
 };
 
+// 消息图标
 export const MessageIcon = ({ size = 16 }: { size?: number }) => {
   return (
     <svg
@@ -622,6 +650,7 @@ export const MessageIcon = ({ size = 16 }: { size?: number }) => {
   );
 };
 
+// 叉号图标
 export const CrossIcon = ({ size = 16 }: { size?: number }) => (
   <svg
     height={size}
@@ -639,6 +668,7 @@ export const CrossIcon = ({ size = 16 }: { size?: number }) => (
   </svg>
 );
 
+// 小叉号图标
 export const CrossSmallIcon = ({ size = 16 }: { size?: number }) => (
   <svg
     height={size}
@@ -656,6 +686,7 @@ export const CrossSmallIcon = ({ size = 16 }: { size?: number }) => (
   </svg>
 );
 
+// 撤销图标
 export const UndoIcon = ({ size = 16 }: { size?: number }) => (
   <svg
     height={size}
@@ -673,6 +704,7 @@ export const UndoIcon = ({ size = 16 }: { size?: number }) => (
   </svg>
 );
 
+// 重做图标
 export const RedoIcon = ({ size = 16 }: { size?: number }) => (
   <svg
     height={size}
@@ -690,6 +722,7 @@ export const RedoIcon = ({ size = 16 }: { size?: number }) => (
   </svg>
 );
 
+// 三角形图标
 export const DeltaIcon = ({ size = 16 }: { size?: number }) => (
   <svg
     height={size}
@@ -707,6 +740,7 @@ export const DeltaIcon = ({ size = 16 }: { size?: number }) => (
   </svg>
 );
 
+// CPU 图标
 export const CpuIcon = ({ size = 16 }: { size?: number }) => (
   <svg
     fill="none"
@@ -734,6 +768,7 @@ export const CpuIcon = ({ size = 16 }: { size?: number }) => (
   </svg>
 );
 
+// 铅笔图标
 export const PenIcon = ({ size = 16 }: { size?: number }) => (
   <svg
     height={size}
@@ -751,6 +786,7 @@ export const PenIcon = ({ size = 16 }: { size?: number }) => (
   </svg>
 );
 
+// 总结图标
 export const SummarizeIcon = ({ size = 16 }: { size?: number }) => (
   <svg
     height={size}
@@ -768,6 +804,7 @@ export const SummarizeIcon = ({ size = 16 }: { size?: number }) => (
   </svg>
 );
 
+// 展开图标
 export const SidebarLeftIcon = ({ size = 16 }: { size?: number }) => (
   <svg
     height={size}
@@ -785,6 +822,7 @@ export const SidebarLeftIcon = ({ size = 16 }: { size?: number }) => (
   </svg>
 );
 
+// 加号（+）图标
 export const PlusIcon = ({ size = 16 }: { size?: number }) => (
   <svg
     height={size}
@@ -802,6 +840,7 @@ export const PlusIcon = ({ size = 16 }: { size?: number }) => (
   </svg>
 );
 
+// 复制图标
 export const CopyIcon = ({ size = 16 }: { size?: number }) => (
   <svg
     height={size}
@@ -819,6 +858,7 @@ export const CopyIcon = ({ size = 16 }: { size?: number }) => (
   </svg>
 );
 
+// 点赞图标
 export const ThumbUpIcon = ({ size = 16 }: { size?: number }) => (
   <svg
     height={size}
@@ -836,6 +876,7 @@ export const ThumbUpIcon = ({ size = 16 }: { size?: number }) => (
   </svg>
 );
 
+// 踩踩图标
 export const ThumbDownIcon = ({ size = 16 }: { size?: number }) => (
   <svg
     height={size}
@@ -853,6 +894,7 @@ export const ThumbDownIcon = ({ size = 16 }: { size?: number }) => (
   </svg>
 );
 
+// 向下箭头图标
 export const ChevronDownIcon = ({ size = 16 }: { size?: number }) => (
   <svg
     height={size}
@@ -870,6 +912,7 @@ export const ChevronDownIcon = ({ size = 16 }: { size?: number }) => (
   </svg>
 );
 
+// 闪烁图标
 export const SparklesIcon = ({ size = 16 }: { size?: number }) => (
   <svg
     height={size}
@@ -893,6 +936,7 @@ export const SparklesIcon = ({ size = 16 }: { size?: number }) => (
   </svg>
 );
 
+// 打勾图标
 export const CheckCircleFillIcon = ({ size = 16 }: { size?: number }) => {
   return (
     <svg
@@ -912,6 +956,7 @@ export const CheckCircleFillIcon = ({ size = 16 }: { size?: number }) => {
   );
 };
 
+// 地球图标
 export const GlobeIcon = ({ size = 16 }: { size?: number }) => {
   return (
     <svg
@@ -931,6 +976,7 @@ export const GlobeIcon = ({ size = 16 }: { size?: number }) => {
   );
 };
 
+// 锁图标
 export const LockIcon = ({ size = 16 }: { size?: number }) => {
   return (
     <svg
@@ -950,6 +996,7 @@ export const LockIcon = ({ size = 16 }: { size?: number }) => {
   );
 };
 
+// 眼睛图标
 export const EyeIcon = ({ size = 16 }: { size?: number }) => {
   return (
     <svg
@@ -969,6 +1016,7 @@ export const EyeIcon = ({ size = 16 }: { size?: number }) => {
   );
 };
 
+// 分享图标
 export const ShareIcon = ({ size = 16 }: { size?: number }) => {
   return (
     <svg
@@ -988,6 +1036,7 @@ export const ShareIcon = ({ size = 16 }: { size?: number }) => {
   );
 };
 
+// 代码图标
 export const CodeIcon = ({ size = 16 }: { size?: number }) => {
   return (
     <svg
@@ -1007,6 +1056,7 @@ export const CodeIcon = ({ size = 16 }: { size?: number }) => {
   );
 };
 
+// 播放图标
 export const PlayIcon = ({ size = 16 }: { size?: number }) => {
   return (
     <svg
@@ -1026,6 +1076,7 @@ export const PlayIcon = ({ size = 16 }: { size?: number }) => {
   );
 };
 
+// Python 图标
 export const PythonIcon = ({ size = 16 }: { size?: number }) => {
   return (
     <svg
@@ -1047,6 +1098,7 @@ export const PythonIcon = ({ size = 16 }: { size?: number }) => {
   );
 };
 
+// 终端窗口图标
 export const TerminalWindowIcon = ({ size = 16 }: { size?: number }) => {
   return (
     <svg
@@ -1066,6 +1118,7 @@ export const TerminalWindowIcon = ({ size = 16 }: { size?: number }) => {
   );
 };
 
+// 终端图标
 export const TerminalIcon = ({ size = 16 }: { size?: number }) => {
   return (
     <svg
@@ -1085,6 +1138,7 @@ export const TerminalIcon = ({ size = 16 }: { size?: number }) => {
   );
 };
 
+// 时钟倒退图标
 export const ClockRewind = ({ size = 16 }: { size?: number }) => {
   return (
     <svg
@@ -1104,6 +1158,7 @@ export const ClockRewind = ({ size = 16 }: { size?: number }) => {
   );
 };
 
+// 日志图标
 export const LogsIcon = ({ size = 16 }: { size?: number }) => {
   return (
     <svg
@@ -1123,6 +1178,7 @@ export const LogsIcon = ({ size = 16 }: { size?: number }) => {
   );
 };
 
+// 图片图标
 export const ImageIcon = ({ size = 16 }: { size?: number }) => {
   return (
     <svg
@@ -1142,6 +1198,7 @@ export const ImageIcon = ({ size = 16 }: { size?: number }) => {
   );
 };
 
+// 全屏图标
 export const FullscreenIcon = ({ size = 16 }: { size?: number }) => (
   <svg
     height={size}
@@ -1159,6 +1216,7 @@ export const FullscreenIcon = ({ size = 16 }: { size?: number }) => (
   </svg>
 );
 
+// 下载图标
 export const DownloadIcon = ({ size = 16 }: { size?: number }) => (
   <svg
     height={size}
@@ -1176,6 +1234,7 @@ export const DownloadIcon = ({ size = 16 }: { size?: number }) => (
   </svg>
 );
 
+// 折线图图标
 export const LineChartIcon = ({ size = 16 }: { size?: number }) => (
   <svg
     height={size}
@@ -1193,6 +1252,7 @@ export const LineChartIcon = ({ size = 16 }: { size?: number }) => (
   </svg>
 );
 
+// 警告图标
 export const WarningIcon = ({ size = 16 }: { size?: number }) => {
   return (
     <svg

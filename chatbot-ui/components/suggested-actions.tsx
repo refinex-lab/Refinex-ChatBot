@@ -1,3 +1,6 @@
+/**
+ * AI 聊天建议操作
+ */
 "use client";
 
 import type { UseChatHelpers } from "@ai-sdk/react";
@@ -15,10 +18,10 @@ type SuggestedActionsProps = {
 
 function PureSuggestedActions({ chatId, sendMessage }: SuggestedActionsProps) {
   const suggestedActions = [
-    "What are the advantages of using Next.js?",
-    "Write code to demonstrate Dijkstra's algorithm",
-    "Help me write an essay about Silicon Valley",
-    "What is the weather in San Francisco?",
+    "使用 Next.js 有哪些优势？",
+    "编写代码演示 Dijkstra 算法",
+    "帮我写一篇关于硅谷的论文",
+    "旧金山今天的天气怎么样？",
   ];
 
   return (

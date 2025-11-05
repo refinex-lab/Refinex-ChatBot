@@ -1,3 +1,6 @@
+/**
+ * 侧边栏历史聊天记录
+ */
 "use client";
 
 import { isToday, isYesterday, subMonths, subWeeks } from "date-fns";
@@ -28,6 +31,7 @@ import { fetcher } from "@/lib/utils";
 import { LoaderIcon } from "./icons";
 import { ChatItem } from "./sidebar-history-item";
 
+// 按日期分组聊天记录类型定义
 type GroupedChats = {
   today: Chat[];
   yesterday: Chat[];
@@ -36,13 +40,16 @@ type GroupedChats = {
   older: Chat[];
 };
 
+// 聊天历史类型定义
 export type ChatHistory = {
   chats: Chat[];
   hasMore: boolean;
 };
 
+// 聊天历史单页大小
 const PAGE_SIZE = 20;
 
+// 按日期分组聊天记录
 const groupChatsByDate = (chats: Chat[]): GroupedChats => {
   const now = new Date();
   const oneWeekAgo = subWeeks(now, 1);
@@ -76,6 +83,7 @@ const groupChatsByDate = (chats: Chat[]): GroupedChats => {
   );
 };
 
+// 获取聊天历史分页键
 export function getChatHistoryPaginationKey(
   pageIndex: number,
   previousPageData: ChatHistory
@@ -97,6 +105,9 @@ export function getChatHistoryPaginationKey(
   return `/api/history?ending_before=${firstChatFromPage.id}&limit=${PAGE_SIZE}`;
 }
 
+/**
+ * 侧边栏历史聊天记录组件
+ */
 export function SidebarHistory({ user }: { user: User | undefined }) {
   const { setOpenMobile } = useSidebar();
   const { id } = useParams();
@@ -115,21 +126,24 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
+  // 是否到达聊天历史末尾
   const hasReachedEnd = paginatedChatHistories
     ? paginatedChatHistories.some((page) => page.hasMore === false)
     : false;
 
+  // 是否没有聊天记录
   const hasEmptyChatHistory = paginatedChatHistories
     ? paginatedChatHistories.every((page) => page.chats.length === 0)
     : false;
-
+  
+  // 删除聊天记录
   const handleDelete = () => {
     const deletePromise = fetch(`/api/chat?id=${deleteId}`, {
       method: "DELETE",
     });
 
     toast.promise(deletePromise, {
-      loading: "Deleting chat...",
+      loading: "删除聊天中...",
       success: () => {
         mutate((chatHistories) => {
           if (chatHistories) {
@@ -140,35 +154,40 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
           }
         });
 
-        return "Chat deleted successfully";
+        return "聊天删除成功";
       },
-      error: "Failed to delete chat",
+      error: "聊天删除失败",
     });
 
+    // 关闭删除对话框
     setShowDeleteDialog(false);
 
+    // 如果删除的聊天是当前聊天，则跳转到首页
     if (deleteId === id) {
       router.push("/");
     }
   };
 
+  // 用户未登录时显示提示信息
   if (!user) {
     return (
       <SidebarGroup>
         <SidebarGroupContent>
           <div className="flex w-full flex-row items-center justify-center gap-2 px-2 text-sm text-zinc-500">
-            Login to save and revisit previous chats!
+            登录即可保存并重新查看之前的聊天记录！
           </div>
         </SidebarGroupContent>
       </SidebarGroup>
     );
   }
 
+  // 加载中时显示加载中提示信息
   if (isLoading) {
     return (
+      // 侧边栏分组
       <SidebarGroup>
         <div className="px-2 py-1 text-sidebar-foreground/50 text-xs">
-          Today
+          今天
         </div>
         <SidebarGroupContent>
           <div className="flex flex-col">
@@ -193,37 +212,44 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
     );
   }
 
+  // 没有聊天记录时显示提示信息
   if (hasEmptyChatHistory) {
     return (
       <SidebarGroup>
         <SidebarGroupContent>
           <div className="flex w-full flex-row items-center justify-center gap-2 px-2 text-sm text-zinc-500">
-            Your conversations will appear here once you start chatting!
+            您的聊天记录将在这里显示，一旦您开始聊天！
           </div>
         </SidebarGroupContent>
       </SidebarGroup>
     );
   }
 
+  // 返回侧边栏历史聊天记录组件
   return (
     <>
       <SidebarGroup>
         <SidebarGroupContent>
+          {/* 侧边栏菜单 */}
           <SidebarMenu>
+            {/* 分页聊天记录 */}
             {paginatedChatHistories &&
               (() => {
+                // 获取分页聊天记录
                 const chatsFromHistory = paginatedChatHistories.flatMap(
                   (paginatedChatHistory) => paginatedChatHistory.chats
                 );
 
+                // 按日期分组聊天记录
                 const groupedChats = groupChatsByDate(chatsFromHistory);
 
                 return (
                   <div className="flex flex-col gap-6">
+                    {/* 今天 */}
                     {groupedChats.today.length > 0 && (
                       <div>
                         <div className="px-2 py-1 text-sidebar-foreground/50 text-xs">
-                          Today
+                          今天
                         </div>
                         {groupedChats.today.map((chat) => (
                           <ChatItem
@@ -240,10 +266,11 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
                       </div>
                     )}
 
+                    {/* 昨天 */}
                     {groupedChats.yesterday.length > 0 && (
                       <div>
                         <div className="px-2 py-1 text-sidebar-foreground/50 text-xs">
-                          Yesterday
+                          昨天
                         </div>
                         {groupedChats.yesterday.map((chat) => (
                           <ChatItem
@@ -260,10 +287,11 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
                       </div>
                     )}
 
+                    {/* 最近一周 */}
                     {groupedChats.lastWeek.length > 0 && (
                       <div>
                         <div className="px-2 py-1 text-sidebar-foreground/50 text-xs">
-                          Last 7 days
+                          最近一周
                         </div>
                         {groupedChats.lastWeek.map((chat) => (
                           <ChatItem
@@ -280,10 +308,11 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
                       </div>
                     )}
 
+                    {/* 最近一个月 */}
                     {groupedChats.lastMonth.length > 0 && (
                       <div>
                         <div className="px-2 py-1 text-sidebar-foreground/50 text-xs">
-                          Last 30 days
+                          最近一个月
                         </div>
                         {groupedChats.lastMonth.map((chat) => (
                           <ChatItem
@@ -300,10 +329,11 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
                       </div>
                     )}
 
+                    {/* 更早的聊天记录 */}
                     {groupedChats.older.length > 0 && (
                       <div>
                         <div className="px-2 py-1 text-sidebar-foreground/50 text-xs">
-                          Older than last month
+                          更早的聊天记录
                         </div>
                         {groupedChats.older.map((chat) => (
                           <ChatItem
@@ -334,14 +364,14 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
 
           {hasReachedEnd ? (
             <div className="mt-8 flex w-full flex-row items-center justify-center gap-2 px-2 text-sm text-zinc-500">
-              You have reached the end of your chat history.
+              您已经到达了聊天历史的末尾。
             </div>
           ) : (
             <div className="mt-8 flex flex-row items-center gap-2 p-2 text-zinc-500 dark:text-zinc-400">
               <div className="animate-spin">
                 <LoaderIcon />
               </div>
-              <div>Loading Chats...</div>
+              <div>加载聊天中...</div>
             </div>
           )}
         </SidebarGroupContent>
@@ -350,16 +380,15 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
       <AlertDialog onOpenChange={setShowDeleteDialog} open={showDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogTitle>您确定要删除吗？</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your
-              chat and remove it from our servers.
+              此操作无法撤销。这将永久删除您的聊天并将其从我们的服务器中删除。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction onClick={handleDelete}>
-              Continue
+              继续
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

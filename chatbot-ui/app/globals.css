@@ -1,19 +1,32 @@
+/**
+ * 全局样式
+ */
 @import "tailwindcss";
 
-/* include utility classes in streamdown */
+/**
+ * 包含流式样式
+ */
 @source '../node_modules/streamdown/dist/index.js';
 
-/* Add KaTeX CSS for math rendering */
+/**
+ * 添加 KaTeX CSS 用于数学渲染
+ */
 @import 'katex/dist/katex.min.css';
 
-/* custom variant for setting dark mode programmatically */
+/**
+ * 自定义变量用于设置暗色模式
+ */
 @custom-variant dark (&:is(.dark, .dark *));
 
-/* include plugins */
+/**
+ * 包含插件
+ */
 @plugin "tailwindcss-animate";
 @plugin "@tailwindcss/typography";
 
-/* define design tokens (light mode) */
+/**
+ * 定义设计令牌（亮色模式）
+ */
 :root {
   --background: hsl(0 0% 100%);
   --foreground: hsl(240 10% 3.9%);
@@ -52,7 +65,9 @@
   --sidebar: hsl(0 0% 98%);
 }
 
-/* define design tokens (dark mode) */
+/**
+ * 定义设计令牌（暗色模式）
+ */
 .dark {
   --background: hsl(240 10% 3.9%);
   --foreground: hsl(0 0% 98%);
@@ -89,7 +104,9 @@
   --sidebar: hsl(240 5.9% 10%);
 }
 
-/* define theme */
+/**
+ * 定义主题
+ */
 @theme {
   --font-sans: var(--font-geist);
   --font-mono: var(--font-geist-mono);
@@ -145,12 +162,10 @@
 }
 
 /*
-  The default border color has changed to `currentcolor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
-
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
+/**
+ * 默认边框颜色已更改为 `currentcolor` 在 Tailwind CSS v4 中，
+ * 所以我们添加了这些兼容性样式来确保一切仍然看起来与 Tailwind CSS v3 一样。
+ * 如果我们想删除这些样式，我们需要添加一个显式的边框颜色工具到任何依赖这些默认值的元素。
 */
 @layer base {
   *,
@@ -269,7 +284,9 @@
   @apply bg-blue-200 hover:bg-blue-300 dark:hover:bg-blue-400/50 dark:text-blue-50 dark:bg-blue-500/40;
 }
 
-/* minimal scrollbar styling */
+/**
+ * 最小化滚动条样式
+ */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -293,7 +310,9 @@
   background: transparent;
 }
 
-/* firefox scrollbar styling */
+/**
+ * Firefox 滚动条样式
+ */
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--border) transparent;

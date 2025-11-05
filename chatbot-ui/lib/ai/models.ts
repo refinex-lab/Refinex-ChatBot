@@ -1,3 +1,6 @@
+/**
+ * AI 聊天模型
+ */
 export const DEFAULT_CHAT_MODEL: string = "chat-model";
 
 export type ChatModel = {
@@ -9,13 +12,13 @@ export type ChatModel = {
 export const chatModels: ChatModel[] = [
   {
     id: "chat-model",
-    name: "Grok Vision",
-    description: "Advanced multimodal model with vision and text capabilities",
+    name: "Grok 视觉模型",
+    description: "高级多模态模型，具有视觉和文本能力",
   },
   {
     id: "chat-model-reasoning",
-    name: "Grok Reasoning",
+    name: "Grok 推理模型",
     description:
-      "Uses advanced chain-of-thought reasoning for complex problems",
+      "使用高级链式思维推理解决复杂问题",
   },
 ];

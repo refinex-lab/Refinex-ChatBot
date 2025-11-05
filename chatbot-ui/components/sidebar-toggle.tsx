@@ -1,3 +1,6 @@
+/**
+ * AI 聊天侧边栏 展开/折叠按钮
+ */
 import type { ComponentProps } from "react";
 
 import { type SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
@@ -28,7 +31,7 @@ export function SidebarToggle({
         </Button>
       </TooltipTrigger>
       <TooltipContent align="start" className="hidden md:block">
-        Toggle Sidebar
+        展开/收起
       </TooltipContent>
     </Tooltip>
   );

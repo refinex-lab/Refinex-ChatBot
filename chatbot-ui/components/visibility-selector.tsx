@@ -1,3 +1,6 @@
+/**
+ * Header 左上区域的 AI 聊天可见性选择器
+ */
 "use client";
 
 import { type ReactNode, useMemo, useState } from "react";
@@ -17,8 +20,10 @@ import {
   LockIcon,
 } from "./icons";
 
+// 可见行类型定义
 export type VisibilityType = "private" | "public";
 
+// 可见性选项列表
 const visibilities: Array<{
   id: VisibilityType;
   label: string;
@@ -27,14 +32,14 @@ const visibilities: Array<{
 }> = [
   {
     id: "private",
-    label: "Private",
-    description: "Only you can access this chat",
+    label: "私有",
+    description: "只有您可以访问此聊天",
     icon: <LockIcon />,
   },
   {
     id: "public",
-    label: "Public",
-    description: "Anyone with the link can access this chat",
+    label: "公开",
+    description: "任何人都可以通过链接访问此聊天",
     icon: <GlobeIcon />,
   },
 ];
