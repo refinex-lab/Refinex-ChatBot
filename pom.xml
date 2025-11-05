@@ -8,7 +8,7 @@
     <packaging>pom</packaging>
 
     <name>Refinex-ChatBot</name>
-    <description>Refinex-ChatBot is an AI agent built using Spring AI and Vercel/ai-chatbot</description>
+    <description>Refinex-ChatBot 是一个使用 Spring AI 和 Vercel/ai-chatbot 构建的 AI 智能代理</description>
     <url>https://github.com/refinex-lab/Refinex-ChatBot</url>
 
     <properties>
