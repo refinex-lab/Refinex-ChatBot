@@ -34,7 +34,7 @@
         <spring-ai-alibaba.version>1.0.0.2</spring-ai-alibaba.version>
 
         <hutool.version>5.8.38</hutool.version>
-        <lombok.version>1.18.40</lombok.version>
+        <lombok.version>1.18.42</lombok.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
         <commons-collections4.version>4.4</commons-collections4.version>
@@ -56,6 +56,7 @@
         <yauaa.version>7.28.1</yauaa.version>
         <jsoup.version>1.21.2</jsoup.version>
         <java-diff-utils.version>4.16</java-diff-utils.version>
+        <jspecify.version>1.0.0</jspecify.version>
 
         <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
@@ -262,6 +263,13 @@
                 <version>${java-diff-utils.version}</version>
             </dependency>
 
+            <!-- JSpecify: 类型注释库, Google 主导, 未来可能成为官方标准 -->
+            <dependency>
+                <groupId>org.jspecify</groupId>
+                <artifactId>jspecify</artifactId>
+                <version>${jspecify.version}</version>
+            </dependency>
+
             <!-- ========================== 项目文档 ========================== -->
             <!-- Knife4j for Spring Boot 3 (已包含 SpringDoc) -->
             <dependency>
@@ -453,30 +461,35 @@
     </build>
 
     <repositories>
-        <!-- 华为 nexus 仓库 -->
-        <repository>
+        <!-- 华为镜像（稳定版本） -->
+        <!-- <repository>
             <id>public</id>
             <name>huawei nexus</name>
             <url>https://mirrors.huaweicloud.com/repository/maven/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
-        </repository>
+        </repository> -->
 
         <!-- 如果使用的是 .RELEASE 版本，则不需要此配置，这里是为例使用最新的 HTTP Interface 的 客户端扫描未发布能力 -->
-        <repository>
-            <id>spring-snapshots</id>
-            <url>http://repo.spring.io/snapshot</url>
-            <snapshots><enabled>true</enabled></snapshots>
-        </repository>
+        <!-- Spring Milestone 仓库 (官方) -->
         <repository>
             <id>spring-milestones</id>
-            <url>http://repo.spring.io/milestone</url>
+            <name>Spring Milestone Repository</name>
+            <url>https://repo.spring.io/milestone</url>
+        </repository>
+
+        <!-- Spring Snapshot 仓库 (仅 SNAPSHOT 用) -->
+        <repository>
+            <id>spring-snapshots</id>
+            <name>Spring Snapshot Repository</name>
+            <url>https://repo.spring.io/snapshot</url>
+            <snapshots><enabled>true</enabled></snapshots>
         </repository>
     </repositories>
     <pluginRepositories>
-        <!-- 华为 nexus 仓库 -->
-        <pluginRepository>
+        <!-- 华为镜像（稳定版本） -->
+        <!-- <pluginRepository>
             <id>public</id>
             <name>huawei nexus</name>
             <url>https://mirrors.huaweicloud.com/repository/maven/</url>
@@ -486,16 +499,18 @@
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
-        </pluginRepository>
+        </pluginRepository> -->
 
         <!-- 如果使用的是 .RELEASE 版本，则不需要此配置，这里是为例使用最新的 HTTP Interface 的 客户端扫描未发布能力 -->
+        <!-- Spring Milestone 仓库 (官方) -->
         <pluginRepository>
             <id>spring-snapshots</id>
-            <url>http://repo.spring.io/snapshot</url>
+            <url>https://repo.spring.io/snapshot</url>
         </pluginRepository>
+        <!-- Spring Milestone 仓库 (官方) -->
         <pluginRepository>
             <id>spring-milestones</id>
-            <url>http://repo.spring.io/milestone</url>
+            <url>https://repo.spring.io/milestone</url>
         </pluginRepository>
     </pluginRepositories>
 </project>

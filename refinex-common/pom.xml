@@ -13,6 +13,7 @@
     <name>${project.artifactId}</name>
     <description>Refinex ChatBot common module</description>
 
-    <dependencies>
-    </dependencies>
+    <modules>
+        <module>refinex-core</module>
+    </modules>
 </project>
