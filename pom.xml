@@ -11,6 +11,14 @@
     <description>Refinex-ChatBot 是一个使用 Spring AI 和 Vercel/ai-chatbot 构建的 AI 智能代理</description>
     <url>https://github.com/refinex-lab/Refinex-ChatBot</url>
 
+    <modules>
+        <module>refinex-common</module>
+        <module>refinex-ai</module>
+        <module>refinex-platform</module>
+        <module>refinex-gateway</module>
+        <module>refinex-kb</module>
+    </modules>
+
     <properties>
         <revision>1.0.0</revision>
 
