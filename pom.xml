@@ -57,6 +57,7 @@
         <jsoup.version>1.21.2</jsoup.version>
         <java-diff-utils.version>4.16</java-diff-utils.version>
         <jspecify.version>1.0.0</jspecify.version>
+        <satoken.version>1.44.0</satoken.version>
 
         <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
@@ -365,6 +366,53 @@
                 <version>${podam.version}</version>
             </dependency>
 
+            <!-- ========================== 权限框架 ========================== -->
+            <!-- Sa-Token 权限认证 (核心模块) -->
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-core</artifactId>
+                <version>${satoken.version}</version>
+            </dependency>
+            <!-- Sa-Token 权限认证 (Spring Boot 3 集成) -->
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-spring-boot3-starter</artifactId>
+                <version>${satoken.version}</version>
+            </dependency>
+            <!-- Sa-Token 权限认证 (Gateway Reactor 响应式集成) -->
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-reactor-spring-boot3-starter</artifactId>
+                <version>${satoken.version}</version>
+            </dependency>
+            <!-- Sa-Token 集成 Redis 持久化令牌 (使用 Jackson 序列化方式) -->
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-redis-jackson</artifactId>
+                <version>${satoken.version}</version>
+            </dependency>
+
+            <!-- ========================== 封装模块 ========================== -->
+            <!-- Refinex Core: 核心模块，包含基础组件和工具 -->
+            <dependency>
+                <groupId>cn.refinex</groupId>
+                <artifactId>refinex-core</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <!-- Refinex Redis: Redis 模块，包含 Redis 相关组件 -->
+            <dependency>
+                <groupId>cn.refinex</groupId>
+                <artifactId>refinex-redis</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <!-- Refinex JSON: JSON 模块，包含 JSON 相关组件 -->
+            <dependency>
+                <groupId>cn.refinex</groupId>
+                <artifactId>refinex-json</artifactId>
+                <version>${revision}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
