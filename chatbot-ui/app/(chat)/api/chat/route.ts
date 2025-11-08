@@ -1,49 +1,46 @@
-import { geolocation } from "@vercel/functions";
+import {geolocation} from "@vercel/functions";
 import {
-  convertToModelMessages,
-  createUIMessageStream,
-  JsonToSseTransformStream,
-  smoothStream,
-  stepCountIs,
-  streamText,
+    convertToModelMessages,
+    createUIMessageStream,
+    JsonToSseTransformStream,
+    smoothStream,
+    stepCountIs,
+    streamText,
 } from "ai";
-import { unstable_cache as cache } from "next/cache";
-import { after } from "next/server";
+import {unstable_cache as cache} from "next/cache";
+import {after} from "next/server";
+import {createResumableStreamContext, type ResumableStreamContext,} from "resumable-stream";
+import type {ModelCatalog} from "tokenlens/core";
+import {fetchModels} from "tokenlens/fetch";
+import {getUsage} from "tokenlens/helpers";
+import {auth, type UserType} from "@/app/(auth)/auth";
+import type {VisibilityType} from "@/components/visibility-selector";
+import {entitlementsByUserType} from "@/lib/ai/entitlements";
+import type {ChatModel} from "@/lib/ai/models";
+import {type RequestHints, systemPrompt} from "@/lib/ai/prompts";
+import {myProvider} from "@/lib/ai/providers";
+import {createDocument} from "@/lib/ai/tools/create-document";
+import {getWeather} from "@/lib/ai/tools/get-weather";
+import {requestSuggestions} from "@/lib/ai/tools/request-suggestions";
+import {updateDocument} from "@/lib/ai/tools/update-document";
+import {isProductionEnvironment} from "@/lib/constants";
 import {
-  createResumableStreamContext,
-  type ResumableStreamContext,
-} from "resumable-stream";
-import type { ModelCatalog } from "tokenlens/core";
-import { fetchModels } from "tokenlens/fetch";
-import { getUsage } from "tokenlens/helpers";
-import { auth, type UserType } from "@/app/(auth)/auth";
-import type { VisibilityType } from "@/components/visibility-selector";
-import { entitlementsByUserType } from "@/lib/ai/entitlements";
-import type { ChatModel } from "@/lib/ai/models";
-import { type RequestHints, systemPrompt } from "@/lib/ai/prompts";
-import { myProvider } from "@/lib/ai/providers";
-import { createDocument } from "@/lib/ai/tools/create-document";
-import { getWeather } from "@/lib/ai/tools/get-weather";
-import { requestSuggestions } from "@/lib/ai/tools/request-suggestions";
-import { updateDocument } from "@/lib/ai/tools/update-document";
-import { isProductionEnvironment } from "@/lib/constants";
-import {
-  createStreamId,
-  deleteChatById,
-  getChatById,
-  getMessageCountByUserId,
-  getMessagesByChatId,
-  saveChat,
-  saveMessages,
-  updateChatLastContextById,
+    createStreamId,
+    deleteChatById,
+    getChatById,
+    getMessageCountByUserId,
+    getMessagesByChatId,
+    saveChat,
+    saveMessages,
+    updateChatLastContextById,
 } from "@/lib/db/queries";
-import type { DBMessage } from "@/lib/db/schema";
-import { ChatSDKError } from "@/lib/errors";
-import type { ChatMessage } from "@/lib/types";
-import type { AppUsage } from "@/lib/usage";
-import { convertToUIMessages, generateUUID } from "@/lib/utils";
-import { generateTitleFromUserMessage } from "../../actions";
-import { type PostRequestBody, postRequestBodySchema } from "./schema";
+import type {DBMessage} from "@/lib/db/schema";
+import {ChatSDKError} from "@/lib/errors";
+import type {ChatMessage} from "@/lib/types";
+import type {AppUsage} from "@/lib/usage";
+import {convertToUIMessages, generateUUID} from "@/lib/utils";
+import {generateTitleFromUserMessage} from "../../actions";
+import {type PostRequestBody, postRequestBodySchema} from "./schema";
 
 export const maxDuration = 60;
 
@@ -294,16 +291,6 @@ export async function POST(request: Request) {
 
     if (error instanceof ChatSDKError) {
       return error.toResponse();
-    }
-
-    // Check for Vercel AI Gateway credit card error
-    if (
-      error instanceof Error &&
-      error.message?.includes(
-        "AI Gateway requires a valid credit card on file to service requests"
-      )
-    ) {
-      return new ChatSDKError("bad_request:activate_gateway").toResponse();
     }
 
     console.error("Unhandled error in chat API:", error, { vercelId });

@@ -1,10 +1,13 @@
-import { gateway } from "@ai-sdk/gateway";
-import {
-  customProvider,
-  extractReasoningMiddleware,
-  wrapLanguageModel,
-} from "ai";
-import { isTestEnvironment } from "../constants";
+import {createOpenAI} from "@ai-sdk/openai";
+import {customProvider, extractReasoningMiddleware, wrapLanguageModel,} from "ai";
+import {isTestEnvironment} from "../constants";
+
+// 创建 DeepSeek 客户端
+// DeepSeek API 完全兼容 OpenAI 格式
+const deepseek = createOpenAI({
+  apiKey: process.env.DEEPSEEK_API_KEY,
+  baseURL: "https://api.deepseek.com",
+});
 
 export const myProvider = isTestEnvironment
   ? (() => {
@@ -25,12 +28,12 @@ export const myProvider = isTestEnvironment
     })()
   : customProvider({
       languageModels: {
-        "chat-model": gateway.languageModel("xai/grok-2-vision-1212"),
+        "chat-model": deepseek.chat("deepseek-chat"),
         "chat-model-reasoning": wrapLanguageModel({
-          model: gateway.languageModel("xai/grok-3-mini"),
+          model: deepseek.chat("deepseek-reasoner"),
           middleware: extractReasoningMiddleware({ tagName: "think" }),
         }),
-        "title-model": gateway.languageModel("xai/grok-2-1212"),
-        "artifact-model": gateway.languageModel("xai/grok-2-1212"),
+        "title-model": deepseek.chat("deepseek-chat"),
+        "artifact-model": deepseek.chat("deepseek-chat"),
       },
     });

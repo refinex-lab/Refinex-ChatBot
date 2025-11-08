@@ -1,16 +1,15 @@
+/**
+ * AI 思考组件
+ */
 "use client";
 
-import { useControllableState } from "@radix-ui/react-use-controllable-state";
-import { BrainIcon, ChevronDownIcon } from "lucide-react";
-import type { ComponentProps } from "react";
-import { createContext, memo, useContext, useEffect, useState } from "react";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import { cn } from "@/lib/utils";
-import { Response } from "./response";
+import {useControllableState} from "@radix-ui/react-use-controllable-state";
+import {BrainIcon, ChevronDownIcon} from "lucide-react";
+import type {ComponentProps} from "react";
+import {createContext, memo, useContext, useEffect, useState} from "react";
+import {Collapsible, CollapsibleContent, CollapsibleTrigger,} from "@/components/ui/collapsible";
+import {cn} from "@/lib/utils";
+import {Response} from "./response";
 
 type ReasoningContextValue = {
   isStreaming: boolean;
@@ -128,9 +127,9 @@ export const ReasoningTrigger = memo(
           <>
             <BrainIcon className="size-4" />
             {isStreaming || duration === 0 ? (
-              <p>Thinking...</p>
+              <p>思考中...</p>
             ) : (
-              <p>Thought for {duration}s</p>
+              <p>思考了 {duration} 秒</p>
             )}
             <ChevronDownIcon
               className={cn(

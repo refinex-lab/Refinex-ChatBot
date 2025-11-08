@@ -12,13 +12,12 @@ export type ChatModel = {
 export const chatModels: ChatModel[] = [
   {
     id: "chat-model",
-    name: "Grok 视觉模型",
-    description: "高级多模态模型，具有视觉和文本能力",
+    name: "DeepSeek Chat",
+    description: "DeepSeek 通用对话模型，支持文本和视觉处理",
   },
   {
     id: "chat-model-reasoning",
-    name: "Grok 推理模型",
-    description:
-      "使用高级链式思维推理解决复杂问题",
+    name: "DeepSeek Reasoner",
+    description: "DeepSeek 推理模型，使用链式思维解决复杂问题",
   },
 ];
