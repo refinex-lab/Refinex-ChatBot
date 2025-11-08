@@ -14,5 +14,22 @@
     <description>Refinex ChatBot knowledge base module</description>
 
     <dependencies>
+        <!-- Spring Boot Web Starter (包含 RestClient 支持) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- Sa-Token 权限认证 Servlet 支持 -->
+        <dependency>
+            <groupId>cn.refinex</groupId>
+            <artifactId>refinex-satoken-servlet</artifactId>
+        </dependency>
+
+        <!-- Refinex JDBC: JDBC 模块，包含 JDBC 相关组件 -->
+        <dependency>
+            <groupId>cn.refinex</groupId>
+            <artifactId>refinex-jdbc</artifactId>
+        </dependency>
     </dependencies>
 </project>

@@ -1,0 +1,93 @@
+# Spring Config
+spring:
+  # Servlet 配置
+  servlet:
+    # 上传文件配置
+    multipart:
+      # 单个文件最大大小
+      max-file-size: 100MB
+      # 最大请求大小
+      max-request-size: 100MB
+
+  # 线程配置
+  threads:
+    # 虚拟线程配置
+    virtual:
+      # 全局启用启用虚拟线程(JDK 21)
+      enabled: true
+
+  # HTTP 客户端配置(基于 Http Interface)
+  http:
+    client:
+      service:
+        # 全局配置 (应用于所有组)
+        read-timeout: 2s
+        connect-timeout: 1s
+        # 分组配置 (每个组可以有不同的超时设置)
+        group:
+          # 平台模块
+          refinex-platform:
+            # 平台模块的基础 URL，内部调用不走网关
+            base-url: http://localhost:8082
+            read-timeout: 2s
+            connect-timeout: 1s
+          # 智能体模块
+          refinex-ai:
+            # 智能体模块的基础 URL，内部调用不走网关
+            base-url: http://localhost:8083
+            read-timeout: 2s
+            connect-timeout: 1s
+          # 知识库模块
+          refinex-kb:
+            # 知识库模块的基础 URL，内部调用不走网关
+            base-url: http://localhost:8084
+            read-timeout: 2s
+            connect-timeout: 1s
+
+# SaToken Config
+sa-token:
+  # Token 名称(同时作为 Cookie 和 Header 的键名)
+  token-name: Authorization
+  # Token 前缀(建议加上 Bearer 前缀, 符合 OAuth2 规范)
+  token-prefix: Bearer
+  # 是否允许动态设置 token 有效期，默认 true
+  dynamic-active-timeout: true
+  # 是否允许从请求参数读取 token，默认 true
+  is-read-body: true
+  # Token 有效期, 单位：秒, 默认 30 天, -1 代表永久有效
+  # Token 有效期(秒), 建议 2 小时, 通过刷新机制延长
+  timeout: 7200
+  # 最小活跃间隔(秒), 超过此时间未活跃则 Token 失效, 默认 -1 表示不限制
+  active-timeout: 3600
+  # 是否允许同一账号多端登录, true：允许一起登录, false：新登录挤掉旧登录
+  is-concurrent: true
+  # 多端登录是否共享同一 Token(建议 false, 提高安全性)
+  is-share: false
+  # Token 风格 (可选值：uuid(性能好)、simple-uuid、random-32、random-64、random-128、tik、jwt-simple(便于携带信息))
+  token-style: uuid
+  # 是否输出操作日志(生产环境建议关闭)
+  is-log: false
+  # 是否尝试从 Cookie 中读取 Token
+  is-read-cookie: false
+  # 是否尝试从 Header 中读取 Token
+  is-read-header: true
+  # 是否在登录后将 Token 写入 Cookie
+  is-write-header: true
+  # 同 Token 检查(用于微服务网关鉴权)
+  check-same-token: true
+  # Token 续期配置, 单位秒, 默认 -1 表示不限制
+  token-session-timeout: -1
+  # 自动续签(每次访问自动续期)
+  auto-renew: true
+
+# Refinex Config
+refinex:
+  # Redis 配置
+  redis:
+    # redis scan 一次返回数量, 默认 30
+    redis-scan-batch-size: 30
+
+  # AES 加密密钥: Base64 编码后的 32 字节密钥
+  aes-key: "0umyw3k+P/MSrZ3FhSR81ICJzHRR7PJj8XaqH45QlkE="
+  # HMAC 密钥: Base64 编码后的 32 字节密钥
+  hmac-key: "X4SCliHw1oFtAhYUeHPiRqNWn8SgiJC4D03my1uoeLA="

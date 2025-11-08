@@ -15,9 +15,9 @@
 
     <modules>
         <module>refinex-core</module>
-        <module>refinex-mybatis</module>
         <module>refinex-satoken</module>
         <module>refinex-redis</module>
         <module>refinex-json</module>
+        <module>refinex-jdbc</module>
     </modules>
 </project>

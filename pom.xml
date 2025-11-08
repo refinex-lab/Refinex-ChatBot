@@ -58,6 +58,8 @@
         <java-diff-utils.version>4.16</java-diff-utils.version>
         <jspecify.version>1.0.0</jspecify.version>
         <satoken.version>1.44.0</satoken.version>
+        <httpclient5.version>5.3.1</httpclient5.version>
+        <tika-core.version>3.2.3</tika-core.version>
 
         <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
@@ -222,6 +224,13 @@
                 <version>${commons-io.version}</version>
             </dependency>
 
+            <!-- Apache Tika核心库 -->
+            <dependency>
+                <groupId>org.apache.tika</groupId>
+                <artifactId>tika-core</artifactId>
+                <version>${tika-core.version}</version>
+            </dependency>
+
             <!-- 中文转拼音库 https://github.com/biezhi/TinyPinyin -->
             <dependency>
                 <groupId>io.github.biezhi</groupId>
@@ -269,6 +278,13 @@
                 <groupId>org.jspecify</groupId>
                 <artifactId>jspecify</artifactId>
                 <version>${jspecify.version}</version>
+            </dependency>
+
+            <!-- Apache HttpClient 5.x -->
+            <dependency>
+                <groupId>org.apache.httpcomponents.client5</groupId>
+                <artifactId>httpclient5</artifactId>
+                <version>${httpclient5.version}</version>
             </dependency>
 
             <!-- ========================== 项目文档 ========================== -->
@@ -411,6 +427,32 @@
             <dependency>
                 <groupId>cn.refinex</groupId>
                 <artifactId>refinex-json</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <!-- Refinex SaToken Common: SaToken 公共模块，包含 SaToken 相关组件 -->
+            <dependency>
+                <groupId>cn.refinex</groupId>
+                <artifactId>refinex-satoken-common</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <!-- Refinex SaToken Servlet: SaToken Servlet 模块，包含 SaToken Servlet 相关组件 -->
+            <dependency>
+                <groupId>cn.refinex</groupId>
+                <artifactId>refinex-satoken-servlet</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <!-- Refinex SaToken Reactor: SaToken Reactor 模块，包含 SaToken Reactor 相关组件 -->
+            <dependency>
+                <groupId>cn.refinex</groupId>
+                <artifactId>refinex-satoken-reactor</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <!-- Refinex JDBC: JDBC 模块，包含 JDBC 相关组件 -->
+            <dependency>
+                <groupId>cn.refinex</groupId>
+                <artifactId>refinex-jdbc</artifactId>
                 <version>${revision}</version>
             </dependency>
         </dependencies>
