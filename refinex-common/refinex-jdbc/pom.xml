@@ -1,0 +1,55 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>cn.refinex</groupId>
+        <artifactId>refinex-common</artifactId>
+        <version>${revision}</version>
+    </parent>
+
+    <artifactId>refinex-jdbc</artifactId>
+    <packaging>jar</packaging>
+
+    <name>${project.artifactId}</name>
+    <description>Refinex ChatBot JDBC Model</description>
+
+    <dependencies>
+        <!-- Spring Boot Starter JDBC: 提供 JDBC 相关的自动配置和依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+
+        <!-- MySQL Connector J: 提供 MySQL 数据库连接驱动 -->
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- Dynamic Data Source Spring Boot 3 Starter: 提供动态数据源配置 -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>dynamic-datasource-spring-boot3-starter</artifactId>
+        </dependency>
+
+        <!-- Spring Boot Configuration Processor: 提供配置属性的元数据 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Spring Boot Autoconfigure: 提供自动配置的支持 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>
+
+        <!-- Refinex Core: 提供 Refinex ChatBot 核心功能 -->
+        <dependency>
+            <groupId>cn.refinex</groupId>
+            <artifactId>refinex-core</artifactId>
+        </dependency>
+    </dependencies>
+</project>

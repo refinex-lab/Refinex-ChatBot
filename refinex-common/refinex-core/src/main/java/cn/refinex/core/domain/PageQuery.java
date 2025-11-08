@@ -6,6 +6,8 @@ import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 通用分页查询参数
@@ -58,6 +60,17 @@ public class PageQuery implements Serializable {
     @Min(value = 1, message = "每页大小必须大于等于 1")
     @Max(value = MAX_SIZE, message = "每页大小不能超过 " + MAX_SIZE)
     private Long size = DEFAULT_SIZE;
+
+    /**
+     * 排序字段集合
+     * <p>
+     * 可从前端传入，例如：
+     * <pre>
+     * orderList[0].column = "createdTime"
+     * orderList[0].asc = false
+     * </pre>
+     */
+    private List<SortOrder> orderList = Collections.emptyList();
 
     /**
      * 无参构造函数
@@ -129,5 +142,62 @@ public class PageQuery implements Serializable {
      */
     public long getLimit() {
         return size;
+    }
+
+    /**
+     * 校验分页参数
+     * <p>
+     * 校验当前页码和每页大小是否符合规范，确保分页参数的有效性。
+     * 如果校验失败，将抛出 IllegalArgumentException 异常。
+     * <p>
+     * 校验规则：
+     * <ul>
+     *     <li>当前页码必须大于等于 1</li>
+     *     <li>每页大小必须在 1 和 500 之间</li>
+     * </ul>
+     */
+    public void validate() {
+        if (current < 1) {
+            throw new IllegalArgumentException("页码必须大于等于 1");
+        }
+        if (size < 1 || size > MAX_SIZE) {
+            throw new IllegalArgumentException("每页大小必须在 1 和 " + MAX_SIZE + " 之间");
+        }
+    }
+
+    /**
+     * 生成排序 SQL 片段
+     * <p>
+     * 示例返回：ORDER BY created_time DESC, id ASC
+     * 适用于 JdbcTemplate / 自定义 SQL 场景。
+     *
+     * @param allowedColumns 允许排序的列白名单（防 SQL 注入）
+     * @return SQL 排序片段（可能为空字符串）
+     */
+    public String buildOrderByClause(List<String> allowedColumns) {
+        if (orderList == null || orderList.isEmpty()) {
+            return "";
+        }
+
+        StringBuilder sb = new StringBuilder(" ORDER BY ");
+        boolean first = true;
+
+        for (SortOrder order : orderList) {
+            if (order == null || order.getColumn() == null) {
+                continue;
+            };
+
+            String column = order.getColumn();
+            // 防止 SQL 注入
+            if (allowedColumns != null && !allowedColumns.contains(column)) {
+                continue;
+            }
+            if (!first) {
+                sb.append(", ");
+            }
+            sb.append(column).append(order.getAsc() ? " ASC" : " DESC");
+            first = false;
+        }
+        return first ? "" : sb.toString();
     }
 }
