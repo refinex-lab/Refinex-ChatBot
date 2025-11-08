@@ -1,0 +1,35 @@
+package cn.refinex.platform.entity;
+
+import cn.refinex.jdbc.core.domain.BaseEntity;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.*;
+
+import java.io.Serial;
+import java.io.Serializable;
+
+/**
+ * 角色菜单关联实体类
+ *
+ * @author Refinex
+ * @since 1.0.0
+ */
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+@Schema(description = "角色菜单关联实体类")
+public class SysMenuRole extends BaseEntity implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    @Schema(description = "主键ID")
+    private Long id;
+
+    @Schema(description = "角色ID")
+    private Long roleId;
+
+    @Schema(description = "菜单ID")
+    private Long menuId;
+}
