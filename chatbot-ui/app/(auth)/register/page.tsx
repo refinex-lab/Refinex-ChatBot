@@ -4,13 +4,14 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
-import { useActionState, useEffect, useState } from "react";
-import { AuthForm } from "@/components/auth-form";
-import { SubmitButton } from "@/components/submit-button";
-import { toast } from "@/components/toast";
-import { type RegisterActionState, register } from "../actions";
+import {useRouter} from "next/navigation";
+import {useSession} from "next-auth/react";
+import {useActionState, useEffect, useState} from "react";
+import {AuthForm} from "@/components/auth-form";
+import {AuthHeader} from "@/components/auth-header";
+import {SubmitButton} from "@/components/submit-button";
+import {toast} from "@/components/toast";
+import {register, type RegisterActionState} from "../actions";
 
 /**
  * 注册页面组件
@@ -66,7 +67,13 @@ export default function Page() {
   };
 
   return (
-    <div className="flex h-dvh w-screen items-start justify-center bg-background pt-12 md:items-center md:pt-0">
+    <div className="relative flex h-dvh w-screen items-start justify-center bg-background pt-12 md:items-center md:pt-0">
+      {/* 左上角 Logo 和标题 */}
+      <div className="absolute top-6 left-6">
+        <AuthHeader />
+      </div>
+
+      {/* 注册表单容器 */}
       <div className="flex w-full max-w-md flex-col gap-12 overflow-hidden rounded-2xl">
         <div className="flex flex-col items-center justify-center gap-2 px-4 text-center sm:px-16">
           <h3 className="font-semibold text-xl dark:text-zinc-50">注册</h3>
