@@ -1,15 +1,18 @@
-import type { UseChatHelpers } from "@ai-sdk/react";
+/**
+ * AI 消息列表组件
+ */
+import type {UseChatHelpers} from "@ai-sdk/react";
 import equal from "fast-deep-equal";
-import { AnimatePresence } from "framer-motion";
-import { ArrowDownIcon } from "lucide-react";
-import { memo, useEffect } from "react";
-import { useMessages } from "@/hooks/use-messages";
-import type { Vote } from "@/lib/db/schema";
-import type { ChatMessage } from "@/lib/types";
-import { useDataStream } from "./data-stream-provider";
-import { Conversation, ConversationContent } from "./elements/conversation";
-import { Greeting } from "./greeting";
-import { PreviewMessage, ThinkingMessage } from "./message";
+import {AnimatePresence} from "framer-motion";
+import {ArrowDownIcon} from "lucide-react";
+import {memo, useEffect} from "react";
+import {useMessages} from "@/hooks/use-messages";
+import type {Vote} from "@/lib/db/schema";
+import type {ChatMessage} from "@/lib/types";
+import {useDataStream} from "./data-stream-provider";
+import {Conversation, ConversationContent} from "./elements/conversation";
+import {Greeting} from "./greeting";
+import {PreviewMessage, ThinkingMessage} from "./message";
 
 type MessagesProps = {
   chatId: string;

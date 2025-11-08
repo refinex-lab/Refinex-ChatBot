@@ -1,29 +1,26 @@
+/**
+ * AI 消息组件
+ */
 "use client";
-import type { UseChatHelpers } from "@ai-sdk/react";
+import type {UseChatHelpers} from "@ai-sdk/react";
 import equal from "fast-deep-equal";
-import { motion } from "framer-motion";
-import { memo, useState } from "react";
-import type { Vote } from "@/lib/db/schema";
-import type { ChatMessage } from "@/lib/types";
-import { cn, sanitizeText } from "@/lib/utils";
-import { useDataStream } from "./data-stream-provider";
-import { DocumentToolResult } from "./document";
-import { DocumentPreview } from "./document-preview";
-import { MessageContent } from "./elements/message";
-import { Response } from "./elements/response";
-import {
-  Tool,
-  ToolContent,
-  ToolHeader,
-  ToolInput,
-  ToolOutput,
-} from "./elements/tool";
-import { SparklesIcon } from "./icons";
-import { MessageActions } from "./message-actions";
-import { MessageEditor } from "./message-editor";
-import { MessageReasoning } from "./message-reasoning";
-import { PreviewAttachment } from "./preview-attachment";
-import { Weather } from "./weather";
+import {motion} from "framer-motion";
+import {memo, useState} from "react";
+import type {Vote} from "@/lib/db/schema";
+import type {ChatMessage} from "@/lib/types";
+import {cn, sanitizeText} from "@/lib/utils";
+import {useDataStream} from "./data-stream-provider";
+import {DocumentToolResult} from "./document";
+import {DocumentPreview} from "./document-preview";
+import {MessageContent} from "./elements/message";
+import {Response} from "./elements/response";
+import {Tool, ToolContent, ToolHeader, ToolInput, ToolOutput,} from "./elements/tool";
+import {SparklesIcon} from "./icons";
+import {MessageActions} from "./message-actions";
+import {MessageEditor} from "./message-editor";
+import {MessageReasoning} from "./message-reasoning";
+import {PreviewAttachment} from "./preview-attachment";
+import {Weather} from "./weather";
 
 const PurePreviewMessage = ({
   chatId,
@@ -86,6 +83,8 @@ const PurePreviewMessage = ({
               mode === "edit",
             "max-w-[calc(100%-2.5rem)] sm:max-w-[min(fit-content,80%)]":
               message.role === "user" && mode !== "edit",
+            "group is-user": message.role === "user",
+            "group is-assistant": message.role === "assistant",
           })}
         >
           {attachmentsFromMessage.length > 0 && (
@@ -126,17 +125,12 @@ const PurePreviewMessage = ({
                   <div key={key}>
                     <MessageContent
                       className={cn({
-                        "w-fit break-words rounded-2xl px-3 py-2 text-right text-white":
+                        "w-fit break-words rounded-2xl px-3 py-2 text-right":
                           message.role === "user",
                         "bg-transparent px-0 py-0 text-left":
                           message.role === "assistant",
                       })}
                       data-testid="message-content"
-                      style={
-                        message.role === "user"
-                          ? { backgroundColor: "#006cff" }
-                          : undefined
-                      }
                     >
                       <Response>{sanitizeText(part.text)}</Response>
                     </MessageContent>
@@ -329,7 +323,7 @@ export const ThinkingMessage = () => {
 
         <div className="flex w-full flex-col gap-2 md:gap-4">
           <div className="p-0 text-muted-foreground text-sm">
-            Thinking...
+            思考中...
           </div>
         </div>
       </div>
