@@ -3,35 +3,29 @@
  */
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import type { User } from "next-auth";
-import { useState } from "react";
-import { toast } from "sonner";
-import { useSWRConfig } from "swr";
-import { unstable_serialize } from "swr/infinite";
-import { PlusIcon, TrashIcon } from "@/components/icons";
-import { SidebarHistory, getChatHistoryPaginationKey } from "@/components/sidebar-history";
-import { SidebarUserNav } from "@/components/sidebar-user-nav";
-import { Button } from "@/components/ui/button";
+import {useRouter} from "next/navigation";
+import type {User} from "next-auth";
+import {useState} from "react";
+import {toast} from "sonner";
+import {useSWRConfig} from "swr";
+import {unstable_serialize} from "swr/infinite";
+import {PlusIcon, TrashIcon} from "@/components/icons";
+import {getChatHistoryPaginationKey, SidebarHistory} from "@/components/sidebar-history";
+import {SidebarUserNav} from "@/components/sidebar-user-nav";
+import {Button} from "@/components/ui/button";
+import {Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, useSidebar,} from "@/components/ui/sidebar";
+import {Tooltip, TooltipContent, TooltipTrigger} from "./ui/tooltip";
 import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarMenu,
-  useSidebar,
-} from "@/components/ui/sidebar";
-import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
 } from "./ui/alert-dialog";
 
 /**
@@ -71,15 +65,25 @@ export function AppSidebar({ user }: { user: User | undefined }) {
             <div className="flex flex-row items-center justify-between">
               {/* 侧边栏链接，点击后关闭移动端侧边栏并跳转到首页 */}
               <Link
+                aria-label="返回首页"
                 className="flex flex-row items-center gap-3"
                 href="/"
                 onClick={() => {
                   setOpenMobile(false);
                 }}
+                title="返回首页"
               >
-                <span className="cursor-pointer rounded-md px-2 font-semibold text-lg hover:bg-muted">
+                {/* 系统 Logo */}
+                <Image
+                  alt="RefinexChatBot Logo"
+                  className="h-8 w-8 cursor-pointer rounded-md p-1 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                  height={32}
+                  src="/images/logo.svg"
+                  width={32}
+                />
+                {/* <span className="cursor-pointer rounded-md px-2 font-semibold text-lg hover:bg-muted">
                   Refinex AI
-                </span>
+                </span> */}
               </Link>
               {/* 侧边栏按钮 */}
               <div className="flex flex-row gap-1">
