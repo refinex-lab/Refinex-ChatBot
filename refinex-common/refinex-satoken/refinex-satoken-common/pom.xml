@@ -1,0 +1,79 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>cn.refinex</groupId>
+        <artifactId>refinex-satoken</artifactId>
+        <version>${revision}</version>
+    </parent>
+
+    <artifactId>refinex-satoken-common</artifactId>
+    <packaging>jar</packaging>
+
+    <name>${project.artifactId}</name>
+    <description>Sa-Token 公共模块 - 包含登录对象、辅助类、异常处理等</description>
+
+    <dependencies>
+        <!-- Sa-Token 核心依赖 -->
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-core</artifactId>
+        </dependency>
+
+        <!-- Sa-Token Redis Jackson -->
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-redis-jackson</artifactId>
+        </dependency>
+        <!-- Pool2(Redis 连接池) -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+        </dependency>
+
+        <!-- Spring Web(用于异常处理) -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Refinex Core -->
+        <dependency>
+            <groupId>cn.refinex</groupId>
+            <artifactId>refinex-core</artifactId>
+        </dependency>
+
+        <!-- Jakarta Servlet API(用于 Servlet 环境) -->
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Refinex Redis -->
+        <dependency>
+            <groupId>cn.refinex</groupId>
+            <artifactId>refinex-redis</artifactId>
+        </dependency>
+
+        <!-- Refinex JSON(用于 JSON 序列化) -->
+        <dependency>
+            <groupId>cn.refinex</groupId>
+            <artifactId>refinex-json</artifactId>
+        </dependency>
+
+        <!-- Spring Boot Configuration Processor -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Spring Boot Autoconfigure -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>
+    </dependencies>
+</project>
