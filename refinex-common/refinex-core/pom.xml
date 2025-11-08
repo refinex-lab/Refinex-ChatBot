@@ -10,15 +10,15 @@
     <artifactId>refinex-core</artifactId>
     <packaging>jar</packaging>
 
-    <name>refinex-core</name>
-    <description>Refinex ChatBot core module</description>
+    <name>${project.artifactId}</name>
+    <description>Refinex ChatBot Core Module</description>
 
     <dependencies>
         <!-- Lombok: 编译期工具，不参与运行时 -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
 
         <!-- Knife4j: OpenAPI 3 文档增强 -->
@@ -110,7 +110,42 @@
         <dependency>
             <groupId>org.jspecify</groupId>
             <artifactId>jspecify</artifactId>
-            <scope>provided</scope>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- Apache HttpClient 5.x -->
+        <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+        </dependency>
+
+        <!-- JSON 工具类 -->
+        <dependency>
+            <groupId>cn.refinex</groupId>
+            <artifactId>refinex-json</artifactId>
+        </dependency>
+
+        <!-- 重试支持 -->
+        <dependency>
+            <groupId>org.springframework.retry</groupId>
+            <artifactId>spring-retry</artifactId>
+        </dependency>
+        <!-- 切面支持 -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aspects</artifactId>
+        </dependency>
+
+        <!-- Spring Security Crypto 用于 BCrypt -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-crypto</artifactId>
+        </dependency>
+
+        <!-- Apache Tika核心库 -->
+        <dependency>
+            <groupId>org.apache.tika</groupId>
+            <artifactId>tika-core</artifactId>
         </dependency>
     </dependencies>
 </project>
