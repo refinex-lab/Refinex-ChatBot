@@ -1,0 +1,325 @@
+/**
+ * CodePreview - 样式文件
+ *
+ * @author Refinex Team
+ */
+
+// ==================== 遮罩层 ====================
+.code-preview-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 1000;
+  animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &.closing {
+    animation: fadeOut 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+// ==================== 预览面板 ====================
+.code-preview-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 50%;
+  min-width: 600px;
+  max-width: 90%;
+  background: #ffffff;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &.closing {
+    animation: slideOut 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  // 响应式
+  @media (max-width: 1200px) {
+    width: 60%;
+    min-width: 500px;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    min-width: 100%;
+  }
+}
+
+// ==================== 标题栏 ====================
+.code-preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid #f0f0f0;
+  background: #ffffff;
+}
+
+.code-preview-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 16px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.85);
+}
+
+.code-preview-language {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: normal;
+  color: #1890ff;
+  background: #e6f7ff;
+  border-radius: 4px;
+}
+
+.code-preview-close-btn {
+  color: rgba(0, 0, 0, 0.45);
+
+  &:hover {
+    color: rgba(0, 0, 0, 0.85);
+    background: rgba(0, 0, 0, 0.04);
+  }
+}
+
+// ==================== Tabs 容器 ====================
+.code-preview-tabs {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 20px; // 增加上下内边距
+  background: #ffffff;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.code-preview-tab-list {
+  display: flex;
+  gap: 4px;
+}
+
+.code-preview-tab {
+  padding: 6px 16px; // 减小按钮高度
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.65);
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+
+  &:hover {
+    color: #1890ff;
+    background: #f5f5f5;
+  }
+
+  &.active {
+    color: #1890ff;
+    background: #e6f7ff;
+    font-weight: 500;
+  }
+}
+
+.code-preview-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  .ant-btn {
+    color: rgba(0, 0, 0, 0.45);
+
+    &:hover {
+      color: #1890ff;
+      background: #e6f7ff;
+    }
+
+    &.ant-btn-primary {
+      color: #1890ff;
+      background: #e6f7ff;
+    }
+  }
+}
+
+// ==================== 内容区域 ====================
+.code-preview-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+// ==================== 预览视口 ====================
+.code-preview-viewport {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  padding: 5px;
+  // background: #f5f5f5;
+
+  // 美化滚动条
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+
+    &:hover {
+      background: #a8a8a8;
+    }
+  }
+}
+
+// ==================== 设备信息提示 ====================
+.code-preview-device-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 8px 16px;
+  margin-bottom: 5px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.65);
+  max-width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+
+  .device-name {
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.85);
+  }
+
+  .device-size {
+    color: #1890ff;
+    font-family: 'Fira Code', 'Monaco', 'Menlo', 'Consolas', monospace;
+  }
+
+  .device-zoom {
+    padding: 2px 8px;
+    background: #f0f0f0;
+    border-radius: 4px;
+    font-family: 'Fira Code', 'Monaco', 'Menlo', 'Consolas', monospace;
+    font-size: 12px;
+  }
+}
+
+.code-preview-frame {
+  background: #ffffff;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+// ==================== 源码查看器 ====================
+.code-preview-source {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background: #ffffff;
+
+  // 美化滚动条
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+
+    &:hover {
+      background: #a8a8a8;
+    }
+  }
+}
+
+.code-preview-source-pre {
+  margin: 0;
+  padding: 20px;
+  font-family: 'Fira Code', 'Monaco', 'Menlo', 'Consolas', monospace;
+  font-size: 14px;
+  line-height: 1.8;
+  background: #ffffff;
+
+  code {
+    display: block;
+    background: transparent;
+    white-space: pre;
+    word-wrap: normal;
+    overflow-x: auto;
+
+    // highlight.js 样式会自动应用
+    &.hljs {
+      padding: 0;
+      background: transparent;
+    }
+  }
+}
+
+// ==================== 动画 ====================
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+// ==================== 代码执行器 ====================
+.code-executor {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+}
+

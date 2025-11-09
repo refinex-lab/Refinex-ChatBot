@@ -1,12 +1,14 @@
 "use client";
 
 import type {ReactNode} from "react";
-import {useRef, useState} from "react";
+import {useMemo, useRef, useState} from "react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import {CheckCircleFillIcon, CodeIcon, CopyIcon, DownloadIcon, FullscreenIcon,} from "@/components/icons";
+import {CheckCircleFillIcon, CodeIcon, CopyIcon, DownloadIcon, FullscreenIcon, SparklesIcon} from "@/components/icons";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
 import {MermaidRenderer} from "./mermaid-renderer";
 import {MermaidPreviewModal} from "./mermaid-preview-modal";
+import CodePreviewPanel from "./code-preview-panel";
+import {detectExecutableCode} from "./utils/code-detector";
 import {toast} from "sonner";
 import {cn} from "@/lib/utils";
 
@@ -28,6 +30,7 @@ export const CodeBlock = ({
   const [copied, setCopied] = useState(false);
   const [showSource, setShowSource] = useState(false);
   const [previewVisible, setPreviewVisible] = useState(false);
+  const [codePreviewVisible, setCodePreviewVisible] = useState(false);
   const mermaidContainerRef = useRef<HTMLDivElement>(null);
 
   if (inline) {
@@ -35,16 +38,6 @@ export const CodeBlock = ({
   }
 
   const isMermaid = enableMermaid && language?.toLowerCase() === "mermaid";
-
-  const getPlainTextCode = (): string => {
-    if (typeof code === "string") {
-      return code;
-    }
-    if (Array.isArray(code)) {
-      return extractTextFromReactElement(code);
-    }
-    return extractTextFromReactElement(code);
-  };
 
   const extractTextFromReactElement = (element: unknown): string => {
     if (typeof element === "string") {
@@ -71,6 +64,26 @@ export const CodeBlock = ({
     }
     return String(element);
   };
+
+  const getPlainTextCode = (): string => {
+    if (typeof code === "string") {
+      return code;
+    }
+    if (Array.isArray(code)) {
+      return extractTextFromReactElement(code);
+    }
+    return extractTextFromReactElement(code);
+  };
+
+  // 检测代码是否可执行
+  const codeDetection = useMemo(() => {
+    const plainText = typeof code === "string" 
+      ? code 
+      : extractTextFromReactElement(code);
+    return detectExecutableCode(plainText, language);
+  }, [code, language]);
+
+  const isExecutable = codeDetection.executable && !isMermaid;
 
   const handleCopy = async () => {
     try {
@@ -267,6 +280,14 @@ export const CodeBlock = ({
     setPreviewVisible(false);
   };
 
+  const handleOpenCodePreview = () => {
+    setCodePreviewVisible(true);
+  };
+
+  const handleCloseCodePreview = () => {
+    setCodePreviewVisible(false);
+  };
+
   const getLanguageDisplayName = (lang: string): string => {
     const nameMap: Record<string, string> = {
       javascript: "JavaScript",
@@ -324,6 +345,22 @@ export const CodeBlock = ({
             </div>
 
             <div className="flex items-center gap-1">
+              {isExecutable && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      type="button"
+                      onClick={handleOpenCodePreview}
+                      className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+                      aria-label="执行代码"
+                    >
+                      <SparklesIcon size={14} />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>执行代码</TooltipContent>
+                </Tooltip>
+              )}
+
               {isMermaid && (
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -458,6 +495,17 @@ export const CodeBlock = ({
           onClose={handleClosePreview}
           chart={getPlainTextCode()}
           language={language}
+        />
+      )}
+
+      {isExecutable && (
+        <CodePreviewPanel
+          visible={codePreviewVisible}
+          onClose={handleCloseCodePreview}
+          code={getPlainTextCode()}
+          language={language}
+          codeType={codeDetection.type}
+          title="代码预览"
         />
       )}
     </>

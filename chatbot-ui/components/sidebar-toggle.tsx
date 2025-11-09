@@ -1,17 +1,13 @@
 /**
  * AI 聊天侧边栏 展开/折叠按钮
  */
-import type { ComponentProps } from "react";
+import type {ComponentProps} from "react";
 
-import { type SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
-import { SidebarLeftIcon } from "./icons";
-import { Button } from "./ui/button";
+import {type SidebarTrigger, useSidebar} from "@/components/ui/sidebar";
+import {Tooltip, TooltipContent, TooltipTrigger,} from "@/components/ui/tooltip";
+import {cn} from "@/lib/utils";
+import {SidebarExpandIcon} from "./icons";
+import {Button} from "./ui/button";
 
 export function SidebarToggle({
   className,
@@ -27,7 +23,7 @@ export function SidebarToggle({
           onClick={toggleSidebar}
           variant="outline"
         >
-          <SidebarLeftIcon size={16} />
+          <SidebarExpandIcon size={16} />
         </Button>
       </TooltipTrigger>
       <TooltipContent align="start" className="hidden md:block">
