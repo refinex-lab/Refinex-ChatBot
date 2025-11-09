@@ -3,33 +3,29 @@
  */
 "use client";
 
-import { isToday, isYesterday, subMonths, subWeeks } from "date-fns";
-import { motion } from "framer-motion";
-import { useParams, useRouter } from "next/navigation";
-import type { User } from "next-auth";
-import { useState } from "react";
-import { toast } from "sonner";
+import {isToday, isYesterday, subMonths, subWeeks} from "date-fns";
+import {motion} from "framer-motion";
+import {useParams, useRouter} from "next/navigation";
+import type {User} from "next-auth";
+import {useState} from "react";
+import {toast} from "sonner";
 import useSWRInfinite from "swr/infinite";
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import {
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarMenu,
-  useSidebar,
-} from "@/components/ui/sidebar";
-import type { Chat } from "@/lib/db/schema";
-import { fetcher } from "@/lib/utils";
-import { LoaderIcon } from "./icons";
-import { ChatItem } from "./sidebar-history-item";
+import {SidebarGroup, SidebarGroupContent, SidebarMenu, useSidebar,} from "@/components/ui/sidebar";
+import type {Chat} from "@/lib/db/schema";
+import {fetcher} from "@/lib/utils";
+import {LoaderIcon} from "./icons";
+import {ChatItem} from "./sidebar-history-item";
+import {SidebarActions} from "./sidebar-actions";
 
 // 按日期分组聊天记录类型定义
 type GroupedChats = {
@@ -168,66 +164,100 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
     }
   };
 
-  // 用户未登录时显示提示信息
+  // 获取所有聊天记录（用于搜索）
+  const allChats =
+    paginatedChatHistories?.flatMap(
+      (paginatedChatHistory) => paginatedChatHistory.chats
+    ) ?? [];
+
+  // 用户未登录时显示提示信息和按钮
   if (!user) {
     return (
-      <SidebarGroup>
-        <SidebarGroupContent>
-          <div className="flex w-full flex-row items-center justify-center gap-2 px-2 text-sm text-zinc-500">
-            登录即可保存并重新查看之前的聊天记录！
-          </div>
-        </SidebarGroupContent>
-      </SidebarGroup>
+      <>
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarActions chats={[]} />
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <div className="flex w-full flex-row items-center justify-center gap-2 px-2 text-sm text-zinc-500">
+              登录即可保存并重新查看之前的聊天记录！
+            </div>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </>
     );
   }
 
-  // 加载中时显示加载中提示信息
+  // 加载中时显示加载中提示信息和按钮
   if (isLoading) {
     return (
-      // 侧边栏分组
-      <SidebarGroup>
-        <div className="px-2 py-1 text-sidebar-foreground/50 text-xs">
-          今天
-        </div>
-        <SidebarGroupContent>
-          <div className="flex flex-col">
-            {[44, 32, 28, 64, 52].map((item) => (
-              <div
-                className="flex h-8 items-center gap-2 rounded-md px-2"
-                key={item}
-              >
-                <div
-                  className="h-4 max-w-(--skeleton-width) flex-1 rounded-md bg-sidebar-accent-foreground/10"
-                  style={
-                    {
-                      "--skeleton-width": `${item}%`,
-                    } as React.CSSProperties
-                  }
-                />
-              </div>
-            ))}
+      <>
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarActions chats={[]} />
+          </SidebarGroupContent>
+        </SidebarGroup>
+        {/* 侧边栏分组 */}
+        <SidebarGroup>
+          <div className="px-2 py-1 text-sidebar-foreground/50 text-xs">
+            今天
           </div>
-        </SidebarGroupContent>
-      </SidebarGroup>
+          <SidebarGroupContent>
+            <div className="flex flex-col">
+              {[44, 32, 28, 64, 52].map((item) => (
+                <div
+                  className="flex h-8 items-center gap-2 rounded-md px-2"
+                  key={item}
+                >
+                  <div
+                    className="h-4 max-w-(--skeleton-width) flex-1 rounded-md bg-sidebar-accent-foreground/10"
+                    style={
+                      {
+                        "--skeleton-width": `${item}%`,
+                      } as React.CSSProperties
+                    }
+                  />
+                </div>
+              ))}
+            </div>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </>
     );
   }
 
-  // 没有聊天记录时显示提示信息
+  // 没有聊天记录时显示提示信息和按钮
   if (hasEmptyChatHistory) {
     return (
-      <SidebarGroup>
-        <SidebarGroupContent>
-          <div className="flex w-full flex-row items-center justify-center gap-2 px-2 text-sm text-zinc-500">
-            您的聊天记录将在这里显示，一旦您开始聊天！
-          </div>
-        </SidebarGroupContent>
-      </SidebarGroup>
+      <>
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarActions chats={[]} />
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <div className="flex w-full flex-row items-center justify-center gap-2 px-2 text-sm text-zinc-500">
+              您的聊天记录将在这里显示，一旦您开始聊天！
+            </div>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </>
     );
   }
 
   // 返回侧边栏历史聊天记录组件
   return (
     <>
+      {/* 功能按钮区域 */}
+      <SidebarGroup>
+        <SidebarGroupContent>
+          <SidebarActions chats={allChats} />
+        </SidebarGroupContent>
+      </SidebarGroup>
+
       <SidebarGroup>
         <SidebarGroupContent>
           {/* 侧边栏菜单 */}
