@@ -25,7 +25,6 @@ import type {Chat} from "@/lib/db/schema";
 import {fetcher} from "@/lib/utils";
 import {LoaderIcon} from "./icons";
 import {ChatItem} from "./sidebar-history-item";
-import {SidebarActions} from "./sidebar-actions";
 
 // 按日期分组聊天记录类型定义
 type GroupedChats = {
@@ -170,35 +169,23 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
       (paginatedChatHistory) => paginatedChatHistory.chats
     ) ?? [];
 
-  // 用户未登录时显示提示信息和按钮
+  // 用户未登录时显示提示信息
   if (!user) {
     return (
-      <>
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarActions chats={[]} />
-          </SidebarGroupContent>
-        </SidebarGroup>
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <div className="flex w-full flex-row items-center justify-center gap-2 px-2 text-sm text-zinc-500">
-              登录即可保存并重新查看之前的聊天记录！
-            </div>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </>
+      <SidebarGroup>
+        <SidebarGroupContent>
+          <div className="flex w-full flex-row items-center justify-center gap-2 px-2 text-sm text-zinc-500">
+            登录即可保存并重新查看之前的聊天记录！
+          </div>
+        </SidebarGroupContent>
+      </SidebarGroup>
     );
   }
 
-  // 加载中时显示加载中提示信息和按钮
+  // 加载中时显示加载中提示信息
   if (isLoading) {
     return (
       <>
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarActions chats={[]} />
-          </SidebarGroupContent>
-        </SidebarGroup>
         {/* 侧边栏分组 */}
         <SidebarGroup>
           <div className="px-2 py-1 text-sidebar-foreground/50 text-xs">
@@ -228,36 +215,22 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
     );
   }
 
-  // 没有聊天记录时显示提示信息和按钮
+  // 没有聊天记录时显示提示信息
   if (hasEmptyChatHistory) {
     return (
-      <>
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarActions chats={[]} />
-          </SidebarGroupContent>
-        </SidebarGroup>
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <div className="flex w-full flex-row items-center justify-center gap-2 px-2 text-sm text-zinc-500">
-              您的聊天记录将在这里显示，一旦您开始聊天！
-            </div>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </>
+      <SidebarGroup>
+        <SidebarGroupContent>
+          <div className="flex w-full flex-row items-center justify-center gap-2 px-2 text-sm text-zinc-500">
+            您的聊天记录将在这里显示，一旦您开始聊天！
+          </div>
+        </SidebarGroupContent>
+      </SidebarGroup>
     );
   }
 
   // 返回侧边栏历史聊天记录组件
   return (
     <>
-      {/* 功能按钮区域 */}
-      <SidebarGroup>
-        <SidebarGroupContent>
-          <SidebarActions chats={allChats} />
-        </SidebarGroupContent>
-      </SidebarGroup>
-
       <SidebarGroup>
         <SidebarGroupContent>
           {/* 侧边栏菜单 */}

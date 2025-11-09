@@ -18,10 +18,10 @@ export function SidebarToggle({
     <Tooltip>
       <TooltipTrigger asChild>
         <Button
-          className={cn("h-8 px-2 md:h-fit md:px-2", className)}
+          className={cn("h-8 w-8 rounded-md p-1 border-0 bg-transparent transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800 shadow-none", className)}
           data-testid="sidebar-toggle-button"
           onClick={toggleSidebar}
-          variant="outline"
+          variant="ghost"
         >
           <SidebarExpandIcon size={16} />
         </Button>

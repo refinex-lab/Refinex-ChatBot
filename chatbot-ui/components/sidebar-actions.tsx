@@ -17,7 +17,7 @@ export interface SidebarActionsProps {
 
 export const SidebarActions = ({chats}: SidebarActionsProps) => {
   const router = useRouter();
-  const {setOpenMobile} = useSidebar();
+  const {setOpenMobile, state} = useSidebar();
   const [searchDialogOpen, setSearchDialogOpen] = useState(false);
 
   // 新聊天
@@ -50,70 +50,70 @@ export const SidebarActions = ({chats}: SidebarActionsProps) => {
   return (
     <>
       <TooltipProvider>
-        <div className="flex flex-col gap-1 px-2">
+        <div className="flex flex-col gap-1 px-2 group-data-[collapsible=icon]:px-0">
           <Tooltip>
             <TooltipTrigger asChild>
               <SidebarMenuButton
                 onClick={handleNewChat}
-                className="w-full justify-start gap-2 font-medium"
+                className="w-full justify-start gap-2 font-medium group-data-[collapsible=icon]:!justify-center group-data-[collapsible=icon]:!px-0"
               >
                 <IoCreateOutline size={16} />
-                <span>新聊天</span>
+                <span className="group-data-[collapsible=icon]:hidden">新聊天</span>
               </SidebarMenuButton>
             </TooltipTrigger>
-            <TooltipContent>新聊天</TooltipContent>
+            {state === "collapsed" && <TooltipContent side="right">新聊天</TooltipContent>}
           </Tooltip>
 
           <Tooltip>
             <TooltipTrigger asChild>
               <SidebarMenuButton
                 onClick={handleSearch}
-                className="w-full justify-start gap-2 font-medium"
+                className="w-full justify-start gap-2 font-medium group-data-[collapsible=icon]:!justify-center group-data-[collapsible=icon]:!px-0"
               >
                 <IoSearchOutline size={16} />
-                <span>搜索聊天</span>
+                <span className="group-data-[collapsible=icon]:hidden">搜索聊天</span>
               </SidebarMenuButton>
             </TooltipTrigger>
-            <TooltipContent>搜索聊天</TooltipContent>
+            {state === "collapsed" && <TooltipContent side="right">搜索聊天</TooltipContent>}
           </Tooltip>
 
           <Tooltip>
             <TooltipTrigger asChild>
               <SidebarMenuButton
                 onClick={handleImageGeneration}
-                className="w-full justify-start gap-2 font-medium"
+                className="w-full justify-start gap-2 font-medium group-data-[collapsible=icon]:!justify-center group-data-[collapsible=icon]:!px-0"
               >
                 <FaRegImages size={16} />
-                <span>图像生成</span>
+                <span className="group-data-[collapsible=icon]:hidden">图像生成</span>
               </SidebarMenuButton>
             </TooltipTrigger>
-            <TooltipContent>图像生成</TooltipContent>
+            {state === "collapsed" && <TooltipContent side="right">图像生成</TooltipContent>}
           </Tooltip>
 
           <Tooltip>
             <TooltipTrigger asChild>
               <SidebarMenuButton
                 onClick={handleVideoGeneration}
-                className="w-full justify-start gap-2 font-medium"
+                className="w-full justify-start gap-2 font-medium group-data-[collapsible=icon]:!justify-center group-data-[collapsible=icon]:!px-0"
               >
                 <IoVideocamOutline size={16} />
-                <span>视频生成</span>
+                <span className="group-data-[collapsible=icon]:hidden">视频生成</span>
               </SidebarMenuButton>
             </TooltipTrigger>
-            <TooltipContent>视频生成</TooltipContent>
+            {state === "collapsed" && <TooltipContent side="right">视频生成</TooltipContent>}
           </Tooltip>
 
           <Tooltip>
             <TooltipTrigger asChild>
               <SidebarMenuButton
                 onClick={handleKnowledgeBase}
-                className="w-full justify-start gap-2 font-medium"
+                className="w-full justify-start gap-2 font-medium group-data-[collapsible=icon]:!justify-center group-data-[collapsible=icon]:!px-0"
               >
                 <LuBookOpen size={16} />
-                <span>知识库</span>
+                <span className="group-data-[collapsible=icon]:hidden">知识库</span>
               </SidebarMenuButton>
             </TooltipTrigger>
-            <TooltipContent>知识库</TooltipContent>
+            {state === "collapsed" && <TooltipContent side="right">知识库</TooltipContent>}
           </Tooltip>
         </div>
       </TooltipProvider>

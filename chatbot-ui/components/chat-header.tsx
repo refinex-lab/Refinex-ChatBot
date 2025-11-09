@@ -4,14 +4,13 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { memo } from "react";
-import { useWindowSize } from "usehooks-ts";
-import { SidebarToggle } from "@/components/sidebar-toggle";
-import { Button } from "@/components/ui/button";
-import { PlusIcon, VercelIcon, GitIcon } from "./icons";
-import { useSidebar } from "./ui/sidebar";
-import { VisibilitySelector, type VisibilityType } from "./visibility-selector";
+import {useRouter} from "next/navigation";
+import {memo} from "react";
+import {useWindowSize} from "usehooks-ts";
+import {Button} from "@/components/ui/button";
+import {GitIcon} from "./icons";
+import {useSidebar} from "./ui/sidebar";
+import {VisibilitySelector, type VisibilityType} from "./visibility-selector";
 
 function PureChatHeader({
   chatId,
@@ -31,10 +30,10 @@ function PureChatHeader({
     // AI 聊天头部
     <header className="sticky top-0 flex items-center gap-2 bg-background px-2 py-1.5 md:px-2">
       {/* AI 聊天侧边栏 展开/折叠按钮 */}
-      <SidebarToggle />
+      {/* <SidebarToggle /> */}
 
       {/* AI 聊天新建聊天按钮 */}
-      {(!open || windowWidth < 768) && (
+      {/* {(!open || windowWidth < 768) && (
         <Button
           className="order-2 ml-auto h-8 px-2 md:order-1 md:ml-0 md:h-fit md:px-2"
           onClick={() => {
@@ -46,7 +45,7 @@ function PureChatHeader({
           <PlusIcon />
           <span className="md:sr-only">新建聊天</span>
         </Button>
-      )}
+      )} */}
 
       {!isReadonly && (
         <VisibilitySelector
