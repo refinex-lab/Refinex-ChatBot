@@ -79,3 +79,6 @@ yarn-error.log*
 /playwright-report/
 /blob-report/
 /playwright/*
+
+# 所有路径的 .pmp-store
+.pmp-store/

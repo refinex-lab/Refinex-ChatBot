@@ -3,52 +3,48 @@
  */
 "use client";
 
-import type { UseChatHelpers } from "@ai-sdk/react";
-import { Trigger } from "@radix-ui/react-select";
-import type { UIMessage } from "ai";
+import type {UseChatHelpers} from "@ai-sdk/react";
+import {Trigger} from "@radix-ui/react-select";
+import type {UIMessage} from "ai";
 import equal from "fast-deep-equal";
 import {
-  type ChangeEvent,
-  type Dispatch,
-  memo,
-  type SetStateAction,
-  startTransition,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
+    type ChangeEvent,
+    type Dispatch,
+    memo,
+    type SetStateAction,
+    startTransition,
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
 } from "react";
-import { toast } from "sonner";
-import { useLocalStorage, useWindowSize } from "usehooks-ts";
-import { saveChatModelAsCookie } from "@/app/(chat)/actions";
-import { SelectItem } from "@/components/ui/select";
-import { chatModels } from "@/lib/ai/models";
-import { myProvider } from "@/lib/ai/providers";
-import type { Attachment, ChatMessage } from "@/lib/types";
-import type { AppUsage } from "@/lib/usage";
-import { cn } from "@/lib/utils";
-import { Context } from "./elements/context";
+import {toast} from "sonner";
+import {useLocalStorage, useWindowSize} from "usehooks-ts";
+import {saveChatModelAsCookie} from "@/app/(chat)/actions";
+import {SelectItem} from "@/components/ui/select";
+import {chatModels} from "@/lib/ai/models";
+import {myProvider} from "@/lib/ai/providers";
+import type {Attachment, ChatMessage} from "@/lib/types";
+import type {AppUsage} from "@/lib/usage";
+import {cn} from "@/lib/utils";
+import {Context} from "./elements/context";
 import {
-  PromptInput,
-  PromptInputModelSelect,
-  PromptInputModelSelectContent,
-  PromptInputSubmit,
-  PromptInputTextarea,
-  PromptInputToolbar,
-  PromptInputTools,
+    PromptInput,
+    PromptInputModelSelect,
+    PromptInputModelSelectContent,
+    PromptInputSubmit,
+    PromptInputTextarea,
+    PromptInputToolbar,
+    PromptInputTools,
 } from "./elements/prompt-input";
-import {
-  ArrowUpIcon,
-  ChevronDownIcon,
-  CpuIcon,
-  PaperclipIcon,
-  StopIcon,
-} from "./icons";
-import { PreviewAttachment } from "./preview-attachment";
-import { SuggestedActions } from "./suggested-actions";
-import { Button } from "./ui/button";
-import type { VisibilityType } from "./visibility-selector";
+import {ArrowUpIcon, ChevronDownIcon, CpuIcon, PaperclipIcon, StopIcon,} from "./icons";
+import {MdKeyboardVoice} from "react-icons/md";
+import {RiVoiceprintFill} from "react-icons/ri";
+import {PreviewAttachment} from "./preview-attachment";
+import {SuggestedActions} from "./suggested-actions";
+import {Button} from "./ui/button";
+import type {VisibilityType} from "./visibility-selector";
 
 function PureMultimodalInput({
   chatId,
@@ -131,6 +127,9 @@ function PureMultimodalInput({
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploadQueue, setUploadQueue] = useState<string[]>([]);
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const interimTranscriptRef = useRef<string>("");
 
   const submitForm = useCallback(() => {
     window.history.pushState({}, "", `/chat/${chatId}`);
@@ -289,6 +288,111 @@ function PureMultimodalInput({
     return () => textarea.removeEventListener('paste', handlePaste);
   }, [handlePaste]);
 
+  // Initialize speech recognition
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const SpeechRecognitionClass =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (!SpeechRecognitionClass) {
+      return;
+    }
+
+    const recognition = new SpeechRecognitionClass();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.lang = 'zh-CN';
+
+    recognition.onstart = () => {
+      setIsListening(true);
+      interimTranscriptRef.current = '';
+    };
+
+    recognition.onresult = (event: SpeechRecognitionEvent) => {
+      let interimTranscript = '';
+      let finalTranscript = '';
+
+      for (let i = event.resultIndex; i < event.results.length; i += 1) {
+        const transcript = event.results[i]?.[0]?.transcript;
+        if (!transcript) continue;
+
+        if (event.results[i]?.isFinal) {
+          finalTranscript += transcript;
+        } else {
+          interimTranscript += transcript;
+        }
+      }
+
+      if (finalTranscript) {
+        setInput((prev) => {
+          const newValue = prev + finalTranscript;
+          return newValue;
+        });
+        interimTranscriptRef.current = '';
+      } else if (interimTranscript) {
+        interimTranscriptRef.current = interimTranscript;
+      }
+    };
+
+    recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
+      if (event.error === 'no-speech') {
+        // User stopped speaking, continue listening
+        return;
+      }
+      if (event.error === 'aborted') {
+        // Recognition was stopped
+        return;
+      }
+      setIsListening(false);
+      toast.error(`语音识别错误: ${event.error}`);
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
+      // If there's interim text, add it to input
+      if (interimTranscriptRef.current) {
+        setInput((prev) => prev + interimTranscriptRef.current);
+        interimTranscriptRef.current = '';
+      }
+    };
+
+    recognitionRef.current = recognition;
+
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+    };
+  }, [setInput]);
+
+  const toggleVoiceInput = useCallback(() => {
+    if (!recognitionRef.current) {
+      toast.error('您的浏览器不支持语音识别功能');
+      return;
+    }
+
+    if (isListening) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+    } else {
+      try {
+        recognitionRef.current.start();
+      } catch (error) {
+        // Recognition might already be running
+        if (error instanceof Error && error.name === 'InvalidStateError') {
+          // Try to stop and restart
+          recognitionRef.current.stop();
+          setTimeout(() => {
+            recognitionRef.current?.start();
+          }, 100);
+        } else {
+          toast.error('无法启动语音识别');
+        }
+      }
+    }
+  }, [isListening]);
+
   return (
     <div className={cn("relative flex w-full flex-col gap-4", className)}>
       {messages.length === 0 &&
@@ -386,14 +490,21 @@ function PureMultimodalInput({
           {status === "submitted" ? (
             <StopButton setMessages={setMessages} stop={stop} />
           ) : (
-            <PromptInputSubmit
-              className="size-8 rounded-full bg-primary text-primary-foreground transition-colors duration-200 hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground"
-              disabled={!input.trim() || uploadQueue.length > 0}
-              status={status}
-	      data-testid="send-button"
-            >
-              <ArrowUpIcon size={14} />
-            </PromptInputSubmit>
+            <div className="flex items-center gap-1">
+              <VoiceInputButton
+                isListening={isListening}
+                onClick={toggleVoiceInput}
+                status={status}
+              />
+              <PromptInputSubmit
+                className="size-8 rounded-full bg-primary text-primary-foreground transition-colors duration-200 hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground"
+                disabled={!input.trim() || uploadQueue.length > 0}
+                status={status}
+                data-testid="send-button"
+              >
+                <ArrowUpIcon size={14} />
+              </PromptInputSubmit>
+            </div>
           )}
         </PromptInputToolbar>
       </PromptInput>
@@ -534,3 +645,55 @@ function PureStopButton({
 }
 
 const StopButton = memo(PureStopButton);
+
+function PureVoiceInputButton({
+  isListening,
+  onClick,
+  status,
+}: {
+  isListening: boolean;
+  onClick: () => void;
+  status: UseChatHelpers<ChatMessage>["status"];
+}) {
+  const [isSupported, setIsSupported] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+    const supported = 
+      typeof window !== 'undefined' && 
+      Boolean(window.SpeechRecognition || window.webkitSpeechRecognition);
+    setIsSupported(supported);
+  }, []);
+
+  if (!isMounted || !isSupported) {
+    return null;
+  }
+
+  return (
+    <Button
+      className={cn(
+        "aspect-square h-8 rounded-lg p-1 transition-colors",
+        isListening
+          ? "bg-primary text-primary-foreground hover:bg-primary/90"
+          : "hover:bg-accent"
+      )}
+      data-testid="voice-input-button"
+      disabled={status !== "ready"}
+      onClick={(event) => {
+        event.preventDefault();
+        onClick();
+      }}
+      type="button"
+      variant="ghost"
+    >
+      {isListening ? (
+        <RiVoiceprintFill size={16} className="animate-pulse" />
+      ) : (
+        <MdKeyboardVoice size={16} />
+      )}
+    </Button>
+  );
+}
+
+const VoiceInputButton = memo(PureVoiceInputButton);
