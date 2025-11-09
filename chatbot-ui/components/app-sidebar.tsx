@@ -6,7 +6,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import type {User} from "next-auth";
-import {useState} from "react";
+import {useTheme} from "next-themes";
+import {useEffect, useState} from "react";
 import useSWRInfinite from "swr/infinite";
 import {SidebarExpandIcon} from "@/components/icons";
 import {type ChatHistory, getChatHistoryPaginationKey, SidebarHistory} from "@/components/sidebar-history";
@@ -22,6 +23,13 @@ import {fetcher} from "@/lib/utils";
 export function AppSidebar({ user }: { user: User | undefined }) {
   const { setOpenMobile, state, toggleSidebar } = useSidebar();
   const [isHoveringLogo, setIsHoveringLogo] = useState(false);
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  // 确保只在客户端渲染时使用主题，避免 hydration 错误
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // 获取聊天记录用于搜索功能
   const { data: paginatedChatHistories } = useSWRInfinite<ChatHistory>(
@@ -74,7 +82,7 @@ export function AppSidebar({ user }: { user: User | undefined }) {
                     alt="RefinexChatBot Logo"
                     className="h-8 w-8 cursor-pointer rounded-md p-1 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800"
                     height={32}
-                    src="/images/logo.svg"
+                    src={mounted && resolvedTheme === "dark" ? "/images/logo-dark.svg" : "/images/logo.svg"}
                     width={32}
                   />
                 )}

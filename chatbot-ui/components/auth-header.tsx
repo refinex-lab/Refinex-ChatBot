@@ -6,6 +6,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import {useTheme} from "next-themes";
+import {useEffect, useState} from "react";
 
 /**
  * 认证头部组件属性
@@ -24,6 +26,14 @@ interface AuthHeaderProps {
 export function AuthHeader({
   appName = process.env.NEXT_PUBLIC_APP_NAME || "RefinexChatBot",
 }: AuthHeaderProps) {
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  // 确保只在客户端渲染时使用主题，避免 hydration 错误
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
     <Link
       aria-label={`返回 ${appName} 首页`}
@@ -37,7 +47,7 @@ export function AuthHeader({
         className="h-8 w-8"
         height={32}
         priority
-        src="/images/logo.svg"
+        src={mounted && resolvedTheme === "dark" ? "/images/logo-dark.svg" : "/images/logo.svg"}
         width={32}
       />
 
