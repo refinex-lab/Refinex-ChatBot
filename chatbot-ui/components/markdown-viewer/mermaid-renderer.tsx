@@ -89,8 +89,43 @@ export const MermaidRenderer = ({ chart, className }: MermaidRendererProps) => {
         setLoading(true);
         setError(null);
 
+        // 清理和修复常见的 Mermaid 语法问题
+        let cleanedChart = chart.trim();
+        
+        // 修复节点标签中的特殊字符问题
+        // 匹配模式：节点ID[标签内容]，如果标签包含特殊字符但没有引号，添加引号
+        cleanedChart = cleanedChart.replace(
+          /(\w+)\[([^\]]+)\]/g,
+          (match, nodeId, label) => {
+            // 检查标签是否包含特殊字符（@, #, $, %, &, *, +, =, 等）
+            const hasSpecialChars = /[@#\$%^&*+=\[\]{}|\\:;"'<>?,.\s]/.test(label);
+            
+            // 如果标签包含特殊字符且没有引号，添加引号
+            if (hasSpecialChars && !label.startsWith('"') && !label.startsWith("'")) {
+              // 转义标签中的引号
+              const escapedLabel = label.replace(/"/g, '\\"').replace(/'/g, "\\'");
+              return `${nodeId}["${escapedLabel}"]`;
+            }
+            return match;
+          }
+        );
+
+        // 修复箭头语法：确保箭头前后有空格（如果缺少）
+        // 匹配：节点ID箭头节点ID（没有空格的情况）
+        cleanedChart = cleanedChart.replace(/(\w+)(-->|->|--|->>|==>|==>>)(\w+)/g, '$1 $2 $3');
+        
+        // 修复可能的未闭合标签：如果行以箭头结尾但没有目标节点
+        cleanedChart = cleanedChart.split('\n').map(line => {
+          const trimmed = line.trim();
+          // 如果行以箭头结尾，可能是未完成的，跳过这行
+          if (trimmed.endsWith('-->') || trimmed.endsWith('->') || trimmed.endsWith('--')) {
+            return '';
+          }
+          return line;
+        }).filter(line => line.trim()).join('\n');
+
         const id = `mermaid-${Math.random().toString(36).slice(2, 11)}`;
-        const { svg } = await mermaid.render(id, chart);
+        const { svg } = await mermaid.render(id, cleanedChart);
 
         if (containerRef.current) {
           containerRef.current.innerHTML = svg;
@@ -98,10 +133,29 @@ export const MermaidRenderer = ({ chart, className }: MermaidRendererProps) => {
 
         setLoading(false);
       } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : String(err);
         console.warn("Mermaid render failed (may be streaming):", err);
 
+        // 提供更详细的错误信息
         if (chart.trim().length > 50 && isChartLikelyComplete(chart)) {
-          setError("图表语法错误，请检查 Mermaid 语法");
+          let errorText = "图表语法错误，请检查 Mermaid 语法";
+          
+          // 提取错误行号（如果错误信息中包含）
+          const lineMatch = errorMessage.match(/line (\d+)/i);
+          if (lineMatch) {
+            const lineNum = parseInt(lineMatch[1], 10);
+            const lines = chart.split('\n');
+            if (lines[lineNum - 1]) {
+              errorText += `\n错误位置：第 ${lineNum} 行\n内容：${lines[lineNum - 1].trim()}`;
+            }
+          }
+          
+          // 检查常见问题
+          if (errorMessage.includes('LINK_ID') || errorMessage.includes('Expecting')) {
+            errorText += "\n提示：节点标签中包含特殊字符时，请使用引号括起来，例如：D1[\"主启动类\"]";
+          }
+          
+          setError(errorText);
         }
 
         setLoading(false);

@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/theme-provider";
+import { CodePreviewWrapper } from "@/components/code-preview-wrapper";
 
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
@@ -108,8 +109,11 @@ export default function RootLayout({
         >
           {/* 提示器 */}
           <Toaster position="top-center" />
-          {/* 会话提供者 */}
-          <SessionProvider>{children}</SessionProvider>
+          {/* 代码预览提供者 */}
+          <CodePreviewWrapper>
+            {/* 会话提供者 */}
+            <SessionProvider>{children}</SessionProvider>
+          </CodePreviewWrapper>
         </ThemeProvider>
       </body>
     </html>

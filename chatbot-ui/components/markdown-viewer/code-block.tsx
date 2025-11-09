@@ -1,14 +1,14 @@
 "use client";
 
 import type {ReactNode} from "react";
-import {useMemo, useRef, useState} from "react";
+import {useEffect, useMemo, useRef, useState} from "react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import {CheckCircleFillIcon, CodeIcon, CopyIcon, DownloadIcon, FullscreenIcon, SparklesIcon} from "@/components/icons";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
 import {MermaidRenderer} from "./mermaid-renderer";
 import {MermaidPreviewModal} from "./mermaid-preview-modal";
-import CodePreviewPanel from "./code-preview-panel";
 import {detectExecutableCode} from "./utils/code-detector";
+import {useCodePreviewSafe} from "@/contexts/code-preview-context";
 import {toast} from "sonner";
 import {cn} from "@/lib/utils";
 
@@ -30,8 +30,8 @@ export const CodeBlock = ({
   const [copied, setCopied] = useState(false);
   const [showSource, setShowSource] = useState(false);
   const [previewVisible, setPreviewVisible] = useState(false);
-  const [codePreviewVisible, setCodePreviewVisible] = useState(false);
   const mermaidContainerRef = useRef<HTMLDivElement>(null);
+  const { openPreview } = useCodePreviewSafe();
 
   if (inline) {
     return <code className={className}>{code}</code>;
@@ -281,11 +281,10 @@ export const CodeBlock = ({
   };
 
   const handleOpenCodePreview = () => {
-    setCodePreviewVisible(true);
-  };
-
-  const handleCloseCodePreview = () => {
-    setCodePreviewVisible(false);
+    const plainText = getPlainTextCode();
+    if (codeDetection.type) {
+      openPreview(plainText, language, codeDetection.type);
+    }
   };
 
   const getLanguageDisplayName = (lang: string): string => {
@@ -495,17 +494,6 @@ export const CodeBlock = ({
           onClose={handleClosePreview}
           chart={getPlainTextCode()}
           language={language}
-        />
-      )}
-
-      {isExecutable && (
-        <CodePreviewPanel
-          visible={codePreviewVisible}
-          onClose={handleCloseCodePreview}
-          code={getPlainTextCode()}
-          language={language}
-          codeType={codeDetection.type}
-          title="代码预览"
         />
       )}
     </>
