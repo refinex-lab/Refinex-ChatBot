@@ -1232,6 +1232,24 @@ export const FullscreenIcon = ({ size = 16 }: { size?: number }) => (
   </svg>
 );
 
+// 退出全屏图标
+export const FullscreenExitIcon = ({ size = 16 }: { size?: number }) => (
+  <svg
+    height={size}
+    strokeLinejoin="round"
+    style={{ color: "currentcolor" }}
+    viewBox="0 0 16 16"
+    width={size}
+  >
+    <path
+      clipRule="evenodd"
+      d="M5.25 9.75H6V8.25H5.25H2.5V5.5V4.75H1V5.5V8.75C1 9.30228 1.44772 9.75 2 9.75H5.25ZM9.75 6.25H9V7.75H9.75H12.5V10.5V11.25H14V10.5V7.25C14 6.69772 13.5523 6.25 13 6.25H9.75ZM10.75 1H10V2.5H10.75H13.5V5.25V6H15V5.25V2C15 1.44772 14.5523 1 14 1H10.75ZM5.25 15H6V13.5H5.25H2.5V10.75V10H1V10.75V14C1 14.5523 1.44772 15 2 15H5.25Z"
+      fill="currentColor"
+      fillRule="evenodd"
+    />
+  </svg>
+);
+
 // 下载图标
 export const DownloadIcon = ({ size = 16 }: { size?: number }) => (
   <svg
