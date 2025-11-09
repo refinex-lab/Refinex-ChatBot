@@ -1,7 +1,7 @@
-import { expect, test } from "../fixtures";
-import { ChatPage } from "../pages/chat";
+import {expect, test} from "../fixtures";
+import {ChatPage} from "../pages/chat";
 
-test.describe("Chat activity", () => {
+test.describe("聊天活动", () => {
   let chatPage: ChatPage;
 
   test.beforeEach(async ({ page }) => {
@@ -9,38 +9,38 @@ test.describe("Chat activity", () => {
     await chatPage.createNewChat();
   });
 
-  test("Send a user message and receive response", async () => {
-    await chatPage.sendUserMessage("Why is grass green?");
+  test("发送用户消息并接收响应", async () => {
+    await chatPage.sendUserMessage("草为什么是绿色的？");
     await chatPage.isGenerationComplete();
 
     const assistantMessage = await chatPage.getRecentAssistantMessage();
-    expect(assistantMessage.content).toContain("It's just green duh!");
+    expect(assistantMessage?.content).toContain("它就是绿色的！");
   });
 
-  test("Redirect to /chat/:id after submitting message", async () => {
-    await chatPage.sendUserMessage("Why is grass green?");
+  test("重定向到 /chat/:id  after 提交消息", async () => {
+    await chatPage.sendUserMessage("草为什么是绿色的？");
     await chatPage.isGenerationComplete();
 
     const assistantMessage = await chatPage.getRecentAssistantMessage();
-    expect(assistantMessage.content).toContain("It's just green duh!");
+    expect(assistantMessage?.content).toContain("它就是绿色的！");
     await chatPage.hasChatIdInUrl();
   });
 
-  test("Send a user message from suggestion", async () => {
+  test("发送用户消息从建议", async () => {
     await chatPage.sendUserMessageFromSuggestion();
     await chatPage.isGenerationComplete();
 
     const assistantMessage = await chatPage.getRecentAssistantMessage();
-    expect(assistantMessage.content).toContain(
-      "With Next.js, you can ship fast!"
+    expect(assistantMessage?.content).toContain(
+      "使用 Next.js，你可以快速发布！"
     );
   });
 
-  test("Toggle between send/stop button based on activity", async () => {
+  test("切换发送/停止按钮基于活动", async () => {
     await expect(chatPage.sendButton).toBeVisible();
     await expect(chatPage.sendButton).toBeDisabled();
 
-    await chatPage.sendUserMessage("Why is grass green?");
+    await chatPage.sendUserMessage("草为什么是绿色的？");
 
     await expect(chatPage.sendButton).not.toBeVisible();
     await expect(chatPage.stopButton).toBeVisible();
@@ -51,43 +51,43 @@ test.describe("Chat activity", () => {
     await expect(chatPage.sendButton).toBeVisible();
   });
 
-  test("Stop generation during submission", async () => {
-    await chatPage.sendUserMessage("Why is grass green?");
+  test("停止生成 during 提交", async () => {
+    await chatPage.sendUserMessage("草为什么是绿色的？");
     await expect(chatPage.stopButton).toBeVisible();
     await chatPage.stopButton.click();
     await expect(chatPage.sendButton).toBeVisible();
   });
 
-  test("Edit user message and resubmit", async () => {
-    await chatPage.sendUserMessage("Why is grass green?");
+  test("编辑用户消息 and 重新提交", async () => {
+    await chatPage.sendUserMessage("草为什么是绿色的？");
     await chatPage.isGenerationComplete();
 
     const assistantMessage = await chatPage.getRecentAssistantMessage();
-    expect(assistantMessage.content).toContain("It's just green duh!");
+    expect(assistantMessage?.content).toContain("它就是绿色的！");
 
     const userMessage = await chatPage.getRecentUserMessage();
-    await userMessage.edit("Why is the sky blue?");
+    await userMessage.edit("天空为什么是蓝色的？");
 
     await chatPage.isGenerationComplete();
 
     const updatedAssistantMessage = await chatPage.getRecentAssistantMessage();
-    expect(updatedAssistantMessage.content).toContain("It's just blue duh!");
+    expect(updatedAssistantMessage?.content).toContain("它就是蓝色的！");
   });
 
-  test("Hide suggested actions after sending message", async () => {
+  test("隐藏建议操作 after 发送消息", async () => {
     await chatPage.isElementVisible("suggested-actions");
     await chatPage.sendUserMessageFromSuggestion();
     await chatPage.isElementNotVisible("suggested-actions");
   });
 
-  test("Upload file and send image attachment with message", async () => {
+  test("上传文件并发送图片附件 with 消息", async () => {
     await chatPage.addImageAttachment();
 
     await chatPage.isElementVisible("attachments-preview");
     await chatPage.isElementVisible("input-attachment-loader");
     await chatPage.isElementNotVisible("input-attachment-loader");
 
-    await chatPage.sendUserMessage("Who painted this?");
+    await chatPage.sendUserMessage("谁画了这幅画？");
 
     const userMessage = await chatPage.getRecentUserMessage();
     expect(userMessage.attachments).toHaveLength(1);
@@ -95,69 +95,69 @@ test.describe("Chat activity", () => {
     await chatPage.isGenerationComplete();
 
     const assistantMessage = await chatPage.getRecentAssistantMessage();
-    expect(assistantMessage.content).toBe("This painting is by Monet!");
+    expect(assistantMessage?.content).toBe("这幅画是莫奈画的！");
   });
 
-  test("Call weather tool", async () => {
-    await chatPage.sendUserMessage("What's the weather in sf?");
+  test("调用天气工具", async () => {
+    await chatPage.sendUserMessage("旧金山今天的天气怎么样？");
     await chatPage.isGenerationComplete();
 
     const assistantMessage = await chatPage.getRecentAssistantMessage();
 
-    expect(assistantMessage.content).toBe(
+    expect(assistantMessage?.content).toBe(
       "The current temperature in San Francisco is 17°C."
     );
   });
 
-  test("Upvote message", async () => {
-    await chatPage.sendUserMessage("Why is the sky blue?");
+  test("点赞消息", async () => {
+    await chatPage.sendUserMessage("天空为什么是蓝色的？");
     await chatPage.isGenerationComplete();
 
     const assistantMessage = await chatPage.getRecentAssistantMessage();
-    await assistantMessage.upvote();
+    await assistantMessage?.upvote();
     await chatPage.isVoteComplete();
   });
 
-  test("Downvote message", async () => {
-    await chatPage.sendUserMessage("Why is the sky blue?");
+  test("踩消息", async () => {
+    await chatPage.sendUserMessage("天空为什么是蓝色的？");
     await chatPage.isGenerationComplete();
 
     const assistantMessage = await chatPage.getRecentAssistantMessage();
-    await assistantMessage.downvote();
+    await assistantMessage?.downvote();
     await chatPage.isVoteComplete();
   });
 
-  test("Update vote", async () => {
-    await chatPage.sendUserMessage("Why is the sky blue?");
+  test("更新投票", async () => {
+    await chatPage.sendUserMessage("天空为什么是蓝色的？");
     await chatPage.isGenerationComplete();
 
     const assistantMessage = await chatPage.getRecentAssistantMessage();
-    await assistantMessage.upvote();
+    await assistantMessage?.upvote();
     await chatPage.isVoteComplete();
 
-    await assistantMessage.downvote();
+    await assistantMessage?.downvote();
     await chatPage.isVoteComplete();
   });
 
-  test("Create message from url query", async ({ page }) => {
-    await page.goto("/?query=Why is the sky blue?");
+  test("从 url query 创建消息", async ({ page }) => {
+    await page.goto("/?query=天空为什么是蓝色的？");
 
     await chatPage.isGenerationComplete();
 
     const userMessage = await chatPage.getRecentUserMessage();
-    expect(userMessage.content).toBe("Why is the sky blue?");
+    expect(userMessage?.content).toBe("天空为什么是蓝色的？");
 
     const assistantMessage = await chatPage.getRecentAssistantMessage();
-    expect(assistantMessage.content).toContain("It's just blue duh!");
+    expect(assistantMessage?.content).toContain("它就是蓝色的！");
   });
 
-  test("auto-scrolls to bottom after submitting new messages", async () => {
+  test("自动滚动到底部 after 提交新消息", async () => {
     test.fixme();
     await chatPage.sendMultipleMessages(5, (i) => `filling message #${i}`);
     await chatPage.waitForScrollToBottom();
   });
 
-  test("scroll button appears when user scrolls up, hides on click", async () => {
+  test("滚动按钮出现 when 用户滚动 up, 点击隐藏", async () => {
     test.fixme();
     await chatPage.sendMultipleMessages(5, (i) => `filling message #${i}`);
     await expect(chatPage.scrollToBottomButton).not.toBeVisible();

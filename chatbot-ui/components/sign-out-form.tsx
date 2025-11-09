@@ -1,6 +1,6 @@
 import Form from "next/form";
 
-import { signOut } from "@/app/(auth)/auth";
+import {signOut} from "@/app/(auth)/auth";
 
 export const SignOutForm = () => {
   return (
@@ -18,7 +18,7 @@ export const SignOutForm = () => {
         className="w-full px-1 py-0.5 text-left text-red-500"
         type="submit"
       >
-        Sign out
+        登出
       </button>
     </Form>
   );

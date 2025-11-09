@@ -1,33 +1,26 @@
-import type { UseChatHelpers } from "@ai-sdk/react";
-import { formatDistance } from "date-fns";
+import type {UseChatHelpers} from "@ai-sdk/react";
+import {formatDistance} from "date-fns";
 import equal from "fast-deep-equal";
-import { AnimatePresence, motion } from "framer-motion";
-import {
-  type Dispatch,
-  memo,
-  type SetStateAction,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
-import useSWR, { useSWRConfig } from "swr";
-import { useDebounceCallback, useWindowSize } from "usehooks-ts";
-import { codeArtifact } from "@/artifacts/code/client";
-import { imageArtifact } from "@/artifacts/image/client";
-import { sheetArtifact } from "@/artifacts/sheet/client";
-import { textArtifact } from "@/artifacts/text/client";
-import { useArtifact } from "@/hooks/use-artifact";
-import type { Document, Vote } from "@/lib/db/schema";
-import type { Attachment, ChatMessage } from "@/lib/types";
-import { fetcher } from "@/lib/utils";
-import { ArtifactActions } from "./artifact-actions";
-import { ArtifactCloseButton } from "./artifact-close-button";
-import { ArtifactMessages } from "./artifact-messages";
-import { MultimodalInput } from "./multimodal-input";
-import { Toolbar } from "./toolbar";
-import { useSidebar } from "./ui/sidebar";
-import { VersionFooter } from "./version-footer";
-import type { VisibilityType } from "./visibility-selector";
+import {AnimatePresence, motion} from "framer-motion";
+import {type Dispatch, memo, type SetStateAction, useCallback, useEffect, useState,} from "react";
+import useSWR, {useSWRConfig} from "swr";
+import {useDebounceCallback, useWindowSize} from "usehooks-ts";
+import {codeArtifact} from "@/artifacts/code/client";
+import {imageArtifact} from "@/artifacts/image/client";
+import {sheetArtifact} from "@/artifacts/sheet/client";
+import {textArtifact} from "@/artifacts/text/client";
+import {useArtifact} from "@/hooks/use-artifact";
+import type {Document, Vote} from "@/lib/db/schema";
+import type {Attachment, ChatMessage} from "@/lib/types";
+import {fetcher} from "@/lib/utils";
+import {ArtifactActions} from "./artifact-actions";
+import {ArtifactCloseButton} from "./artifact-close-button";
+import {ArtifactMessages} from "./artifact-messages";
+import {MultimodalInput} from "./multimodal-input";
+import {Toolbar} from "./toolbar";
+import {useSidebar} from "./ui/sidebar";
+import {VersionFooter} from "./version-footer";
+import type {VisibilityType} from "./visibility-selector";
 
 export const artifactDefinitions = [
   textArtifact,
@@ -248,7 +241,7 @@ function PureArtifact({
   );
 
   if (!artifactDefinition) {
-    throw new Error("Artifact definition not found!");
+    throw new Error("未找到 artifact 定义！");
   }
 
   useEffect(() => {
@@ -298,7 +291,7 @@ function PureArtifact({
                   damping: 30,
                 },
               }}
-              className="relative h-dvh w-[400px] shrink-0 bg-muted dark:bg-background"
+              className="relative h-dvh w-[400px] shrink-0 dark:bg-background"
               exit={{
                 opacity: 0,
                 x: 0,
@@ -427,11 +420,11 @@ function PureArtifact({
 
                   {isContentDirty ? (
                     <div className="text-muted-foreground text-sm">
-                      Saving changes...
+                      保存中……
                     </div>
                   ) : document ? (
                     <div className="text-muted-foreground text-sm">
-                      {`Updated ${formatDistance(
+                      {`更新于 ${formatDistance(
                         new Date(document.createdAt),
                         new Date(),
                         {

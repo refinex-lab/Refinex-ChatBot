@@ -3,12 +3,12 @@
  */
 "use client";
 
-import type { UseChatHelpers } from "@ai-sdk/react";
-import { motion } from "framer-motion";
-import { memo } from "react";
-import type { ChatMessage } from "@/lib/types";
-import { Suggestion } from "./elements/suggestion";
-import type { VisibilityType } from "./visibility-selector";
+import type {UseChatHelpers} from "@ai-sdk/react";
+import {motion} from "framer-motion";
+import {memo} from "react";
+import type {ChatMessage} from "@/lib/types";
+import {Suggestion} from "./elements/suggestion";
+import type {VisibilityType} from "./visibility-selector";
 
 type SuggestedActionsProps = {
   chatId: string;
@@ -18,10 +18,10 @@ type SuggestedActionsProps = {
 
 function PureSuggestedActions({ chatId, sendMessage }: SuggestedActionsProps) {
   const suggestedActions = [
-    "使用 Next.js 有哪些优势？",
-    "编写代码演示 Dijkstra 算法",
-    "帮我写一篇关于硅谷的论文",
-    "旧金山今天的天气怎么样？",
+    "Refinex ChatBot 项目文档",
+    "帮我写一个 Spring Boot Hello World",
+    "帮我写一个 Python 的斐波那契数列",
+    "帮我写一个 Java 的冒泡排序",
   ];
 
   return (

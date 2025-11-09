@@ -1,15 +1,15 @@
 "use client";
 
-import { isAfter } from "date-fns";
-import { motion } from "framer-motion";
-import { useState } from "react";
-import { useSWRConfig } from "swr";
-import { useWindowSize } from "usehooks-ts";
-import { useArtifact } from "@/hooks/use-artifact";
-import type { Document } from "@/lib/db/schema";
-import { getDocumentTimestampByIndex } from "@/lib/utils";
-import { LoaderIcon } from "./icons";
-import { Button } from "./ui/button";
+import {isAfter} from "date-fns";
+import {motion} from "framer-motion";
+import {useState} from "react";
+import {useSWRConfig} from "swr";
+import {useWindowSize} from "usehooks-ts";
+import {useArtifact} from "@/hooks/use-artifact";
+import type {Document} from "@/lib/db/schema";
+import {getDocumentTimestampByIndex} from "@/lib/utils";
+import {LoaderIcon} from "./icons";
+import {Button} from "./ui/button";
 
 type VersionFooterProps = {
   handleVersionChange: (type: "next" | "prev" | "toggle" | "latest") => void;
@@ -43,9 +43,9 @@ export const VersionFooter = ({
       transition={{ type: "spring", stiffness: 140, damping: 20 }}
     >
       <div>
-        <div>You are viewing a previous version</div>
+        <div>你正在查看一个以前的版本</div>
         <div className="text-muted-foreground text-sm">
-          Restore this version to make edits
+          恢复此版本以进行编辑
         </div>
       </div>
 
@@ -86,7 +86,7 @@ export const VersionFooter = ({
             );
           }}
         >
-          <div>Restore this version</div>
+          <div>恢复此版本</div>
           {isMutating && (
             <div className="animate-spin">
               <LoaderIcon />
@@ -99,7 +99,7 @@ export const VersionFooter = ({
           }}
           variant="outline"
         >
-          Back to latest version
+          返回最新版本
         </Button>
       </div>
     </motion.div>

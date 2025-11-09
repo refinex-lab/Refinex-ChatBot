@@ -1,19 +1,15 @@
+/**
+ * 消息编辑器组件
+ */
 "use client";
 
-import type { UseChatHelpers } from "@ai-sdk/react";
-import {
-  type Dispatch,
-  type SetStateAction,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import { deleteTrailingMessages } from "@/app/(chat)/actions";
-import type { ChatMessage } from "@/lib/types";
-import { getTextFromMessage } from "@/lib/utils";
-import { Button } from "./ui/button";
-import { Textarea } from "./ui/textarea";
+import type {UseChatHelpers} from "@ai-sdk/react";
+import {type Dispatch, type SetStateAction, useCallback, useEffect, useRef, useState,} from "react";
+import {deleteTrailingMessages} from "@/app/(chat)/actions";
+import type {ChatMessage} from "@/lib/types";
+import {getTextFromMessage} from "@/lib/utils";
+import {Button} from "./ui/button";
+import {Textarea} from "./ui/textarea";
 
 export type MessageEditorProps = {
   message: ChatMessage;
@@ -71,7 +67,7 @@ export function MessageEditor({
           }}
           variant="outline"
         >
-          Cancel
+          取消
         </Button>
         <Button
           className="h-fit px-3 py-2"
@@ -104,7 +100,7 @@ export function MessageEditor({
           }}
           variant="default"
         >
-          {isSubmitting ? "Sending..." : "Send"}
+          {isSubmitting ? "发送中..." : "发送"}
         </Button>
       </div>
     </div>

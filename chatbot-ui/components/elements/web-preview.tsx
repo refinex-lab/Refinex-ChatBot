@@ -1,22 +1,13 @@
 "use client";
 
-import { ChevronDownIcon } from "lucide-react";
-import type { ComponentProps, ReactNode } from "react";
-import { createContext, useContext, useState } from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import { Input } from "@/components/ui/input";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
+import {ChevronDownIcon} from "lucide-react";
+import type {ComponentProps, ReactNode} from "react";
+import {createContext, useContext, useState} from "react";
+import {Button} from "@/components/ui/button";
+import {Collapsible, CollapsibleContent, CollapsibleTrigger,} from "@/components/ui/collapsible";
+import {Input} from "@/components/ui/input";
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger,} from "@/components/ui/tooltip";
+import {cn} from "@/lib/utils";
 
 export type WebPreviewContextValue = {
   url: string;
@@ -30,7 +21,7 @@ const WebPreviewContext = createContext<WebPreviewContextValue | null>(null);
 const useWebPreview = () => {
   const context = useContext(WebPreviewContext);
   if (!context) {
-    throw new Error("WebPreview components must be used within a WebPreview");
+    throw new Error("WebPreview 组件必须在 WebPreview 中使用");
   }
   return context;
 };
@@ -147,7 +138,7 @@ export const WebPreviewUrl = ({
       className="h-8 flex-1 text-sm"
       onChange={onChange}
       onKeyDown={handleKeyDown}
-      placeholder="Enter URL..."
+      placeholder="输入 URL..."
       value={value ?? url}
       {...props}
     />
@@ -225,7 +216,7 @@ export const WebPreviewConsole = ({
       >
         <div className="max-h-48 space-y-1 overflow-y-auto">
           {logs.length === 0 ? (
-            <p className="text-muted-foreground">No console output</p>
+            <p className="text-muted-foreground">没有 console 输出</p>
           ) : (
             logs.map((log, index) => (
               <div

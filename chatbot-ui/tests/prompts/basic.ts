@@ -1,22 +1,22 @@
-import type { ModelMessage } from "ai";
+import type {ModelMessage} from "ai";
 
 export const TEST_PROMPTS: Record<string, ModelMessage> = {
   USER_SKY: {
     role: "user",
-    content: [{ type: "text", text: "Why is the sky blue?" }],
+    content: [{ type: "text", text: "天空为什么是蓝色的？" }],
   },
   USER_GRASS: {
     role: "user",
-    content: [{ type: "text", text: "Why is grass green?" }],
+    content: [{ type: "text", text: "草为什么是绿色的？" }],
   },
   USER_THANKS: {
     role: "user",
-    content: [{ type: "text", text: "Thanks!" }],
+    content: [{ type: "text", text: "谢谢！" }],
   },
   USER_NEXTJS: {
     role: "user",
     content: [
-      { type: "text", text: "What are the advantages of using Next.js?" },
+      { type: "text", text: "使用 Next.js 有哪些优势？" },
     ],
   },
   USER_IMAGE_ATTACHMENT: {
@@ -29,7 +29,7 @@ export const TEST_PROMPTS: Record<string, ModelMessage> = {
       },
       {
         type: "text",
-        text: "Who painted this?",
+        text: "谁画了这幅画？",
       },
     ],
   },
@@ -38,7 +38,7 @@ export const TEST_PROMPTS: Record<string, ModelMessage> = {
     content: [
       {
         type: "text",
-        text: "Help me write an essay about Silicon Valley",
+        text: "帮我写一篇关于硅谷的论文",
       },
     ],
   },
@@ -47,7 +47,7 @@ export const TEST_PROMPTS: Record<string, ModelMessage> = {
     content: [
       {
         type: "text",
-        text: "Essay about Silicon Valley",
+        text: "硅谷论文",
       },
     ],
   },
@@ -62,9 +62,9 @@ export const TEST_PROMPTS: Record<string, ModelMessage> = {
           type: "json",
           value: {
             id: "3ca386a4-40c6-4630-8ed1-84cbd46cc7eb",
-            title: "Essay about Silicon Valley",
+            title: "硅谷论文",
             kind: "text",
-            content: "A document was created and is now visible to the user.",
+            content: "一个文档被创建并现在对用户可见。",
           },
         },
       },
@@ -75,7 +75,7 @@ export const TEST_PROMPTS: Record<string, ModelMessage> = {
     content: [
       {
         type: "text",
-        text: "What's the weather in sf?",
+        text: "旧金山今天的天气怎么样？",
       },
     ],
   },

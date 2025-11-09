@@ -1,8 +1,8 @@
 import Image from "next/image";
-import type { Attachment } from "@/lib/types";
-import { Loader } from "./elements/loader";
-import { CrossSmallIcon } from "./icons";
-import { Button } from "./ui/button";
+import type {Attachment} from "@/lib/types";
+import {Loader} from "./elements/loader";
+import {CrossSmallIcon} from "./icons";
+import {Button} from "./ui/button";
 
 export const PreviewAttachment = ({
   attachment,
@@ -22,7 +22,7 @@ export const PreviewAttachment = ({
     >
       {contentType?.startsWith("image") ? (
         <Image
-          alt={name ?? "An image attachment"}
+          alt={name ?? "图片附件"}
           className="size-full object-cover"
           height={64}
           src={url}
@@ -30,7 +30,7 @@ export const PreviewAttachment = ({
         />
       ) : (
         <div className="flex size-full items-center justify-center text-muted-foreground text-xs">
-          File
+          文件
         </div>
       )}
 

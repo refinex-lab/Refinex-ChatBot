@@ -1,8 +1,8 @@
-import { memo } from "react";
-import { toast } from "sonner";
-import { useArtifact } from "@/hooks/use-artifact";
-import type { ArtifactKind } from "./artifact";
-import { FileIcon, LoaderIcon, MessageIcon, PencilEditIcon } from "./icons";
+import {memo} from "react";
+import {toast} from "sonner";
+import {useArtifact} from "@/hooks/use-artifact";
+import type {ArtifactKind} from "./artifact";
+import {FileIcon, MessageIcon, PencilEditIcon} from "./icons";
 
 const getActionText = (
   type: "create" | "update" | "request-suggestions",
@@ -10,13 +10,13 @@ const getActionText = (
 ) => {
   switch (type) {
     case "create":
-      return tense === "present" ? "Creating" : "Created";
+      return tense === "present" ? "创建中" : "已创建";
     case "update":
-      return tense === "present" ? "Updating" : "Updated";
+      return tense === "present" ? "更新中" : "已更新";
     case "request-suggestions":
       return tense === "present"
-        ? "Adding suggestions"
-        : "Added suggestions to";
+        ? "添加建议中"
+        : "已添加建议";
     default:
       return null;
   }
@@ -41,7 +41,7 @@ function PureDocumentToolResult({
       onClick={(event) => {
         if (isReadonly) {
           toast.error(
-            "Viewing files in shared chats is currently not supported."
+            "在共享聊天中查看文件目前不支持。"
           );
           return;
         }
@@ -107,7 +107,7 @@ function PureDocumentToolCall({
       onClick={(event) => {
         if (isReadonly) {
           toast.error(
-            "Viewing files in shared chats is currently not supported."
+            "在共享聊天中查看文件目前不支持。"
           );
           return;
         }
@@ -147,13 +147,13 @@ function PureDocumentToolCall({
               : type === "update" && "description" in args
                 ? `"${args.description}"`
                 : type === "request-suggestions"
-                  ? "for document"
+                  ? "为文档"
                   : ""
           }`}
         </div>
       </div>
 
-      <div className="mt-1 animate-spin">{<LoaderIcon />}</div>
+      <div className="mt-1 animate-spin">正在加载...</div>
     </button>
   );
 }

@@ -1,6 +1,6 @@
-import type { LanguageModelV2StreamPart } from "@ai-sdk/provider";
-import { generateId, type ModelMessage } from "ai";
-import { TEST_PROMPTS } from "./basic";
+import type {LanguageModelV2StreamPart} from "@ai-sdk/provider";
+import {generateId, type ModelMessage} from "ai";
+import {TEST_PROMPTS} from "./basic";
 
 export function compareMessages(
   firstMessage: ModelMessage,
@@ -89,7 +89,7 @@ export const getResponseChunksByPrompt = (
   if (isReasoningEnabled) {
     if (compareMessages(recentMessage, TEST_PROMPTS.USER_SKY)) {
       return [
-        ...reasoningToDeltas("The sky is blue because of rayleigh scattering!"),
+        ...reasoningToDeltas("天空为什么是蓝色的？因为瑞利散射！"),
         ...textToDeltas("It's just blue duh!"),
         {
           type: "finish",
@@ -102,7 +102,7 @@ export const getResponseChunksByPrompt = (
     if (compareMessages(recentMessage, TEST_PROMPTS.USER_GRASS)) {
       return [
         ...reasoningToDeltas(
-          "Grass is green because of chlorophyll absorption!"
+          "草为什么是绿色的？因为叶绿素吸收！"
         ),
         ...textToDeltas("It's just green duh!"),
         {
@@ -116,7 +116,7 @@ export const getResponseChunksByPrompt = (
 
   if (compareMessages(recentMessage, TEST_PROMPTS.USER_THANKS)) {
     return [
-      ...textToDeltas("You're welcome!"),
+      ...textToDeltas("不客气！"),
       {
         type: "finish",
         finishReason: "stop",
@@ -127,7 +127,7 @@ export const getResponseChunksByPrompt = (
 
   if (compareMessages(recentMessage, TEST_PROMPTS.USER_GRASS)) {
     return [
-      ...textToDeltas("It's just green duh!"),
+      ...textToDeltas("它就是绿色的！"),
       {
         type: "finish",
         finishReason: "stop",
@@ -138,7 +138,7 @@ export const getResponseChunksByPrompt = (
 
   if (compareMessages(recentMessage, TEST_PROMPTS.USER_SKY)) {
     return [
-      ...textToDeltas("It's just blue duh!"),
+      ...textToDeltas("它就是蓝色的！"),
       {
         type: "finish",
         finishReason: "stop",
@@ -149,7 +149,7 @@ export const getResponseChunksByPrompt = (
 
   if (compareMessages(recentMessage, TEST_PROMPTS.USER_NEXTJS)) {
     return [
-      ...textToDeltas("With Next.js, you can ship fast!"),
+      ...textToDeltas("使用 Next.js，你可以快速发布！"),
 
       {
         type: "finish",
@@ -161,7 +161,7 @@ export const getResponseChunksByPrompt = (
 
   if (compareMessages(recentMessage, TEST_PROMPTS.USER_IMAGE_ATTACHMENT)) {
     return [
-      ...textToDeltas("This painting is by Monet!"),
+      ...textToDeltas("这幅画是莫奈画的！"),
       {
         type: "finish",
         finishReason: "stop",
@@ -183,7 +183,7 @@ export const getResponseChunksByPrompt = (
         id: toolCallId,
         type: "tool-input-delta",
         delta: JSON.stringify({
-          title: "Essay about Silicon Valley",
+          title: "硅谷论文",
           kind: "text",
         }),
       },
@@ -197,7 +197,7 @@ export const getResponseChunksByPrompt = (
         toolName: "createDocument",
         result: {
           id: "doc_123",
-          title: "Essay about Silicon Valley",
+          title: "硅谷论文",
           kind: "text",
         },
       },
@@ -212,23 +212,23 @@ export const getResponseChunksByPrompt = (
   if (compareMessages(recentMessage, TEST_PROMPTS.CREATE_DOCUMENT_TEXT_CALL)) {
     return [
       ...textToDeltas(`\n
-# Silicon Valley: The Epicenter of Innovation
+# 硅谷：创新的中心
 
-## Origins and Evolution
+## 起源和演变
 
-Silicon Valley, nestled in the southern part of the San Francisco Bay Area, emerged as a global technology hub in the late 20th century. Its transformation began in the 1950s when Stanford University encouraged its graduates to start their own companies nearby, leading to the formation of pioneering semiconductor firms that gave the region its name.
+硅谷，位于旧金山湾区的南部，在20世纪末成为全球科技中心。它的转变始于1950年代，斯坦福大学鼓励其毕业生在附近创办自己的公司，形成了最早的半导体公司，从而赋予了该地区硅谷的名称。
 
-## The Innovation Ecosystem
+## 创新生态系统
 
-What makes Silicon Valley unique is its perfect storm of critical elements: prestigious universities like Stanford and Berkeley, abundant venture capital, a culture that celebrates risk-taking, and a dense network of talented individuals. This ecosystem has consistently nurtured groundbreaking technologies from personal computers to social media platforms to artificial intelligence.
+硅谷的独特之处在于它拥有完美的要素组合：斯坦福和伯克利等顶尖大学、充足的创业资本、勇于冒险的文化和密集的人才网络。这个生态系统一直在培养突破性的技术，从个人电脑到社交媒体平台再到人工智能。
 
-## Challenges and Criticisms
+## 挑战和批评
 
-Despite its remarkable success, Silicon Valley faces significant challenges including extreme income inequality, housing affordability crises, and questions about technology's impact on society. Critics argue the region has developed a monoculture that sometimes struggles with diversity and inclusion.
+尽管硅谷取得了显著的成功，但它面临着严重的挑战，包括极端的收入不平等、住房负担能力危机以及对技术对社会影响的质疑。批评者认为该地区发展了一种单一文化，有时在多样性和包容性方面存在问题。
 
-## Future Prospects
+## 未来展望
 
-As we move forward, Silicon Valley continues to reinvent itself. While some predict its decline due to remote work trends and competition from other tech hubs, the region's adaptability and innovative spirit suggest it will remain influential in shaping our technological future for decades to come.
+随着我们继续前进，硅谷将继续自我重塑。虽然有些人预测由于远程工作趋势和来自其他科技中心的竞争，硅谷的衰落，但该地区的适应能力和创新精神表明，它将继续在塑造我们的技术未来几十年中发挥重要作用。
 `),
       {
         type: "finish",
@@ -242,7 +242,7 @@ As we move forward, Silicon Valley continues to reinvent itself. While some pred
     compareMessages(recentMessage, TEST_PROMPTS.CREATE_DOCUMENT_TEXT_RESULT)
   ) {
     return [
-      ...textToDeltas("A document was created and is now visible to the user."),
+      ...textToDeltas("一个文档被创建并现在对用户可见。"),
       {
         type: "finish",
         finishReason: "stop",
@@ -269,7 +269,7 @@ As we move forward, Silicon Valley continues to reinvent itself. While some pred
 
   if (compareMessages(recentMessage, TEST_PROMPTS.GET_WEATHER_RESULT)) {
     return [
-      ...textToDeltas("The current temperature in San Francisco is 17°C."),
+      ...textToDeltas("旧金山今天的天气是17°C。"),
       {
         type: "finish",
         finishReason: "stop",
@@ -278,5 +278,5 @@ As we move forward, Silicon Valley continues to reinvent itself. While some pred
     ];
   }
 
-  return [{ id: "6", type: "text-delta", delta: "Unknown test prompt!" }];
+  return [{ id: "6", type: "text-delta", delta: "未知的测试提示！" }];
 };

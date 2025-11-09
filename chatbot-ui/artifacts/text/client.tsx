@@ -1,18 +1,11 @@
-import { toast } from "sonner";
-import { Artifact } from "@/components/create-artifact";
-import { DiffView } from "@/components/diffview";
-import { DocumentSkeleton } from "@/components/document-skeleton";
-import {
-  ClockRewind,
-  CopyIcon,
-  MessageIcon,
-  PenIcon,
-  RedoIcon,
-  UndoIcon,
-} from "@/components/icons";
-import { Editor } from "@/components/text-editor";
-import type { Suggestion } from "@/lib/db/schema";
-import { getSuggestions } from "../actions";
+import {toast} from "sonner";
+import {Artifact} from "@/components/create-artifact";
+import {DiffView} from "@/components/diffview";
+import {DocumentSkeleton} from "@/components/document-skeleton";
+import {ClockRewind, CopyIcon, MessageIcon, PenIcon, RedoIcon, UndoIcon,} from "@/components/icons";
+import {TextEditorWithPreview} from "@/components/text-editor-with-preview";
+import type {Suggestion} from "@/lib/db/schema";
+import {getSuggestions} from "../actions";
 
 type TextArtifactMetadata = {
   suggestions: Suggestion[];
@@ -77,7 +70,7 @@ export const textArtifact = new Artifact<"text", TextArtifactMetadata>({
 
     return (
       <div className="flex flex-row px-4 py-8 md:p-20">
-        <Editor
+        <TextEditorWithPreview
           content={content}
           currentVersionIndex={currentVersionIndex}
           isCurrentVersion={isCurrentVersion}
@@ -140,21 +133,21 @@ export const textArtifact = new Artifact<"text", TextArtifactMetadata>({
       description: "Copy to clipboard",
       onClick: ({ content }) => {
         navigator.clipboard.writeText(content);
-        toast.success("Copied to clipboard!");
+        toast.success("已复制到剪贴板！");
       },
     },
   ],
   toolbar: [
     {
       icon: <PenIcon />,
-      description: "Add final polish",
+      description: "添加最终润色",
       onClick: ({ sendMessage }) => {
         sendMessage({
           role: "user",
           parts: [
             {
               type: "text",
-              text: "Please add final polish and check for grammar, add section titles for better structure, and ensure everything reads smoothly.",
+              text: "请添加最终润色并检查语法，添加章节标题以改善结构，并确保一切阅读流畅。",
             },
           ],
         });
@@ -162,14 +155,14 @@ export const textArtifact = new Artifact<"text", TextArtifactMetadata>({
     },
     {
       icon: <MessageIcon />,
-      description: "Request suggestions",
+      description: "请求建议",
       onClick: ({ sendMessage }) => {
         sendMessage({
           role: "user",
           parts: [
             {
               type: "text",
-              text: "Please add suggestions you have that could improve the writing.",
+              text: "请添加您认为可以改进写作的建议。",
             },
           ],
         });

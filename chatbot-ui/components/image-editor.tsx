@@ -1,5 +1,5 @@
 import cn from "classnames";
-import { LoaderIcon } from "./icons";
+import {LoaderIcon} from "./icons";
 
 type ImageEditorProps = {
   title: string;
@@ -30,7 +30,7 @@ export function ImageEditor({
               <LoaderIcon />
             </div>
           )}
-          <div>Generating Image...</div>
+          <div>生成图片中...</div>
         </div>
       ) : (
         <picture>

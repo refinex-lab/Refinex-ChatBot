@@ -1,4 +1,4 @@
-import { generateUUID } from "@/lib/utils";
+import {generateUUID} from "@/lib/utils";
 
 export const TEST_PROMPTS = {
   SKY: {
@@ -6,8 +6,8 @@ export const TEST_PROMPTS = {
       id: generateUUID(),
       createdAt: new Date().toISOString(),
       role: "user",
-      content: "Why is the sky blue?",
-      parts: [{ type: "text", text: "Why is the sky blue?" }],
+      content: "天空为什么是蓝色的？",
+      parts: [{ type: "text", text: "天空为什么是蓝色的？" }],
     },
     OUTPUT_STREAM: [
       'data: {"type":"start-step"}',
@@ -27,8 +27,8 @@ export const TEST_PROMPTS = {
       id: generateUUID(),
       createdAt: new Date().toISOString(),
       role: "user",
-      content: "Why is grass green?",
-      parts: [{ type: "text", text: "Why is grass green?" }],
+      content: "草为什么是绿色的？",
+      parts: [{ type: "text", text: "草为什么是绿色的？" }],
     },
     OUTPUT_STREAM: [
       'data: {"type":"start-step"}',

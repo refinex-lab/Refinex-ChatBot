@@ -248,6 +248,19 @@
   outline: none;
 }
 
+/* 确保 ProseMirror 中的代码块可见 */
+.ProseMirror pre {
+  @apply bg-muted p-4 rounded-lg overflow-x-auto my-4;
+}
+
+.ProseMirror pre code {
+  @apply bg-transparent p-0 text-sm font-mono;
+}
+
+.ProseMirror code {
+  @apply bg-muted px-1.5 py-0.5 rounded text-sm font-mono;
+}
+
 .cm-editor,
 .cm-gutters {
   @apply bg-background! dark:bg-zinc-800! outline-hidden! selection:bg-zinc-900!;
@@ -336,4 +349,76 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/**
+ * 代码高亮样式优化
+ * 确保在亮色和暗色主题下都有合适的颜色
+ * 亮色模式使用 highlight.js 的 github.css 主题（保持不变）
+ * 暗色模式使用优化的高对比度颜色方案
+ */
+
+/* 暗色主题下的代码高亮颜色 - 优化对比度和可读性 */
+.dark .hljs {
+  color: #e5e7eb !important;
+  background: transparent;
+}
+
+.dark .hljs-comment,
+.dark .hljs-quote {
+  color: #9ca3af;
+}
+
+.dark .hljs-keyword,
+.dark .hljs-selector-tag,
+.dark .hljs-type {
+  color: #f87171;
+}
+
+.dark .hljs-string,
+.dark .hljs-literal {
+  color: #2dd4bf;
+}
+
+.dark .hljs-number {
+  color: #60a5fa;
+}
+
+.dark .hljs-title,
+.dark .hljs-section,
+.dark .hljs-attribute,
+.dark .hljs-name {
+  color: #c084fc;
+}
+
+.dark .hljs-variable,
+.dark .hljs-template-variable {
+  color: #fbbf24;
+}
+
+.dark .hljs-regexp,
+.dark .hljs-link {
+  color: #2dd4bf;
+}
+
+.dark .hljs-symbol,
+.dark .hljs-bullet {
+  color: #60a5fa;
+}
+
+.dark .hljs-built_in,
+.dark .hljs-builtin-name {
+  color: #60a5fa;
+}
+
+.dark .hljs-meta {
+  color: #9ca3af;
+}
+
+.dark .hljs-deletion {
+  background: #7f1d1d;
+}
+
+.dark .hljs-addition {
+  background: #14532d;
 }

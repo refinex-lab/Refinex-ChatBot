@@ -1,12 +1,12 @@
 import equal from "fast-deep-equal";
-import { memo } from "react";
-import { toast } from "sonner";
-import { useSWRConfig } from "swr";
-import { useCopyToClipboard } from "usehooks-ts";
-import type { Vote } from "@/lib/db/schema";
-import type { ChatMessage } from "@/lib/types";
-import { Action, Actions } from "./elements/actions";
-import { CopyIcon, PencilEditIcon, ThumbDownIcon, ThumbUpIcon } from "./icons";
+import {memo} from "react";
+import {toast} from "sonner";
+import {useSWRConfig} from "swr";
+import {useCopyToClipboard} from "usehooks-ts";
+import type {Vote} from "@/lib/db/schema";
+import type {ChatMessage} from "@/lib/types";
+import {Action, Actions} from "./elements/actions";
+import {CopyIcon, PencilEditIcon, ThumbDownIcon, ThumbUpIcon} from "./icons";
 
 export function PureMessageActions({
   chatId,
@@ -41,7 +41,7 @@ export function PureMessageActions({
     }
 
     await copyToClipboard(textFromParts);
-    toast.success("Copied to clipboard!");
+    toast.success("已复制到剪贴板！");
   };
 
   // User messages get edit (on hover) and copy actions
@@ -54,12 +54,12 @@ export function PureMessageActions({
               className="-left-10 absolute top-0 opacity-0 transition-opacity focus-visible:opacity-100 group-hover/message:opacity-100"
               data-testid="message-edit-button"
               onClick={() => setMode("edit")}
-              tooltip="Edit"
+              tooltip="编辑"
             >
               <PencilEditIcon />
             </Action>
           )}
-          <Action onClick={handleCopy} tooltip="Copy">
+          <Action onClick={handleCopy} tooltip="复制">
             <CopyIcon />
           </Action>
         </div>
@@ -69,7 +69,7 @@ export function PureMessageActions({
 
   return (
     <Actions className="-ml-0.5">
-      <Action onClick={handleCopy} tooltip="Copy">
+      <Action onClick={handleCopy} tooltip="复制">
         <CopyIcon />
       </Action>
 
@@ -112,12 +112,12 @@ export function PureMessageActions({
                 { revalidate: false }
               );
 
-              return "Upvoted Response!";
+              return "已点赞！";
             },
-            error: "Failed to upvote response.",
+            error: "点赞失败。",
           });
         }}
-        tooltip="Upvote Response"
+        tooltip="点赞"
       >
         <ThumbUpIcon />
       </Action>
@@ -136,7 +136,7 @@ export function PureMessageActions({
           });
 
           toast.promise(downvote, {
-            loading: "Downvoting Response...",
+            loading: "点踩中...",
             success: () => {
               mutate<Vote[]>(
                 `/api/vote?chatId=${chatId}`,
@@ -161,12 +161,12 @@ export function PureMessageActions({
                 { revalidate: false }
               );
 
-              return "Downvoted Response!";
+              return "已点踩！";
             },
-            error: "Failed to downvote response.",
+            error: "点踩失败。",
           });
         }}
-        tooltip="Downvote Response"
+        tooltip="点踩"
       >
         <ThumbDownIcon />
       </Action>

@@ -1,10 +1,10 @@
-import { type Dispatch, memo, type SetStateAction, useState } from "react";
-import { toast } from "sonner";
-import { cn } from "@/lib/utils";
-import { artifactDefinitions, type UIArtifact } from "./artifact";
-import type { ArtifactActionContext } from "./create-artifact";
-import { Button } from "./ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
+import {type Dispatch, memo, type SetStateAction, useState} from "react";
+import {toast} from "sonner";
+import {cn} from "@/lib/utils";
+import {artifactDefinitions, type UIArtifact} from "./artifact";
+import type {ArtifactActionContext} from "./create-artifact";
+import {Button} from "./ui/button";
+import {Tooltip, TooltipContent, TooltipTrigger} from "./ui/tooltip";
 
 type ArtifactActionsProps = {
   artifact: UIArtifact;
@@ -32,7 +32,7 @@ function PureArtifactActions({
   );
 
   if (!artifactDefinition) {
-    throw new Error("Artifact definition not found!");
+    throw new Error("未找到 artifact 定义！");
   }
 
   const actionContext: ArtifactActionContext = {
@@ -68,7 +68,7 @@ function PureArtifactActions({
                 try {
                   await Promise.resolve(action.onClick(actionContext));
                 } catch (_error) {
-                  toast.error("Failed to execute action");
+                  toast.error("执行操作失败。");
                 } finally {
                   setIsLoading(false);
                 }

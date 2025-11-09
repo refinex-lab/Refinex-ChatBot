@@ -47,6 +47,9 @@ const PurePreviewMessage = ({
     (part) => part.type === "file"
   );
 
+  console.log("message", message);
+  console.log("attachmentsFromMessage", attachmentsFromMessage);
+
   useDataStream();
 
   return (

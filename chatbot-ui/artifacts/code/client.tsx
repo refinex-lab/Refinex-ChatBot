@@ -1,20 +1,9 @@
-import { toast } from "sonner";
-import { CodeEditor } from "@/components/code-editor";
-import {
-  Console,
-  type ConsoleOutput,
-  type ConsoleOutputContent,
-} from "@/components/console";
-import { Artifact } from "@/components/create-artifact";
-import {
-  CopyIcon,
-  LogsIcon,
-  MessageIcon,
-  PlayIcon,
-  RedoIcon,
-  UndoIcon,
-} from "@/components/icons";
-import { generateUUID } from "@/lib/utils";
+import {toast} from "sonner";
+import {CodeEditor} from "@/components/code-editor";
+import {Console, type ConsoleOutput, type ConsoleOutputContent,} from "@/components/console";
+import {Artifact} from "@/components/create-artifact";
+import {CopyIcon, LogsIcon, MessageIcon, PlayIcon, RedoIcon, UndoIcon,} from "@/components/icons";
+import {generateUUID} from "@/lib/utils";
 
 const OUTPUT_HANDLERS = {
   matplotlib: `
@@ -241,7 +230,7 @@ export const codeArtifact = new Artifact<"code", Metadata>({
       description: "Copy code to clipboard",
       onClick: ({ content }) => {
         navigator.clipboard.writeText(content);
-        toast.success("Copied to clipboard!");
+        toast.success("已复制到剪贴板！");
       },
     },
   ],

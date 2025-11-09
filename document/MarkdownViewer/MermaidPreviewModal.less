@@ -1,0 +1,125 @@
+/**
+ * MermaidPreviewModal 样式
+ */
+
+.mermaid-preview-modal {
+  .ant-modal-content {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .ant-modal-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  // 工具栏
+  .mermaid-preview-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: #fafafa;
+    border-bottom: 1px solid #e8e8e8;
+    flex-shrink: 0;
+
+    .mermaid-preview-scale-info {
+      font-size: 14px;
+      font-weight: 500;
+      color: #262626;
+      min-width: 50px;
+      text-align: center;
+    }
+
+    .mermaid-preview-toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .mermaid-preview-shortcuts {
+      font-size: 12px;
+      color: #8c8c8c;
+      user-select: none;
+    }
+  }
+
+  // 预览容器
+  .mermaid-preview-container {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    background: #f5f5f5;
+    background-image:
+      linear-gradient(45deg, #e8e8e8 25%, transparent 25%),
+      linear-gradient(-45deg, #e8e8e8 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #e8e8e8 75%),
+      linear-gradient(-45deg, transparent 75%, #e8e8e8 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    // 预览内容
+    .mermaid-preview-content {
+      position: relative;
+      transform-origin: center center;
+      will-change: transform;
+
+      .mermaid-preview-diagram {
+        display: inline-block;
+        background: #ffffff;
+        padding: 24px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+        svg {
+          display: block;
+          max-width: none !important;
+          height: auto !important;
+        }
+      }
+    }
+  }
+}
+
+// ==================== 暗色模式适配 ====================
+.realDark {
+  .mermaid-preview-modal {
+    // 工具栏暗色适配
+    .mermaid-preview-toolbar {
+      background: #1f1f1f;
+      border-bottom-color: #303030;
+
+      .mermaid-preview-scale-info {
+        color: rgba(255, 255, 255, 0.88);
+      }
+
+      .mermaid-preview-shortcuts {
+        color: rgba(255, 255, 255, 0.65);
+      }
+    }
+
+    // 预览容器暗色适配
+    .mermaid-preview-container {
+      background: #141414;
+      background-image:
+        linear-gradient(45deg, #262626 25%, transparent 25%),
+        linear-gradient(-45deg, #262626 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #262626 75%),
+        linear-gradient(-45deg, transparent 75%, #262626 75%);
+
+      .mermaid-preview-content {
+        .mermaid-preview-diagram {
+          background: #1f1f1f;
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+        }
+      }
+    }
+  }
+}
+

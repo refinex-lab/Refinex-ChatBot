@@ -1,23 +1,23 @@
-import { getMessageByErrorCode } from "@/lib/errors";
-import { generateUUID } from "@/lib/utils";
-import { expect, test } from "../fixtures";
-import { TEST_PROMPTS } from "../prompts/routes";
+import {getMessageByErrorCode} from "@/lib/errors";
+import {generateUUID} from "@/lib/utils";
+import {expect, test} from "../fixtures";
+import {TEST_PROMPTS} from "../prompts/routes";
 
 const chatIdsCreatedByAda: string[] = [];
 
-// Helper function to normalize stream data for comparison
+// 辅助函数，用于规范化流数据以进行比较
 function normalizeStreamData(lines: string[]): string[] {
   return lines.map((line) => {
     if (line.startsWith("data: ")) {
       try {
-        const data = JSON.parse(line.slice(6)); // Remove 'data: ' prefix
+        const data = JSON.parse(line.slice(6)); // 移除 'data: ' 前缀
         if (data.id) {
-          // Replace dynamic id with a static one for comparison
+          // 替换动态 id 为静态 id 用于比较
           return `data: ${JSON.stringify({ ...data, id: "STATIC_ID" })}`;
         }
         return line;
       } catch {
-        return line; // Return as-is if it's not valid JSON
+        return line; // 如果它不是有效的 JSON，则返回原样
       }
     }
     return line;
@@ -26,7 +26,7 @@ function normalizeStreamData(lines: string[]): string[] {
 
 test.describe
   .serial("/api/chat", () => {
-    test("Ada cannot invoke a chat generation with empty request body", async ({
+    test("Ada 无法在没有请求体的情况下调用聊天生成", async ({
       adaContext,
     }) => {
       const response = await adaContext.request.post("/api/chat", {
@@ -39,7 +39,7 @@ test.describe
       expect(message).toEqual(getMessageByErrorCode("bad_request:api"));
     });
 
-    test("Ada can invoke chat generation", async ({ adaContext }) => {
+    test("Ada 可以调用聊天生成", async ({ adaContext }) => {
       const chatId = generateUUID();
 
       const response = await adaContext.request.post("/api/chat", {
@@ -66,7 +66,7 @@ test.describe
       chatIdsCreatedByAda.push(chatId);
     });
 
-    test("Babbage cannot append message to Ada's chat", async ({
+    test("Babbage 无法附加消息到 Ada 的聊天", async ({
       babbageContext,
     }) => {
       const [chatId] = chatIdsCreatedByAda;
@@ -86,7 +86,7 @@ test.describe
       expect(message).toEqual(getMessageByErrorCode("forbidden:chat"));
     });
 
-    test("Babbage cannot delete Ada's chat", async ({ babbageContext }) => {
+    test("Babbage 无法删除 Ada 的聊天", async ({ babbageContext }) => {
       const [chatId] = chatIdsCreatedByAda;
 
       const response = await babbageContext.request.delete(
@@ -99,7 +99,7 @@ test.describe
       expect(message).toEqual(getMessageByErrorCode("forbidden:chat"));
     });
 
-    test("Ada can delete her own chat", async ({ adaContext }) => {
+    test("Ada 可以删除自己的聊天", async ({ adaContext }) => {
       const [chatId] = chatIdsCreatedByAda;
 
       const response = await adaContext.request.delete(
@@ -111,7 +111,7 @@ test.describe
       expect(deletedChat).toMatchObject({ id: chatId });
     });
 
-    test("Ada cannot resume stream of chat that does not exist", async ({
+    test("Ada 无法恢复不存在的聊天的流", async ({
       adaContext,
     }) => {
       const response = await adaContext.request.get(
@@ -120,7 +120,7 @@ test.describe
       expect(response.status()).toBe(404);
     });
 
-    test("Ada can resume chat generation", async ({ adaContext }) => {
+    test("Ada 可以恢复聊天生成", async ({ adaContext }) => {
       const chatId = generateUUID();
 
       const firstRequest = adaContext.request.post("/api/chat", {
@@ -129,11 +129,11 @@ test.describe
           message: {
             id: generateUUID(),
             role: "user",
-            content: "Help me write an essay about Silcon Valley",
+            content: "帮我写一篇关于硅谷的论文",
             parts: [
               {
                 type: "text",
-                text: "Help me write an essay about Silicon Valley",
+                text: "帮我写一篇关于硅谷的论文",
               },
             ],
             createdAt: new Date().toISOString(),
@@ -172,7 +172,7 @@ test.describe
       );
     });
 
-    test("Ada can resume chat generation that has ended during request", async ({
+    test("Ada 可以恢复在请求期间结束的聊天生成", async ({
       adaContext,
     }) => {
       const chatId = generateUUID();
@@ -183,7 +183,7 @@ test.describe
           message: {
             id: generateUUID(),
             role: "user",
-            content: "Help me write an essay about Silcon Valley",
+            content: "帮我写一篇关于硅谷的论文",
             parts: [
               {
                 type: "text",
@@ -222,7 +222,7 @@ test.describe
       expect(secondResponseContent).toContain("appendMessage");
     });
 
-    test("Ada cannot resume chat generation that has ended", async ({
+    test("Ada 无法恢复已结束的聊天生成", async ({
       adaContext,
     }) => {
       const chatId = generateUUID();
@@ -233,11 +233,11 @@ test.describe
           message: {
             id: generateUUID(),
             role: "user",
-            content: "Help me write an essay about Silcon Valley",
+            content: "帮我写一篇关于硅谷的论文",
             parts: [
               {
                 type: "text",
-                text: "Help me write an essay about Silicon Valley",
+                text: "帮我写一篇关于硅谷的论文",
               },
             ],
             createdAt: new Date().toISOString(),
@@ -264,7 +264,7 @@ test.describe
       expect(secondResponseContent).toEqual("");
     });
 
-    test("Babbage cannot resume a private chat generation that belongs to Ada", async ({
+    test("Babbage 无法恢复属于 Ada 的私有聊天生成", async ({
       adaContext,
       babbageContext,
     }) => {
@@ -276,11 +276,11 @@ test.describe
           message: {
             id: generateUUID(),
             role: "user",
-            content: "Help me write an essay about Silcon Valley",
+            content: "帮我写一篇关于硅谷的论文",
             parts: [
               {
                 type: "text",
-                text: "Help me write an essay about Silicon Valley",
+                text: "帮我写一篇关于硅谷的论文",
               },
             ],
             createdAt: new Date().toISOString(),
@@ -310,7 +310,7 @@ test.describe
       expect(secondStatusCode).toBe(403);
     });
 
-    test("Babbage can resume a public chat generation that belongs to Ada", async ({
+    test("Babbage 可以恢复属于 Ada 的公共聊天生成", async ({
       adaContext,
       babbageContext,
     }) => {
@@ -323,11 +323,11 @@ test.describe
           message: {
             id: generateUUID(),
             role: "user",
-            content: "Help me write an essay about Silicon Valley",
+            content: "帮我写一篇关于硅谷的论文",
             parts: [
               {
                 type: "text",
-                text: "Help me write an essay about Silicon Valley",
+                text: "帮我写一篇关于硅谷的论文",
               },
             ],
             createdAt: new Date().toISOString(),

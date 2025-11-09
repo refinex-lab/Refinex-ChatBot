@@ -1,6 +1,9 @@
+/**
+ * 文档骨架组件
+ */
 "use client";
 
-import type { ArtifactKind } from "./artifact";
+import type {ArtifactKind} from "./artifact";
 
 export const DocumentSkeleton = ({
   artifactKind,

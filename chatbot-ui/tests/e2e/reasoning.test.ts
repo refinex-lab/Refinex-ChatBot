@@ -1,7 +1,7 @@
-import { expect, test } from "../fixtures";
-import { ChatPage } from "../pages/chat";
+import {expect, test} from "../fixtures";
+import {ChatPage} from "../pages/chat";
 
-test.describe("chat activity with reasoning", () => {
+test.describe("聊天活动 with 推理", () => {
   let chatPage: ChatPage;
 
   test.beforeEach(async ({ curieContext }) => {
@@ -9,36 +9,36 @@ test.describe("chat activity with reasoning", () => {
     await chatPage.createNewChat();
   });
 
-  test("Curie can send message and generate response with reasoning", async () => {
-    await chatPage.sendUserMessage("Why is the sky blue?");
+  test("Curie 可以发送消息 and 生成响应 with 推理", async () => {
+    await chatPage.sendUserMessage("天空为什么是蓝色的？");
     await chatPage.isGenerationComplete();
 
     const assistantMessage = await chatPage.getRecentAssistantMessage();
-    expect(assistantMessage.content).toBe("It's just blue duh!");
+    expect(assistantMessage?.content).toBe("它就是蓝色的！");
 
-    expect(assistantMessage.reasoning).toBe(
-      "The sky is blue because of rayleigh scattering!"
+    expect(assistantMessage?.reasoning).toBe(
+      "天空为什么是蓝色的？因为瑞利散射！"
     );
   });
 
-  test("Curie can toggle reasoning visibility", async () => {
-    await chatPage.sendUserMessage("Why is the sky blue?");
+  test("Curie 可以切换推理可见性", async () => {
+    await chatPage.sendUserMessage("天空为什么是蓝色的？");
     await chatPage.isGenerationComplete();
 
     const assistantMessage = await chatPage.getRecentAssistantMessage();
     const reasoningElement =
-      assistantMessage.element.getByTestId("message-reasoning");
+      assistantMessage?.element.getByTestId("message-reasoning");
     expect(reasoningElement).toBeVisible();
 
-    await assistantMessage.toggleReasoningVisibility();
+    await assistantMessage?.toggleReasoningVisibility();
     await expect(reasoningElement).not.toBeVisible();
 
-    await assistantMessage.toggleReasoningVisibility();
+    await assistantMessage?.toggleReasoningVisibility();
     await expect(reasoningElement).toBeVisible();
   });
 
-  test("Curie can edit message and resubmit", async () => {
-    await chatPage.sendUserMessage("Why is the sky blue?");
+  test("Curie 可以编辑消息 and 重新提交", async () => {
+    await chatPage.sendUserMessage("天空为什么是蓝色的？");
     await chatPage.isGenerationComplete();
 
     const assistantMessage = await chatPage.getRecentAssistantMessage();
@@ -49,15 +49,15 @@ test.describe("chat activity with reasoning", () => {
     const userMessage = await chatPage.getRecentUserMessage();
 
     const generationCompletePromise = chatPage.isGenerationComplete();
-    await userMessage.edit("Why is grass green?");
+    await userMessage.edit("草为什么是绿色的？");
     await generationCompletePromise;
 
     const updatedAssistantMessage = await chatPage.getRecentAssistantMessage();
 
-    expect(updatedAssistantMessage.content).toBe("It's just green duh!");
+    expect(updatedAssistantMessage?.content).toBe("它就是绿色的！");
 
-    expect(updatedAssistantMessage.reasoning).toBe(
-      "Grass is green because of chlorophyll absorption!"
+    expect(updatedAssistantMessage?.reasoning).toBe(
+      "草为什么是绿色的？因为叶绿素吸收！"
     );
   });
 });

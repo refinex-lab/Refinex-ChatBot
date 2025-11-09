@@ -1,33 +1,15 @@
 "use client";
-import type { UseChatHelpers } from "@ai-sdk/react";
+import type {UseChatHelpers} from "@ai-sdk/react";
 import cx from "classnames";
-import {
-  AnimatePresence,
-  motion,
-  useMotionValue,
-  useTransform,
-} from "framer-motion";
-import { nanoid } from "nanoid";
-import {
-  type Dispatch,
-  memo,
-  type ReactNode,
-  type SetStateAction,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import { useOnClickOutside } from "usehooks-ts";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import type { ChatMessage } from "@/lib/types";
-import { type ArtifactKind, artifactDefinitions } from "./artifact";
-import type { ArtifactToolbarItem } from "./create-artifact";
-import { ArrowUpIcon, StopIcon, SummarizeIcon } from "./icons";
+import {AnimatePresence, motion, useMotionValue, useTransform,} from "framer-motion";
+import {nanoid} from "nanoid";
+import {type Dispatch, memo, type ReactNode, type SetStateAction, useEffect, useRef, useState,} from "react";
+import {useOnClickOutside} from "usehooks-ts";
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger,} from "@/components/ui/tooltip";
+import type {ChatMessage} from "@/lib/types";
+import {artifactDefinitions, type ArtifactKind} from "./artifact";
+import type {ArtifactToolbarItem} from "./create-artifact";
+import {ArrowUpIcon, StopIcon, SummarizeIcon} from "./icons";
 
 type ToolProps = {
   description: string;
@@ -365,7 +347,7 @@ const PureToolbar = ({
   );
 
   if (!artifactDefinition) {
-    throw new Error("Artifact definition not found!");
+    throw new Error("未找到 artifact 定义！");
   }
 
   const toolsByArtifactKind = artifactDefinition.toolbar;
