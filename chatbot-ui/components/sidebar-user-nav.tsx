@@ -9,7 +9,10 @@ import {useRouter} from "next/navigation";
 import type {User} from "next-auth";
 import {signOut, useSession} from "next-auth/react";
 import {useTheme} from "next-themes";
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import {BsMoonStars} from "react-icons/bs";
+import {CiLogin, CiLogout, CiTrash} from "react-icons/ci";
+import {FiSun} from "react-icons/fi";
 import {toast} from "sonner";
 import {useSWRConfig} from "swr";
 import {unstable_serialize} from "swr/infinite";
@@ -45,6 +48,12 @@ export function SidebarUserNav({ user }: { user: User }) {
   const { setTheme, resolvedTheme } = useTheme();
   const { mutate } = useSWRConfig();
   const [showDeleteAllDialog, setShowDeleteAllDialog] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  // 确保只在客户端渲染时使用主题，避免 hydration 错误
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // 是否为游客
   const isGuest = guestRegex.test(data?.user?.email ?? "");
@@ -125,7 +134,14 @@ export function SidebarUserNav({ user }: { user: User }) {
                   setTheme(resolvedTheme === "dark" ? "light" : "dark")
                 }
               >
-                {`切换${resolvedTheme === "light" ? "暗色" : "亮色"}模式`}
+                <div className="flex items-center gap-2">
+                  {mounted && resolvedTheme === "dark" ? (
+                    <FiSun className="size-4" />
+                  ) : (
+                    <BsMoonStars className="size-4" />
+                  )}
+                  <span>{`切换${mounted && resolvedTheme === "light" ? "暗色" : "亮色"}模式`}</span>
+                </div>
               </DropdownMenuItem>
               {/* 分割线 */}
               <DropdownMenuSeparator />
@@ -137,7 +153,10 @@ export function SidebarUserNav({ user }: { user: User }) {
                     data-testid="user-nav-item-delete-all"
                     onSelect={() => setShowDeleteAllDialog(true)}
                   >
-                    删除所有聊天记录
+                    <div className="flex items-center gap-2">
+                      <CiTrash className="size-4" />
+                      <span>删除所有聊天记录</span>
+                    </div>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                 </>
@@ -145,7 +164,7 @@ export function SidebarUserNav({ user }: { user: User }) {
               {/* 登录/登出按钮 */}
               <DropdownMenuItem asChild data-testid="user-nav-item-auth">
                 <button
-                  className="w-full cursor-pointer"
+                  className="flex w-full items-center gap-2 cursor-pointer"
                   onClick={() => {
                     if (status === "loading") {
                       toastNotification({
@@ -167,7 +186,17 @@ export function SidebarUserNav({ user }: { user: User }) {
                   }}
                   type="button"
                 >
-                  {isGuest ? "登录您的账户" : "登出"}
+                  {isGuest ? (
+                    <>
+                      <CiLogin className="size-4" />
+                      <span>登录您的账户</span>
+                    </>
+                  ) : (
+                    <>
+                      <CiLogout className="size-4" />
+                      <span>登出</span>
+                    </>
+                  )}
                 </button>
               </DropdownMenuItem>
             </DropdownMenuContent>
