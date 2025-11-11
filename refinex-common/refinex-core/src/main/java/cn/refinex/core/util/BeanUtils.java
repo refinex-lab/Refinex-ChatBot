@@ -95,7 +95,7 @@ public final class BeanUtils {
         if (null == map || null == clazz) {
             return null;
         }
-        return BeanUtil.mapToBean(map, clazz, ObjectUtil.defaultIfNull(copyOptions, CopyOptions::create));
+        return BeanUtil.toBean(map, clazz, ObjectUtil.defaultIfNull(copyOptions, CopyOptions::create));
     }
 
     /**
@@ -108,7 +108,7 @@ public final class BeanUtils {
      */
     public static Map<String, Object> beanToMap(final Object bean, final boolean isToUnderlineCase, final boolean ignoreNullValue) {
         if (null == bean) {
-            return null;
+            return Collections.emptyMap();
         }
         return BeanUtil.beanToMap(bean, isToUnderlineCase, ignoreNullValue);
     }
@@ -123,7 +123,7 @@ public final class BeanUtils {
      */
     public static Map<String, Object> beanToMap(final Object bean, Map<String, Object> targetMap, final CopyOptions copyOptions) {
         if (null == bean) {
-            return null;
+            return Collections.emptyMap();
         }
         if (null == targetMap) {
             targetMap = new LinkedHashMap<>();
@@ -231,7 +231,7 @@ public final class BeanUtils {
         }
         try {
             return Optional.ofNullable(toBean(source, clazz));
-        } catch (Throwable ex) {
+        } catch (Exception ex) {
             return Optional.empty();
         }
     }
@@ -250,7 +250,7 @@ public final class BeanUtils {
         try {
             copyProperties(source, target, CopyOptions.create());
             return true;
-        } catch (Throwable ex) {
+        } catch (Exception ex) {
             return false;
         }
     }
@@ -266,7 +266,7 @@ public final class BeanUtils {
      */
     public static Map<String, Object> mapKeysToCamelCase(final Map<String, Object> source) {
         if (null == source) {
-            return null;
+            return Collections.emptyMap();
         }
         if (source.isEmpty()) {
             return new LinkedHashMap<>();

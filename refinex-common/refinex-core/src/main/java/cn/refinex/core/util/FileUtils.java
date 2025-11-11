@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.tika.Tika;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import org.springframework.util.Assert;
 
 import java.io.*;
@@ -168,14 +170,16 @@ public final class FileUtils {
      */
     private static void deleteDirectoryRecursively(Path directory) throws IOException {
         Files.walkFileTree(directory, new SimpleFileVisitor<>() {
+            @NullMarked
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                 Files.delete(file);
                 return FileVisitResult.CONTINUE;
             }
 
+            @NullMarked
             @Override
-            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+            public FileVisitResult postVisitDirectory(Path dir, @Nullable IOException exc) throws IOException {
                 Files.delete(dir);
                 return FileVisitResult.CONTINUE;
             }
@@ -243,7 +247,7 @@ public final class FileUtils {
             Path target = Paths.get(targetPath);
 
             if (!Files.exists(source)) {
-                log.error("源路径不存在: {}", sourcePath);
+                log.error("移动文件或目录失败，源路径不存在: {}", sourcePath);
                 return false;
             }
 
@@ -304,12 +308,12 @@ public final class FileUtils {
         try {
             Path path = Paths.get(filePath);
             if (!Files.exists(path)) {
-                log.error("文件不存在: {}", filePath);
+                log.error("读取文件内容为字符串失败，文件不存在: {}", filePath);
                 return null;
             }
             return Files.readString(path, charset);
         } catch (IOException e) {
-            log.error("读取文件失败: {}", filePath, e);
+            log.error("读取文件内容为字符串失败: {}", filePath, e);
             return null;
         }
     }
@@ -327,13 +331,13 @@ public final class FileUtils {
         try {
             Path path = Paths.get(filePath);
             if (!Files.exists(path)) {
-                log.error("文件不存在: {}", filePath);
-                return null;
+                log.error("读取文件内容为字节数组失败，文件不存在: {}", filePath);
+                return new byte[0];
             }
             return Files.readAllBytes(path);
         } catch (IOException e) {
             log.error("读取文件失败: {}", filePath, e);
-            return null;
+            return new byte[0];
         }
     }
 
@@ -363,12 +367,12 @@ public final class FileUtils {
         try {
             Path path = Paths.get(filePath);
             if (!Files.exists(path)) {
-                log.error("文件不存在: {}", filePath);
+                log.error("读取文件所有行失败，文件不存在: {}", filePath);
                 return Collections.emptyList();
             }
             return Files.readAllLines(path, charset);
         } catch (IOException e) {
-            log.error("读取文件失败: {}", filePath, e);
+            log.error("读取文件所有行失败: {}", filePath, e);
             return Collections.emptyList();
         }
     }
@@ -409,10 +413,10 @@ public final class FileUtils {
                     : new OpenOption[]{StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING};
 
             Files.writeString(path, content, charset, options);
-            log.info("文件写入成功: {}", filePath);
+            log.info("写入字符串到文件成功: {}", filePath);
             return true;
         } catch (IOException e) {
-            log.error("文件写入失败: {}", filePath, e);
+            log.error("写入字符串到文件失败: {}", filePath, e);
             return false;
         }
     }
@@ -451,10 +455,10 @@ public final class FileUtils {
                     : new OpenOption[]{StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING};
 
             Files.write(path, bytes, options);
-            log.info("文件写入成功: {}", filePath);
+            log.info("写入字节数组到文件成功: {}", filePath);
             return true;
         } catch (IOException e) {
-            log.error("文件写入失败: {}", filePath, e);
+            log.error("写入字节数组到文件失败: {}", filePath, e);
             return false;
         }
     }
@@ -825,7 +829,7 @@ public final class FileUtils {
      */
     private static void zipDirectory(Path rootPath, Path dirPath, ZipOutputStream zos) throws IOException {
         try (Stream<Path> paths = Files.list(dirPath)) {
-            for (Path path : paths.collect(Collectors.toList())) {
+            for (Path path : paths.toList()) {
                 String entryName = rootPath.relativize(path).toString().replace("\\", "/");
                 if (Files.isDirectory(path)) {
                     zipDirectory(rootPath, path, zos);
@@ -920,7 +924,7 @@ public final class FileUtils {
         try {
             Path dir = Paths.get(dirPath);
             if (!Files.exists(dir) || !Files.isDirectory(dir)) {
-                log.error("目录不存在或不是目录: {}", dirPath);
+                log.error("列出目录下所有文件失败，目录不存在或不是目录: {}", dirPath);
                 return Collections.emptyList();
             }
 
@@ -929,14 +933,14 @@ public final class FileUtils {
                     return paths
                             .filter(Files::isRegularFile)
                             .map(Path::toString)
-                            .collect(Collectors.toList());
+                            .toList();
                 }
             } else {
                 try (Stream<Path> paths = Files.list(dir)) {
                     return paths
                             .filter(Files::isRegularFile)
                             .map(Path::toString)
-                            .collect(Collectors.toList());
+                            .toList();
                 }
             }
         } catch (IOException e) {
@@ -971,7 +975,7 @@ public final class FileUtils {
                     String ext = getExtension(filePath).toLowerCase();
                     return extensionSet.contains(ext);
                 })
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
@@ -995,7 +999,7 @@ public final class FileUtils {
         try {
             Path dir = Paths.get(dirPath);
             if (!Files.exists(dir) || !Files.isDirectory(dir)) {
-                log.error("目录不存在或不是目录: {}", dirPath);
+                log.error("列出目录下所有文件失败，目录不存在或不是目录: {}", dirPath);
                 return Collections.emptyList();
             }
 
@@ -1007,7 +1011,7 @@ public final class FileUtils {
                             .filter(Files::isRegularFile)
                             .filter(path -> matcher.matches(path.getFileName()))
                             .map(Path::toString)
-                            .collect(Collectors.toList());
+                            .toList();
                 }
             } else {
                 try (Stream<Path> paths = Files.list(dir)) {
@@ -1015,7 +1019,7 @@ public final class FileUtils {
                             .filter(Files::isRegularFile)
                             .filter(path -> matcher.matches(path.getFileName()))
                             .map(Path::toString)
-                            .collect(Collectors.toList());
+                            .toList();
                 }
             }
         } catch (IOException e) {
@@ -1048,7 +1052,7 @@ public final class FileUtils {
                     }
                     return maxSize == null || size <= maxSize;
                 })
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
@@ -1064,7 +1068,7 @@ public final class FileUtils {
         try {
             Path dir = Paths.get(dirPath);
             if (!Files.exists(dir) || !Files.isDirectory(dir)) {
-                log.error("目录不存在或不是目录: {}", dirPath);
+                log.error("计算目录大小失败，目录不存在或不是目录: {}", dirPath);
                 return -1L;
             }
 
@@ -1175,9 +1179,8 @@ public final class FileUtils {
      *
      * @param input  输入流
      * @param output 输出流
-     * @throws IOException IO异常
      */
-    public static void copyStream(InputStream input, OutputStream output) throws IOException {
+    public static void copyStream(InputStream input, OutputStream output) {
         Objects.requireNonNull(input, "输入流不能为null");
         Objects.requireNonNull(output, "输出流不能为null");
         IoUtil.copy(input, output, DEFAULT_BUFFER_SIZE);
@@ -1216,7 +1219,7 @@ public final class FileUtils {
             }
 
             try (Stream<Path> paths = Files.list(dir)) {
-                for (Path path : paths.collect(Collectors.toList())) {
+                for (Path path : paths.toList()) {
                     if (Files.isDirectory(path)) {
                         deleteDirectoryRecursively(path);
                     } else {

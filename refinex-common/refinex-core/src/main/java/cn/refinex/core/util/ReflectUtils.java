@@ -300,11 +300,10 @@ public final class ReflectUtils {
      * @return 对象实例，创建失败返回null
      * @throws IllegalArgumentException 如果类对象为null
      */
-    @SuppressWarnings("unchecked")
     public static <T> T newInstance(Class<T> clazz, Object... params) {
         validateNotNull(clazz, "类对象不能为null");
         try {
-            return (T) ReflectUtil.newInstance(clazz, params);
+            return ReflectUtil.newInstance(clazz, params);
         } catch (Exception e) {
             log.error("创建实例失败: {}, 参数: {}", clazz.getName(), Arrays.toString(params), e);
             return null;
@@ -395,11 +394,19 @@ public final class ReflectUtils {
                 log.error("未找到静态方法: {}.{}", clazz.getName(), methodName);
                 return null;
             }
-            method.setAccessible(true);
+
+            // 仅在必要时尝试解除访问限制
+            if (!Modifier.isPublic(method.getModifiers()) || !Modifier.isPublic(method.getDeclaringClass().getModifiers())) {
+                try {
+                    method.setAccessible(true);
+                } catch (Exception e) {
+                    log.warn("方法访问受限 (JDK17+ 模块系统)：{}.{}", clazz.getName(), methodName);
+                }
+            }
+
             return (T) method.invoke(null, args);
         } catch (Exception e) {
-            log.error("调用静态方法失败: {}.{}, 参数: {}",
-                    clazz.getName(), methodName, Arrays.toString(args), e);
+            log.error("调用静态方法失败: {}.{}, 参数: {}", clazz.getName(), methodName, Arrays.toString(args), e);
             return null;
         }
     }
@@ -473,7 +480,7 @@ public final class ReflectUtils {
 
         return getAllMethods(clazz).stream()
                 .filter(method -> method.getName().equals(methodName))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
@@ -554,7 +561,7 @@ public final class ReflectUtils {
         try {
             Field field = getField(clazz, fieldName);
             if (field == null) {
-                log.error("未找到静态字段: {}.{}", clazz.getName(), fieldName);
+                log.error("获取静态字段值失败，未找到静态字段: {}.{}", clazz.getName(), fieldName);
                 return null;
             }
             field.setAccessible(true);
@@ -571,19 +578,16 @@ public final class ReflectUtils {
      * @param obj       对象实例
      * @param fieldName 字段名
      * @param value     字段值
-     * @return 是否设置成功
      * @throws IllegalArgumentException 如果对象或字段名为null
      */
-    public static boolean setFieldValue(Object obj, String fieldName, Object value) {
+    public static void setFieldValue(Object obj, String fieldName, Object value) {
         validateNotNull(obj, "对象实例不能为null");
         validateNotBlank(fieldName, "字段名不能为空");
 
         try {
             ReflectUtil.setFieldValue(obj, fieldName, value);
-            return true;
         } catch (Exception e) {
             log.error("设置字段值失败: {}.{} = {}", obj.getClass().getName(), fieldName, value, e);
-            return false;
         }
     }
 
@@ -702,7 +706,7 @@ public final class ReflectUtils {
      */
     public static boolean isFinalField(Field field) {
         validateNotNull(field, "字段对象不能为null");
-        return Modifier.isFinal(field.getModifiers());
+        return !Modifier.isFinal(field.getModifiers());
     }
 
     /**
@@ -832,7 +836,7 @@ public final class ReflectUtils {
 
         return getAllFields(clazz).stream()
                 .filter(field -> field.isAnnotationPresent(annotationClass))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
@@ -849,7 +853,7 @@ public final class ReflectUtils {
 
         return getAllMethods(clazz).stream()
                 .filter(method -> method.isAnnotationPresent(annotationClass))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     // ==================== 泛型处理 ====================
@@ -880,7 +884,7 @@ public final class ReflectUtils {
      */
     public static Type getFirstGenericType(Class<?> clazz) {
         List<Type> types = getGenericTypes(clazz);
-        return types.isEmpty() ? null : types.get(0);
+        return types.isEmpty() ? null : types.getFirst();
     }
 
     /**
@@ -945,7 +949,7 @@ public final class ReflectUtils {
                 String fieldName = sourceField.getName();
                 Field targetField = targetFieldMap.get(fieldName);
 
-                if (targetField != null && !isFinalField(targetField)) {
+                if (targetField != null && isFinalField(targetField)) {
                     Object value = getFieldValue(source, fieldName);
                     if (value != null) {
                         setFieldValue(target, fieldName, value);
@@ -968,32 +972,7 @@ public final class ReflectUtils {
      * @throws IllegalArgumentException 如果源对象或目标对象为null
      */
     public static boolean copyPropertiesIgnoreNull(Object source, Object target) {
-        validateNotNull(source, "源对象不能为null");
-        validateNotNull(target, "目标对象不能为null");
-
-        try {
-            List<Field> sourceFields = getAllFields(source.getClass());
-            List<Field> targetFields = getAllFields(target.getClass());
-
-            Map<String, Field> targetFieldMap = targetFields.stream()
-                    .collect(Collectors.toMap(Field::getName, field -> field, (f1, f2) -> f1));
-
-            for (Field sourceField : sourceFields) {
-                String fieldName = sourceField.getName();
-                Field targetField = targetFieldMap.get(fieldName);
-
-                if (targetField != null && !isFinalField(targetField)) {
-                    Object value = getFieldValue(source, fieldName);
-                    if (value != null) {
-                        setFieldValue(target, fieldName, value);
-                    }
-                }
-            }
-            return true;
-        } catch (Exception e) {
-            log.error("拷贝属性失败", e);
-            return false;
-        }
+        return copyProperties(source, target);
     }
 
     // ==================== 缓存管理 ====================
@@ -1006,7 +985,7 @@ public final class ReflectUtils {
      */
     private static synchronized void cacheClass(String className, Class<?> clazz) {
         if (CLASS_CACHE.size() >= MAX_CACHE_SIZE) {
-            clearOldestCache(CLASS_CACHE, MAX_CACHE_SIZE / 2);
+            clearOldestCache(CLASS_CACHE);
         }
         CLASS_CACHE.put(className, clazz);
     }
@@ -1019,7 +998,7 @@ public final class ReflectUtils {
      */
     private static synchronized void cacheMethod(String cacheKey, Method method) {
         if (METHOD_CACHE.size() >= MAX_CACHE_SIZE) {
-            clearOldestCache(METHOD_CACHE, MAX_CACHE_SIZE / 2);
+            clearOldestCache(METHOD_CACHE);
         }
         METHOD_CACHE.put(cacheKey, method);
     }
@@ -1032,7 +1011,7 @@ public final class ReflectUtils {
      */
     private static synchronized void cacheField(String cacheKey, Field field) {
         if (FIELD_CACHE.size() >= MAX_CACHE_SIZE) {
-            clearOldestCache(FIELD_CACHE, MAX_CACHE_SIZE / 2);
+            clearOldestCache(FIELD_CACHE);
         }
         FIELD_CACHE.put(cacheKey, field);
     }
@@ -1040,18 +1019,17 @@ public final class ReflectUtils {
     /**
      * 清除最旧的缓存
      *
-     * @param cache       缓存Map
-     * @param removeCount 移除数量
-     * @param <K>         键类型
-     * @param <V>         值类型
+     * @param <K>   键类型
+     * @param <V>   值类型
+     * @param cache 缓存Map
      */
-    private static <K, V> void clearOldestCache(Map<K, V> cache, int removeCount) {
+    private static <K, V> void clearOldestCache(Map<K, V> cache) {
         Iterator<K> iterator = cache.keySet().iterator();
-        for (int i = 0; i < removeCount && iterator.hasNext(); i++) {
+        for (int i = 0; i < 250 && iterator.hasNext(); i++) {
             iterator.next();
             iterator.remove();
         }
-        log.debug("清除{}个最旧的缓存", removeCount);
+        log.debug("清除{}个最旧的缓存", 250);
     }
 
     /**
@@ -1070,7 +1048,7 @@ public final class ReflectUtils {
      * @return 缓存大小信息
      */
     public static Map<String, Integer> getCacheSizes() {
-        Map<String, Integer> sizes = new HashMap<>(4);
+        Map<String, Integer> sizes = HashMap.newHashMap(4);
         sizes.put("methodCache", METHOD_CACHE.size());
         sizes.put("fieldCache", FIELD_CACHE.size());
         sizes.put("classCache", CLASS_CACHE.size());
