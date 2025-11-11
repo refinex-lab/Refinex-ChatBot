@@ -1,0 +1,82 @@
+# Refinex Gateway 服务配置
+
+spring:
+  main:
+    # 显式声明 WebFlux 环境（防止外部配置污染）
+    web-application-type: reactive
+  cloud:
+    gateway:
+      # 自定义属性，是否开启请求日志, 默认开启
+      request-log: true
+      server:
+        webflux:
+          routes:
+            # 平台服务路由
+            - id: refinex-platform
+              uri: lb://refinex-platform
+              predicates:
+                - Path=/refinex-platform/**
+              filters:
+                - StripPrefix=1
+
+            # 知识库服务路由
+            - id: refinex-kb
+              uri: lb://refinex-kb
+              predicates:
+                - Path=/refinex-kb/**
+              filters:
+                - StripPrefix=1
+
+            # 智能体服务路由
+            - id: refinex-ai
+              uri: lb://refinex-ai
+              predicates:
+                - Path=/refinex-ai/**
+              filters:
+                - StripPrefix=1
+
+security:
+  ignore:
+    # 网关鉴权白名单路径 (无需登录即可访问)
+    whites:
+      - /refinex-platform/auth/login
+      - /refinex-platform/auth/logout
+      - /refinex-platform/auth/refresh
+      - /refinex-platform/auth/captcha
+      - /refinex-platform/public/**
+      - /refinex-ai/public/**
+      - /refinex-kb/public/**
+      - /doc.html
+      - /v3/api-docs/**
+      - /swagger-resources/**
+      - /webjars/**
+      - /favicon.ico
+      - /actuator/**
+
+api-decrypt:
+  # 是否启用接口报文解密
+  enabled: false
+  # 客户端传递解密标识的 Header
+  header-flag: Encrypt-Key
+
+# Knife4j 网关聚合配置
+knife4j:
+  gateway:
+    # 是否启用 Knife4j 网关聚合
+    enable: true
+    # 排序规则
+    tags-sorter: order
+    operations-sorter: order
+    # 聚合策略: manual-手动配置, discover-服务发现(自动聚合所有服务)
+    strategy: discover
+    # 服务发现配置
+    discover:
+      enable: true
+      # 指定版本号(openapi3|swagger2)
+      version : openapi3
+      # 排除的服务(网关本身、非业务服务等)
+      excluded-services:
+        - refinex-gateway
+      # OpenAPI3 配置
+      oas3:
+        url: /v3/api-docs

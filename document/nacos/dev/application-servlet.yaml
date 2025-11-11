@@ -1,0 +1,70 @@
+# 这里放一些非网管的，但是需要在 Servlet 服务共享的 YAML 配置，避免影响到 Gateway 服务
+
+# Spring Config
+spring:
+  # Servlet 配置
+  servlet:
+    # 上传文件配置
+    multipart:
+      # 单个文件最大大小
+      max-file-size: 100MB
+      # 最大请求大小
+      max-request-size: 100MB
+
+  # MVC 配置
+  mvc:
+    # 静态资源路径模式
+    static-path-pattern: /static/**
+    # 日期时间格式化
+    format:
+      date: yyyy-MM-dd
+      time: HH:mm:ss
+      date-time: yyyy-MM-dd HH:mm:ss
+    # 路径匹配策略(ant_path_matcher 或 path_pattern_parser)
+    pathmatch:
+      matching-strategy: path_pattern_parser
+
+  # 数据源配置 (Dynamic DataSource)
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    dynamic:
+      # 主数据源名称
+      primary: master
+      # 严格模式,找不到数据源抛异常
+      strict: true
+      # 使用 P6Spy 打印 SQL(开发环境可启用, 生产环境必须关闭)
+      p6spy: false
+      # Seata 分布式事务模式(AT、XA、SAGA)
+      seata: false
+      # 全局 Hikari 配置
+      hikari:
+        # 自动提交
+        auto-commit: true
+        # 连接池名称
+        pool-name: HikariPool-${spring.application.name}
+        # 最大连接数(建议根据数据库性能和并发量调整)
+        maximum-pool-size: 30
+        # 最小空闲连接数
+        minimum-idle: 10
+        # 连接超时(毫秒)
+        connection-timeout: 30000
+        # 空闲超时(毫秒,建议大于 5 分钟)
+        idle-timeout: 600000
+        # 最大生命周期(毫秒,建议小于数据库连接超时时间)
+        max-lifetime: 1800000
+        # 连接测试查询
+        connection-test-query: SELECT 1
+        # 连接保活时间(毫秒,建议小于空闲超时)
+        keepalive-time: 30000
+        # 验证超时(毫秒)
+        validation-timeout: 5000
+        # 泄漏检测阈值(毫秒,0 表示关闭)
+        leak-detection-threshold: 60000
+      # 数据源列表
+      datasource:
+        # 主数据源
+        master:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://127.0.0.1:3306/refinex_platform?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false
+          username: root
+          password: 123456

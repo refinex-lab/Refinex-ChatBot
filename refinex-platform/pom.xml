@@ -14,22 +14,58 @@
     <description>Refinex ChatBot platform module</description>
 
     <dependencies>
-        <!-- Spring Boot Web Starter (包含 RestClient 支持) -->
+        <!-- Web: Web 模块，包含 Web 相关组件 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!-- Sa-Token 权限认证 Servlet 支持 -->
+        <!-- Config: 配置中心 -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+        </dependency>
+
+        <!-- Discovery: 服务发现 -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+
+        <!-- Bootstrap: 引导类 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-bootstrap</artifactId>
+        </dependency>
+
+        <!-- LoadBalancer: 负载均衡器 -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+        </dependency>
+
+        <!-- Sa-Token: Servlet 模块，包含 Servlet 相关组件 -->
         <dependency>
             <groupId>cn.refinex</groupId>
             <artifactId>refinex-satoken-servlet</artifactId>
         </dependency>
 
-        <!-- Refinex JDBC: JDBC 模块，包含 JDBC 相关组件 -->
+        <!-- JDBC: JDBC 模块，包含 JDBC 相关组件 -->
         <dependency>
             <groupId>cn.refinex</groupId>
             <artifactId>refinex-jdbc</artifactId>
+        </dependency>
+
+        <!-- Redis: Redis 模块，包含 Redis 相关组件 -->
+        <dependency>
+            <groupId>cn.refinex</groupId>
+            <artifactId>refinex-redis</artifactId>
+        </dependency>
+
+        <!-- Captcha: 验证码模块，包含验证码相关组件 -->
+        <dependency>
+            <groupId>com.github.whvcse</groupId>
+            <artifactId>easy-captcha</artifactId>
         </dependency>
 
         <!-- JUnit 5 -->
