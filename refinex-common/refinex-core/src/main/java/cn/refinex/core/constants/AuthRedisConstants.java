@@ -31,6 +31,16 @@ public final class AuthRedisConstants {
     private static final String USER_PERMISSION_LIST_PREFIX = AUTH_PREFIX + "user:{}:permissions";
 
     /**
+     * 用户登录失败次数缓存键前缀
+     */
+    private static final String LOGIN_FAIL_COUNT_PREFIX = AUTH_PREFIX + "login:{}:fail-count";
+
+    /**
+     * 用户登录锁定标识缓存键前缀
+     */
+    private static final String LOGIN_LOCK_PREFIX = AUTH_PREFIX + "login:{}:locked";
+
+    /**
      * 构建用户角色列表缓存键
      *
      * @param userId 用户 ID
@@ -48,5 +58,25 @@ public final class AuthRedisConstants {
      */
     public static String buildUserPermissionsKey(Long userId) {
         return StringUtils.format(USER_PERMISSION_LIST_PREFIX, userId);
+    }
+
+    /**
+     * 构建登录失败次数缓存键
+     *
+     * @param identifier 登录唯一标识（如邮箱、用户名）
+     * @return 登录失败次数缓存键
+     */
+    public static String buildLoginFailCountKey(String identifier) {
+        return StringUtils.format(LOGIN_FAIL_COUNT_PREFIX, identifier);
+    }
+
+    /**
+     * 构建登录锁定缓存键
+     *
+     * @param identifier 登录唯一标识（如邮箱、用户名）
+     * @return 登录锁定缓存键
+     */
+    public static String buildLoginLockKey(String identifier) {
+        return StringUtils.format(LOGIN_LOCK_PREFIX, identifier);
     }
 }

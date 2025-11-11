@@ -39,8 +39,13 @@ CREATE TABLE IF NOT EXISTS sys_user
 ) COMMENT '用户表';
 
 -- 初始化超级管理员
-INSERT IGNORE INTO sys_user (id, username, mobile_cipher, mobile_index, email_cipher, email_index, password, nickname, sex, status, create_time)
-VALUES (1, 'refinex', 'w55HcqYTCxm45jAawiGEyNpxXz5XI/yOI0MVOIPyzjOPIrvogEtL', 'c57eda2d10226c4de1015d122f10c95e761b1ad81f38c7cc40a662d727d3c758', 'cwW6TXH0PJKlTzSv3Xk0H3DXpldTS6fIZPRil5E41TZbC2nslFIFZyc9Lg==', '07412cb2ee0724653950d1899676790a89cd16d96f7b9f2ac01e44eaf4fd548f', '$2a$12$7gJV4RjuaVj3F9jo//nP6OzzUtL0mZIWcmhe4zrEhXQ5RJFPAemBq', '超级管理员', 'MALE', 1, NOW());
+INSERT IGNORE INTO sys_user (id, username, mobile_cipher, mobile_index, email_cipher, email_index, password, nickname,
+                             sex, status, create_time)
+VALUES (1, 'refinex', 'w55HcqYTCxm45jAawiGEyNpxXz5XI/yOI0MVOIPyzjOPIrvogEtL',
+        'c57eda2d10226c4de1015d122f10c95e761b1ad81f38c7cc40a662d727d3c758',
+        'cwW6TXH0PJKlTzSv3Xk0H3DXpldTS6fIZPRil5E41TZbC2nslFIFZyc9Lg==',
+        '07412cb2ee0724653950d1899676790a89cd16d96f7b9f2ac01e44eaf4fd548f',
+        '$2a$12$7gJV4RjuaVj3F9jo//nP6OzzUtL0mZIWcmhe4zrEhXQ5RJFPAemBq', '超级管理员', 'MALE', 1, NOW());
 
 -- 系统角色表
 CREATE TABLE IF NOT EXISTS sys_role
@@ -182,6 +187,27 @@ VALUES ('ADD', '新增', '创建新记录或数据项', 1, 1),
        ('AUDIT', '审核', '进行审批或审核操作', 9, 1),
        ('DOWNLOAD', '下载', '下载文件或附件', 10, 1);
 
+-- 登录日志表
+CREATE TABLE IF NOT EXISTS sys_login_log
+(
+    id             BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
+    user_id        BIGINT                             NULL COMMENT '用户ID,匿名登录失败时可为空',
+    username       VARCHAR(50)                        NULL COMMENT '用户名',
+    login_identity VARCHAR(255)                       NOT NULL COMMENT '登录标识(如邮箱)',
+    status         TINYINT  DEFAULT 1                 NOT NULL COMMENT '登录状态:1成功,0失败',
+    message        VARCHAR(500)                       NULL COMMENT '登录结果描述',
+    login_ip       VARCHAR(64)                        NULL COMMENT '登录IP',
+    login_location VARCHAR(255)                       NULL COMMENT '登录地(预留)',
+    device_type    VARCHAR(32)                        NULL COMMENT '设备类型:PC/APP/H5',
+    user_agent     VARCHAR(500)                       NULL COMMENT 'User-Agent',
+    login_time     DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL COMMENT '登录时间',
+    create_by      BIGINT                             NULL COMMENT '创建人(通常为空)',
+    create_time    DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL COMMENT '创建时间',
+    update_by      BIGINT                             NULL COMMENT '更新人(通常为空)',
+    update_time    DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    INDEX idx_login_user (user_id),
+    INDEX idx_login_time (login_time)
+) COMMENT '用户登录日志表-记录每次登录行为';
 
 -- 恢复外键检查
 SET FOREIGN_KEY_CHECKS = 1;

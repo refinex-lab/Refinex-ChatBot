@@ -2,6 +2,7 @@ package cn.refinex.jdbc.core.domain;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
  * @since 1.0.0
  */
 @Data
+@SuperBuilder // Lombok 1.18.2+ 开始支持（建议至少用 1.18.24 以上版本）, 支持继承字段
 public class BaseEntity implements Serializable {
 
     @Serial

@@ -60,7 +60,19 @@ public class CryptoService {
     }
 
     /**
+     * 生成仅用于查询索引的 HMAC 值
+     *
+     * @param plaintext 明文
+     * @return HMAC 索引值
+     * @throws Exception 计算过程中抛出的异常
+     */
+    public String index(String plaintext) throws Exception {
+        return HmacUtil.hmacSha256(hmacKey, plaintext);
+    }
+
+    /**
      * 加密后的值，包含密文和索引值
      */
-    public record EncryptedValue(String cipher, String index) {}
+    public record EncryptedValue(String cipher, String index) {
+    }
 }

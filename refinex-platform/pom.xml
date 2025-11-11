@@ -62,6 +62,18 @@
             <artifactId>refinex-redis</artifactId>
         </dependency>
 
+        <!-- Validation: 验证模块，包含验证相关组件 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <!-- Password Encoder: 密码加密模块，包含密码加密相关组件 -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-crypto</artifactId>
+        </dependency>
+
         <!-- Captcha: 验证码模块，包含验证码相关组件 -->
         <dependency>
             <groupId>com.github.whvcse</groupId>

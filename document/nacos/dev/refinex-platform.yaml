@@ -1,0 +1,53 @@
+# Refinex Platform 服务配置
+
+# Refinex Config
+refinex:
+  # 验证码配置
+  captcha:
+    # 是否启用验证码
+    enabled: true
+    # 验证码类型
+    # 可选值：
+    #   - spec: PNG 类型（线段干扰）
+    #   - gif: GIF 动画类型
+    #   - arithmetic: 算术验证码
+    #   - chinese: 中文验证码
+    #   - chinese_gif: 中文 GIF 验证码
+    type: spec
+    # 图片宽度
+    width: 130
+    # 图片高度
+    height: 48
+    # 验证码长度（字符数）
+    length: 4
+    # 过期时间（秒）
+    expire-seconds: 300
+    # 字符类型
+    # 可选值：
+    #   - 0: 数字和字母混合
+    #   - 1: 纯数字
+    #   - 2: 纯字母
+    #   - 3: 纯大写字母
+    #   - 4: 纯小写字母
+    #   - 5: 数字和大写字母
+    char-type: 2
+    # 是否区分大小写
+    case-sensitive: false
+    # 字体（1-10）
+    font: 1
+    # Redis Key 前缀
+    redis-key-prefix: "captcha:"
+
+  # 认证配置
+  auth:
+    login:
+      # 登录是否开启验证码校验
+      enable-captcha: true
+      # 是否允许自助注册
+      allow-register: true
+      # 密码错误最大尝试次数
+      max-fail-attempts: 5
+      # 失败次数统计窗口
+      fail-record-ttl: 15m
+      # 触发锁定后的锁定时长
+      lock-duration: 30m

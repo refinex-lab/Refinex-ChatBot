@@ -2,7 +2,8 @@ package cn.refinex.satokrn.common.helper;
 
 import cn.dev33.satoken.session.SaSession;
 import cn.dev33.satoken.stp.StpUtil;
-import cn.hutool.core.util.ObjectUtil;
+import cn.dev33.satoken.stp.parameter.SaLoginParameter;
+import cn.refinex.core.util.StringUtils;
 import cn.refinex.satokrn.common.constant.SaTokenConstants;
 import cn.refinex.satokrn.common.model.LoginUser;
 import lombok.AccessLevel;
@@ -52,20 +53,11 @@ public class LoginHelper {
      * @param device    登录设备类型(可选,如: PC, MOBILE)
      */
     public static void login(LoginUser loginUser, String device) {
-        // 设置登录时间
-        loginUser.setLoginTime(LocalDateTime.now());
-
-        // 执行登录
-        if (ObjectUtil.isNotEmpty(device)) {
-            StpUtil.login(loginUser.getUserId(), device);
-        } else {
-            StpUtil.login(loginUser.getUserId());
+        SaLoginParameter parameter = SaLoginParameter.create();
+        if (StringUtils.isNotBlank(device)) {
+            parameter.setDeviceType(device);
         }
-
-        // 存储登录用户信息到 Session
-        setLoginUser(loginUser);
-
-        log.debug("用户登录成功: userId={}, username={}, device={}", loginUser.getUserId(), loginUser.getUsername(), device);
+        login(loginUser, parameter);
     }
 
     /**
@@ -74,7 +66,30 @@ public class LoginHelper {
      * @param loginUser 登录用户信息
      */
     public static void login(LoginUser loginUser) {
-        login(loginUser, null);
+        login(loginUser, (SaLoginParameter) null);
+    }
+
+    /**
+     * 用户登录(自定义参数)
+     *
+     * @param loginUser 登录用户信息
+     * @param parameter 登录参数
+     */
+    public static void login(LoginUser loginUser, SaLoginParameter parameter) {
+        // 设置登录时间
+        loginUser.setLoginTime(LocalDateTime.now());
+
+        // 执行登录
+        if (parameter != null) {
+            StpUtil.login(loginUser.getUserId(), parameter);
+        } else {
+            StpUtil.login(loginUser.getUserId());
+        }
+
+        // 存储登录用户信息到 Session
+        setLoginUser(loginUser);
+
+        log.debug("用户登录成功: userId={}, username={}, parameter={}", loginUser.getUserId(), loginUser.getUsername(), parameter);
     }
 
     /**
