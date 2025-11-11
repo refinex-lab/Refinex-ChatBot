@@ -11,12 +11,15 @@ import org.springframework.core.annotation.Order;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
+
+import java.nio.charset.StandardCharsets;
 
 /**
  * 网关异常处理器
@@ -50,20 +53,48 @@ public class GatewayExceptionHandler implements ErrorWebExceptionHandler {
             return Mono.error(ex);
         }
 
-        // 提取异常信息
-        String msg;
-        if (ex instanceof NotFoundException) {
-            msg = "服务未找到";
-        } else if (ex instanceof ResponseStatusException responseStatusException) {
-            msg = responseStatusException.getMessage();
-        } else {
-            msg = "内部服务器错误";
-        }
+        HttpStatus status = resolveHttpStatus(ex);
+        String message = resolveMessage(ex);
 
-        log.error("[网关异常处理] 请求路径：{}，异常信息：{}", exchange.getRequest().getURI(), ex.getMessage());
+        log.error("[网关异常处理] 请求路径：{}", exchange.getRequest().getURI(), ex);
 
         // 构建响应体
-        return webFluxResponseWriter(response, msg, HttpStatus.OK.value());
+        return writeErrorResponse(response, message, status);
+    }
+
+    /**
+     * 根据异常解析响应状态码。
+     *
+     * @param throwable 抛出的异常
+     * @return {@link HttpStatus}
+     */
+    private HttpStatus resolveHttpStatus(Throwable throwable) {
+        if (throwable instanceof NotFoundException) {
+            return HttpStatus.SERVICE_UNAVAILABLE;
+        }
+        if (throwable instanceof ResponseStatusException responseStatusException) {
+            HttpStatusCode statusCode = responseStatusException.getStatusCode();
+            HttpStatus resolved = HttpStatus.resolve(statusCode.value());
+            return resolved != null ? resolved : HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        return HttpStatus.INTERNAL_SERVER_ERROR;
+    }
+
+    /**
+     * 根据异常解析消息。
+     *
+     * @param throwable 抛出的异常
+     * @return 提示消息
+     */
+    private String resolveMessage(Throwable throwable) {
+        if (throwable instanceof NotFoundException) {
+            return "服务未找到";
+        }
+        if (throwable instanceof ResponseStatusException responseStatusException) {
+            String reason = responseStatusException.getReason();
+            return reason != null ? reason : responseStatusException.getMessage();
+        }
+        return "内部服务器错误";
     }
 
     /**
@@ -71,18 +102,20 @@ public class GatewayExceptionHandler implements ErrorWebExceptionHandler {
      *
      * @param response 服务器 HTTP 响应对象
      * @param value    响应值
-     * @param code     响应码
+     * @param status   响应状态码
      * @return Mono<Void> 表示处理完成的 Mono 实例
      */
     @NullMarked
-    private Mono<Void> webFluxResponseWriter(ServerHttpResponse response, Object value, int code) {
+    private Mono<Void> writeErrorResponse(ServerHttpResponse response, Object value, HttpStatus status) {
         // 设置响应状态码和内容类型
-        response.setStatusCode(HttpStatus.OK);
-        response.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+        response.setStatusCode(status);
+        HttpHeaders headers = response.getHeaders();
+        headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
         // 构建响应体
-        ApiResponse<?> result = ApiResponse.error(code, value.toString());
-        DataBuffer dataBuffer = response.bufferFactory().wrap(jsonUtils.toJson(result).getBytes());
+        ApiResponse<?> result = ApiResponse.error(status.value(), value.toString());
+        byte[] bytes = jsonUtils.toJson(result).getBytes(StandardCharsets.UTF_8);
+        DataBuffer dataBuffer = response.bufferFactory().wrap(bytes);
         return response.writeWith(Mono.just(dataBuffer));
     }
 }

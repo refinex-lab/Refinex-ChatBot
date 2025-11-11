@@ -2,6 +2,7 @@ package cn.refinex.gateway;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 /**
  * Refinex 网关应用主类
@@ -9,6 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author Refinex
  * @since 1.0.0
  */
+@EnableDiscoveryClient
 @SpringBootApplication
 public class RefinexGatewayApplication {
 

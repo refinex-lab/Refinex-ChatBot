@@ -1,13 +1,43 @@
+# 这里放的 YAML 共享配置要确保是 Servlet 服务和 Gateway 服务都能识别的，否则会导致 Gateway 启动失败
+
 # Spring Config
 spring:
-  # Servlet 配置
-  servlet:
-    # 上传文件配置
-    multipart:
-      # 单个文件最大大小
-      max-file-size: 100MB
-      # 最大请求大小
-      max-request-size: 100MB
+  main:
+    # 允许 Bean 定义覆盖,解决多模块场景下的 Bean 冲突
+    allow-bean-definition-overriding: true
+    # 延迟初始化, 加速应用启动(生产环境可根据实际情况调整)
+    lazy-initialization: false
+    # 允许循环依赖(建议在代码层面避免循环依赖)
+    allow-circular-references: true
+
+  # Redis 数据源配置
+  data:
+    redis:
+      # Redis 主机地址
+      host: 127.0.0.1
+      # Redis 端口号
+      port: 6379
+      # Redis 密码, 默认空字符串
+      password:
+      # Redis 数据库索引, 默认 0
+      database: 0
+      # Redis 连接超时时间, 单位毫秒
+      timeout: 10s
+      # Lettuce 连接池配置
+      lettuce:
+        pool:
+          # 最大连接数(建议根据并发量调整,一般为 CPU 核心数的 2-4 倍)
+          max-active: 32
+          # 最大空闲连接
+          max-idle: 16
+          # 最小空闲连接(保持一定数量连接池预热)
+          min-idle: 8
+          # 连接耗尽时最大等待时间
+          max-wait: 3000ms
+          # 空闲连接检测间隔
+          time-between-eviction-runs: 60s
+        # 关闭超时
+        shutdown-timeout: 200ms
 
   # 线程配置
   threads:
@@ -79,6 +109,48 @@ sa-token:
   token-session-timeout: -1
   # 自动续签(每次访问自动续期)
   auto-renew: true
+
+# Redisson Config
+redisson:
+  # 统一键前缀, 避免多应用共用 Redis 时的键冲突
+  key-prefix: "refinex:"
+  # Redisson 线程池配置(建议为 CPU 核心数)
+  threads: 8
+  # Netty 线程数(建议为 CPU 核心数的 2 倍)
+  netty-threads: 16
+  # 编解码器(建议使用 Kryo 或 FST, 性能优于 JDK 序列化)
+  codec: org.redisson.codec.Kryo5Codec
+  # 单节点配置
+  single-server-config:
+    # 客户端名称
+    client-name: ${spring.application.name}
+    # 连接池大小(建议根据并发量调整)
+    connection-pool-size: 64
+    # 最小空闲连接数
+    connection-minimum-idle-size: 16
+    # 空闲连接超时(毫秒)
+    idle-connection-timeout: 10000
+    # 命令执行超时(毫秒)
+    timeout: 3000
+    # 连接超时(毫秒)
+    connect-timeout: 3000
+    # 命令重试次数
+    retry-attempts: 3
+    # 命令重试间隔(毫秒)
+    retry-interval: 1500
+    # 订阅连接池大小
+    subscription-connection-pool-size: 50
+    # 订阅连接最小空闲数
+    subscription-connection-minimum-idle-size: 1
+    # DNS 监控间隔(毫秒)
+    dns-monitoring-interval: 5000
+
+# Lock4J Config
+lock4j:
+  # 获取锁超时时间(毫秒)
+  acquire-timeout: 3000
+  # 锁过期时间(毫秒), 防止死锁
+  expire: 30000
 
 # Refinex Config
 refinex:
