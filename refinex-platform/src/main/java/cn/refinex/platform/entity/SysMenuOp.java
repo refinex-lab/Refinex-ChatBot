@@ -2,7 +2,9 @@ package cn.refinex.platform.entity;
 
 import cn.refinex.jdbc.core.domain.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -14,9 +16,10 @@ import java.io.Serializable;
  * @since 1.0.0
  */
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+//@Builder
+@SuperBuilder
+//@NoArgsConstructor
+//@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Schema(description = "系统菜单操作实体类")
 public class SysMenuOp extends BaseEntity implements Serializable {

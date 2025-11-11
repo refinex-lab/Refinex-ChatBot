@@ -2,7 +2,9 @@ package cn.refinex.platform.entity;
 
 import cn.refinex.jdbc.core.domain.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -15,9 +17,10 @@ import java.time.LocalDateTime;
  * @since 1.0.0
  */
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+//@Builder
+@SuperBuilder
+//@NoArgsConstructor
+//@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Schema(description = "系统用户实体类")
 public class SysUser extends BaseEntity implements Serializable {

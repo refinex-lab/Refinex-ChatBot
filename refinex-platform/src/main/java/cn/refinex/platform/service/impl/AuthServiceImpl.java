@@ -469,22 +469,21 @@ public class AuthServiceImpl implements AuthService {
     private SysUser buildNewUser(String username, String nickname, EncryptedValue encryptedEmail, String rawPassword) {
         LocalDateTime now = LocalDateTime.now();
         Long userId = snowflakeIdUtils.nextId();
-        SysUser user = new SysUser();
-        user.setId(userId);
-        user.setUsername(username);
-        user.setNickname(StringUtils.blankToDefault(nickname, username));
-        user.setEmailCipher(encryptedEmail.cipher());
-        user.setEmailIndex(encryptedEmail.index());
-        user.setPassword(passwordEncoder.encode(rawPassword));
-        user.setSex("OTHER");
-        user.setAccountStatus(1);
-        user.setStatus(1);
-        user.setDeleted(0);
-        user.setCreateBy(userId);
-        user.setCreateTime(now);
-        user.setUpdateBy(userId);
-        user.setUpdateTime(now);
-        return user;
+        return SysUser.builder()
+                .id(userId)
+                .username(username)
+                .nickname(StringUtils.blankToDefault(nickname, username))
+                .emailCipher(encryptedEmail.cipher())
+                .emailIndex(encryptedEmail.index())
+                .password(passwordEncoder.encode(rawPassword))
+                .sex("OTHER")
+                .accountStatus(1)
+                .status(1)
+                .deleted(0)
+                .createBy(userId)
+                .createTime(now)
+                .updateBy(userId)
+                .updateTime(now).build();
     }
 
     /**
