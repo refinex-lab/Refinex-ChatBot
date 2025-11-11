@@ -4,4 +4,23 @@ server:
 spring:
   application:
     name: refinex-ai
-
+  profiles:
+    active: dev
+  config:
+    import:
+      - nacos:application.yaml?group=${nacos.group:DEFAULT_GROUP}&namespace=${nacos.namespace:public}&refreshEnabled=true
+      - nacos:application-servlet.yml?group=${nacos.group:DEFAULT_GROUP}&namespace=${nacos.namespace:public}&refreshEnabled=true
+      - nacos:${spring.application.name}.yml?group=${nacos.group:DEFAULT_GROUP}&namespace=${nacos.namespace:}&refreshEnabled=true
+  cloud:
+    nacos:
+      config:
+        server-addr: ${nacos.server-addr:127.0.0.1:8848}
+        username: ${nacos.username:nacos}
+        password: ${nacos.password:nacos}
+        namespace: ${nacos.namespace:public}
+      discovery:
+        server-addr: ${nacos.server-addr:127.0.0.1:8848}
+        username: ${nacos.username:nacos}
+        password: ${nacos.password:nacos}
+        namespace: ${nacos.namespace:public}
+        group: ${nacos.group:DEFAULT_GROUP}
