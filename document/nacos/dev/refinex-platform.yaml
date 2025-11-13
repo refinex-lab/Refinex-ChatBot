@@ -1,4 +1,6 @@
 # Refinex Platform 服务配置
+server:
+  port: 8082
 
 # Refinex Config
 refinex:

@@ -1,0 +1,6 @@
+nacos:
+  server-addr: 180.184.71.201:8848
+  username: nacos
+  password: Ly084073.
+  namespace: dev
+  group: Refinex-ChatBot
