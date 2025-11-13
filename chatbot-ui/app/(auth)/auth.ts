@@ -1,18 +1,56 @@
 /**
  * 认证模块
  */
-import { compare } from "bcrypt-ts";
-import NextAuth, { type DefaultSession } from "next-auth";
-import type { DefaultJWT } from "next-auth/jwt";
+import NextAuth, {type DefaultSession} from "next-auth";
+import type {DefaultJWT} from "next-auth/jwt";
 import Credentials from "next-auth/providers/credentials";
-import { DUMMY_PASSWORD } from "@/lib/constants";
-import { createGuestUser, getUser } from "@/lib/db/queries";
-import { authConfig } from "./auth.config";
+import {cookies} from "next/headers";
+
+import {createGuestUser} from "@/lib/db/queries";
+import {PLATFORM_AUTH_BASE_URL} from "@/lib/env";
+import type {ApiResponse} from "@/lib/types/api";
+import {authConfig} from "./auth.config";
 
 /**
- * 用户类型
+ * 用户类型 guest(访客) | regular(注册用户)
  */
 export type UserType = "guest" | "regular";
+
+/**
+ * 平台登录凭据类型
+ */
+type PlatformLoginCredentials = {
+  email: string;
+  password: string;
+  captchaUuid?: string;
+  captchaCode?: string;
+  rememberMe?: string | boolean;
+  deviceType?: string;
+};
+
+/**
+ * 平台登录用户类型
+ */
+type PlatformLoginUser = {
+  userId: number;
+  username: string;
+  nickname?: string;
+  avatar?: string;
+  email?: string;
+  mobile?: string;
+  roles?: string[];
+  permissions?: string[];
+};
+
+/**
+ * 平台登录响应类型
+ */
+type PlatformLoginResponse = {
+  tokenName: string;
+  tokenValue: string;
+  expireIn: number;
+  user: PlatformLoginUser;
+};
 
 /**
  * 声明模块
@@ -23,6 +61,10 @@ declare module "next-auth" {
     user: {
       id: string;
       type: UserType;
+      roles?: string[];
+      permissions?: string[];
+      tokenName?: string;
+      tokenValue?: string;
     } & DefaultSession["user"];
   }
 
@@ -32,6 +74,11 @@ declare module "next-auth" {
     id?: string;
     email?: string | null;
     type: UserType;
+    roles?: string[];
+    permissions?: string[];
+    tokenName?: string;
+    tokenValue?: string;
+    avatar?: string | null;
   }
 }
 
@@ -43,6 +90,11 @@ declare module "next-auth/jwt" {
   interface JWT extends DefaultJWT {
     id: string;
     type: UserType;
+    roles?: string[];
+    permissions?: string[];
+    tokenName?: string;
+    tokenValue?: string;
+    avatar?: string | null;
   }
 }
 
@@ -59,37 +111,78 @@ export const {
   providers: [
     Credentials({
       credentials: {},
-      async authorize({ email, password }: any) {
-        // 获取用户
-        const users = await getUser(email);
+      async authorize(credentials) {
+        const { email, password, captchaUuid, captchaCode, rememberMe, deviceType } =
+          (credentials ?? {}) as PlatformLoginCredentials;
 
-        if (users.length === 0) {
-          // 比较密码
-          await compare(password, DUMMY_PASSWORD);
+        if (!email || !password) {
           return null;
         }
 
-        // 获取用户
-        const [user] = users;
+        const response = await fetch(`${PLATFORM_AUTH_BASE_URL}/login`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            password,
+            captchaUuid,
+            captchaCode,
+            rememberMe:
+              typeof rememberMe === "string"
+                ? rememberMe === "true" || rememberMe === "on"
+                : Boolean(rememberMe),
+            deviceType: deviceType ?? "PC",
+          }),
+        });
 
-        // 如果没有密码
-        if (!user.password) {
-          // 比较密码
-          await compare(password, DUMMY_PASSWORD);
-          return null;
+        if (!response.ok) {
+          throw new Error("登录失败");
         }
 
-        // 比较密码
-        const passwordsMatch = await compare(password, user.password);
+        const result =
+          (await response.json()) as ApiResponse<PlatformLoginResponse | null>;
 
-        // 如果密码不匹配
-        if (!passwordsMatch) {
-          // 返回空用户
-          return null;
+        if (result.code !== 200 || !result.data) {
+          throw new Error(result.msg || "登录失败");
         }
 
-        // 返回用户
-        return { ...user, type: "regular" };
+        const loginData = result.data;
+        const user = loginData.user;
+
+        if (!user) {
+          throw new Error("登录失败");
+        }
+
+        const tokenName = loginData.tokenName || "satoken";
+        const tokenValue = loginData.tokenValue;
+        const expires = Math.max(60, loginData.expireIn || 0);
+
+        try {
+          const cookieStore = await cookies();
+          cookieStore.set(tokenName, tokenValue, {
+            httpOnly: true,
+            sameSite: "lax",
+            secure: process.env.NODE_ENV === "production",
+            path: "/",
+            maxAge: expires,
+          });
+        } catch {
+          // ignore cookie errors
+        }
+
+        return {
+          id: String(user.userId ?? user.username ?? email),
+          email: user.email ?? email,
+          name: user.nickname ?? user.username ?? email,
+          type: "regular" as UserType,
+          roles: user.roles ?? [],
+          permissions: user.permissions ?? [],
+          tokenName,
+          tokenValue,
+          avatar: user.avatar ?? null,
+        };
       },
     }),
 
@@ -115,6 +208,11 @@ export const {
         token.id = user.id as string;
         // 设置用户类型
         token.type = user.type;
+        token.roles = user.roles ?? [];
+        token.permissions = user.permissions ?? [];
+        token.tokenName = user.tokenName;
+        token.tokenValue = user.tokenValue;
+        token.avatar = user.avatar ?? null;
       }
 
       return token;
@@ -125,6 +223,11 @@ export const {
         session.user.id = token.id;
         // 设置用户类型
         session.user.type = token.type;
+        session.user.roles = token.roles ?? [];
+        session.user.permissions = token.permissions ?? [];
+        session.user.tokenName = token.tokenName;
+        session.user.tokenValue = token.tokenValue;
+        session.user.image = token.avatar ?? session.user.image;
       }
 
       return session;

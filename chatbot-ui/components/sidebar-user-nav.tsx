@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {SidebarMenu, SidebarMenuButton, SidebarMenuItem,} from "@/components/ui/sidebar";
 import {guestRegex} from "@/lib/constants";
+import {PLATFORM_AUTH_BASE_URL} from "@/lib/env";
 import {getChatHistoryPaginationKey} from "@/components/sidebar-history";
 import {LoaderIcon} from "./icons";
 import {toast as toastNotification} from "./toast";
@@ -57,6 +58,36 @@ export function SidebarUserNav({ user }: { user: User }) {
 
   // 是否为游客
   const isGuest = guestRegex.test(data?.user?.email ?? "");
+  const tokenName = data?.user?.tokenName ?? "satoken";
+
+  const handleSignOut = async () => {
+    if (status === "loading") {
+      toastNotification({
+        type: "error",
+        description: "检查认证状态中，请稍后再试！",
+      });
+      return;
+    }
+
+    if (isGuest) {
+      router.push("/login");
+      return;
+    }
+
+    try {
+      await fetch(`${PLATFORM_AUTH_BASE_URL}/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
+    } catch (error) {
+      console.error("退出登录失败", error);
+    } finally {
+      document.cookie = `${tokenName}=; Max-Age=0; path=/;`;
+      signOut({
+        redirectTo: "/",
+      });
+    }
+  };
 
   // 删除所有聊天记录
   const handleDeleteAll = () => {
@@ -165,25 +196,7 @@ export function SidebarUserNav({ user }: { user: User }) {
               <DropdownMenuItem asChild data-testid="user-nav-item-auth">
                 <button
                   className="flex w-full items-center gap-2 cursor-pointer"
-                  onClick={() => {
-                    if (status === "loading") {
-                      toastNotification({
-                        type: "error",
-                        description:
-                          "检查认证状态中，请稍后再试！",
-                      });
-
-                      return;
-                    }
-
-                    if (isGuest) {
-                      router.push("/login");
-                    } else {
-                      signOut({
-                        redirectTo: "/",
-                      });
-                    }
-                  }}
+                  onClick={handleSignOut}
                   type="button"
                 >
                   {isGuest ? (

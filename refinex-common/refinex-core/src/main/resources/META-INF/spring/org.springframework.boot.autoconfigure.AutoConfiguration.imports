@@ -1,1 +1,2 @@
 cn.refinex.core.autoconfigure.RefinexCoreAutoConfiguration
+cn.refinex.core.autoconfigure.RefinexLoggingAutoConfiguration

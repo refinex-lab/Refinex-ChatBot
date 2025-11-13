@@ -1,5 +1,6 @@
 package cn.refinex.core.autoconfigure;
 
+import cn.refinex.core.autoconfigure.properties.RefinexLoggingProperties;
 import cn.refinex.core.autoconfigure.properties.RefinexProperties;
 import cn.refinex.core.service.CryptoService;
 import cn.refinex.core.util.SnowflakeIdUtils;
@@ -14,7 +15,7 @@ import org.springframework.context.annotation.Bean;
  * @since 1.0.0
  */
 @AutoConfiguration
-@EnableConfigurationProperties(RefinexProperties.class)
+@EnableConfigurationProperties({RefinexProperties.class, RefinexLoggingProperties.class})
 public class RefinexCoreAutoConfiguration {
 
     /**

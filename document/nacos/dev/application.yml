@@ -163,3 +163,42 @@ refinex:
   aes-key: "0umyw3k+P/MSrZ3FhSR81ICJzHRR7PJj8XaqH45QlkE="
   # HMAC 密钥: Base64 编码后的 32 字节密钥
   hmac-key: "X4SCliHw1oFtAhYUeHPiRqNWn8SgiJC4D03my1uoeLA="
+
+  logging:
+    # 全局日志根目录
+    log-root: ./logs
+    # DataSign / TraceId 头配置
+    data-sign-header: DataSign
+    trace-id-header: X-Trace-Id
+    # 滚动策略
+    rolling:
+      # 最大文件大小
+      max-file-size: 128MB
+      # 最大历史文件数
+      max-history: 30
+      # 总容量上限
+      total-size-cap: 10GB
+    # 请求日志配置
+    request-log:
+      # 是否开启请求日志记录
+      enabled: true
+      # 是否将请求日志持久化到文件
+      persist: true
+      # 是否记录请求体
+      record-request-body: true
+      # 是否记录响应体
+      record-response-body: false
+      # 记录体最大长度
+      body-max-length: 4096
+      # 忽略路径(不记录日志)
+      ignore-paths:
+        - /actuator/**
+        - /swagger-ui/**
+      # 敏感字段(在日志中替换为掩码)
+      sensitive-fields:
+        - password
+        - oldPassword
+        - newPassword
+        - confirmPassword
+        - token
+        - mobile

@@ -2,6 +2,7 @@ package cn.refinex.core.interceptor;
 
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NullMarked;
+import org.springframework.core.Ordered;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
@@ -16,7 +17,7 @@ import java.io.IOException;
  * @since 1.0.0
  */
 @Slf4j
-public class HttpLoggingInterceptor implements ClientHttpRequestInterceptor {
+public class HttpLoggingInterceptor implements ClientHttpRequestInterceptor, Ordered {
 
     /**
      * 拦截 HTTP 请求并记录日志
@@ -41,5 +42,15 @@ public class HttpLoggingInterceptor implements ClientHttpRequestInterceptor {
         log.info("Http Response: {} in {}ms", response.getStatusCode(), duration);
 
         return response;
+    }
+
+    /**
+     * 获取拦截器的执行顺序，返回最低优先级
+     *
+     * @return 执行顺序
+     */
+    @Override
+    public int getOrder() {
+        return Ordered.LOWEST_PRECEDENCE;
     }
 }

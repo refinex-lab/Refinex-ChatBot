@@ -209,5 +209,36 @@ CREATE TABLE IF NOT EXISTS sys_login_log
     INDEX idx_login_time (login_time)
 ) COMMENT '用户登录日志表-记录每次登录行为';
 
+-- 请求日志表
+CREATE TABLE IF NOT EXISTS sys_request_log
+(
+    id            BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
+    service_name  VARCHAR(100)                        NOT NULL COMMENT '服务名称',
+    title         VARCHAR(128)                        NOT NULL COMMENT '日志标题',
+    biz_type      VARCHAR(32)   DEFAULT 'OTHER'       NOT NULL COMMENT '业务类型',
+    description   VARCHAR(255)                       NULL COMMENT '业务描述',
+    request_uri   VARCHAR(255)                        NOT NULL COMMENT '请求 URI',
+    http_method   VARCHAR(16)                         NOT NULL COMMENT 'HTTP 方法',
+    client_ip     VARCHAR(64)                        NULL COMMENT '客户端 IP',
+    user_agent    VARCHAR(255)                       NULL COMMENT 'User-Agent',
+    data_sign     VARCHAR(64)                         NOT NULL COMMENT 'DataSign',
+    trace_id      VARCHAR(64)                         NOT NULL COMMENT 'TraceId',
+    http_status   INT                                NULL COMMENT '响应状态码',
+    success       TINYINT       DEFAULT 1            NOT NULL COMMENT '是否成功:1成功,0失败',
+    user_id       BIGINT                            NULL COMMENT '用户ID',
+    username      VARCHAR(64)                       NULL COMMENT '用户名',
+    controller    VARCHAR(128)                      NULL COMMENT 'Controller 类名',
+    method_name   VARCHAR(128)                      NULL COMMENT '方法名',
+    request_body  MEDIUMTEXT                        NULL COMMENT '请求体',
+    response_body MEDIUMTEXT                        NULL COMMENT '响应体',
+    error_message VARCHAR(1000)                     NULL COMMENT '错误信息',
+    duration_ms   BIGINT                             NOT NULL COMMENT '耗时(毫秒)',
+    create_time   DATETIME      DEFAULT CURRENT_TIMESTAMP NOT NULL COMMENT '创建时间'
+) COMMENT '请求日志表';
+
+CREATE INDEX idx_sys_request_log_trace_id ON sys_request_log (trace_id);
+CREATE INDEX idx_sys_request_log_data_sign ON sys_request_log (data_sign);
+CREATE INDEX idx_sys_request_log_created ON sys_request_log (create_time);
+
 -- 恢复外键检查
 SET FOREIGN_KEY_CHECKS = 1;

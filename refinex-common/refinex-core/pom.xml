@@ -33,6 +33,12 @@
             <artifactId>spring-web</artifactId>
         </dependency>
 
+        <!-- Spring JDBC: NamedParameter 支持 -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+        </dependency>
+
         <!-- Spring Context Support: 提供邮件、模板、缓存扩展支持 -->
         <dependency>
             <groupId>org.springframework</groupId>
