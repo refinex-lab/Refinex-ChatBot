@@ -32,37 +32,9 @@ public class RefinexLoggingProperties {
     private String traceIdHeader = "X-Trace-Id";
 
     /**
-     * 日志根目录 (logback 使用)
-     */
-    private String logRoot = "logs";
-
-    /**
-     * 日志滚动策略配置
-     */
-    private RollingPolicyProperties rolling = new RollingPolicyProperties();
-
-    /**
      * 请求日志配置
      */
     private RequestLogProperties requestLog = new RequestLogProperties();
-
-    @Data
-    public static class RollingPolicyProperties {
-        /**
-         * 单个日志文件最大体积
-         */
-        private String maxFileSize = "128MB";
-
-        /**
-         * 最大日志保留天数
-         */
-        private int maxHistory = 30;
-
-        /**
-         * 日志总容量上限
-         */
-        private String totalSizeCap = "5GB";
-    }
 
     @Data
     public static class RequestLogProperties {

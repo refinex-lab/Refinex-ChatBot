@@ -165,19 +165,9 @@ refinex:
   hmac-key: "X4SCliHw1oFtAhYUeHPiRqNWn8SgiJC4D03my1uoeLA="
 
   logging:
-    # 全局日志根目录
-    log-root: ./logs
     # DataSign / TraceId 头配置
     data-sign-header: DataSign
     trace-id-header: X-Trace-Id
-    # 滚动策略
-    rolling:
-      # 最大文件大小
-      max-file-size: 128MB
-      # 最大历史文件数
-      max-history: 30
-      # 总容量上限
-      total-size-cap: 10GB
     # 请求日志配置
     request-log:
       # 是否开启请求日志记录
