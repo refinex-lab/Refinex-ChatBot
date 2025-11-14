@@ -54,6 +54,36 @@ export const login = async (
   _: LoginActionState,
   formData: FormData
 ): Promise<LoginActionState> => {
+  // 提取后端错误信息的小工具：优先解析 JSON 的 msg/message 字段，兜底返回简短文本
+  async function extractErrorMessage(response: Response): Promise<string> {
+    const contentType = response.headers.get("content-type") || "";
+    // 优先按 JSON 解析
+    if (contentType.includes("application/json")) {
+      try {
+        const data = (await response.json()) as any;
+        if (data && typeof data.msg === "string") return data.msg;
+        if (data && typeof data.message === "string") return data.message;
+      } catch {
+        // ignore
+      }
+      return `请求失败（${response.status}）`;
+    }
+    // 非 JSON：尝试读取文本，并尽量避免把整段 JSON/HTML 原样吐给用户
+    const text = await response.text().catch(() => "");
+    try {
+      const data = JSON.parse(text);
+      if (data && typeof data.msg === "string") return data.msg;
+      if (data && typeof data.message === "string") return data.message;
+    } catch {
+      // 不是 JSON，返回可读的简短文本（避免超长/HTML）
+      const trimmed = (text || "").trim();
+      if (trimmed && !trimmed.startsWith("<")) {
+        return trimmed.length > 200 ? `${trimmed.slice(0, 200)}...` : trimmed;
+      }
+    }
+    return `请求失败（${response.status}）`;
+  }
+
   try {
     // 验证数据
     const validatedData = loginFormSchema.parse({
@@ -81,8 +111,8 @@ export const login = async (
     });
 
     if (!response.ok) {
-      const text = await response.text().catch(() => "");
-      return { status: "failed", message: text || "登录失败" };
+      const message = await extractErrorMessage(response);
+      return { status: "failed", message: message || "登录失败" };
     }
 
     type PlatformLoginUser = {
@@ -183,6 +213,33 @@ export const register = async (
   _: RegisterActionState,
   formData: FormData
 ): Promise<RegisterActionState> => {
+  // 提取后端错误信息的小工具：优先解析 JSON 的 msg/message 字段，兜底返回简短文本
+  async function extractErrorMessage(response: Response): Promise<string> {
+    const contentType = response.headers.get("content-type") || "";
+    if (contentType.includes("application/json")) {
+      try {
+        const data = (await response.json()) as any;
+        if (data && typeof data.msg === "string") return data.msg;
+        if (data && typeof data.message === "string") return data.message;
+      } catch {
+        // ignore
+      }
+      return `请求失败（${response.status}）`;
+    }
+    const text = await response.text().catch(() => "");
+    try {
+      const data = JSON.parse(text);
+      if (data && typeof data.msg === "string") return data.msg;
+      if (data && typeof data.message === "string") return data.message;
+    } catch {
+      const trimmed = (text || "").trim();
+      if (trimmed && !trimmed.startsWith("<")) {
+        return trimmed.length > 200 ? `${trimmed.slice(0, 200)}...` : trimmed;
+      }
+    }
+    return `请求失败（${response.status}）`;
+  }
+
   try {
     // 验证数据
     const validatedData = registerFormSchema.parse({
@@ -202,6 +259,11 @@ export const register = async (
       },
       body: JSON.stringify(validatedData),
     });
+
+    if (!response.ok) {
+      const message = await extractErrorMessage(response);
+      return { status: "failed", message };
+    }
 
     const result = (await response.json()) as ApiResponse<unknown>;
     if (response.ok && result.code === 200) {

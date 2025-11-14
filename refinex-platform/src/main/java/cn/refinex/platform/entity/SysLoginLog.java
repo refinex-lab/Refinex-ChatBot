@@ -2,8 +2,10 @@ package cn.refinex.platform.entity;
 
 import cn.refinex.jdbc.core.domain.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
@@ -19,8 +21,8 @@ import java.time.LocalDateTime;
 @Data
 //@Builder
 @SuperBuilder
-//@NoArgsConstructor
-//@AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Schema(description = "用户登录日志")
 public class SysLoginLog extends BaseEntity implements Serializable {

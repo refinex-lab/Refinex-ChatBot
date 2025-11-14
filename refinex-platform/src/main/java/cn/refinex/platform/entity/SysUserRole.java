@@ -2,8 +2,10 @@ package cn.refinex.platform.entity;
 
 import cn.refinex.jdbc.core.domain.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
@@ -18,8 +20,8 @@ import java.io.Serializable;
 @Data
 //@Builder
 @SuperBuilder
-//@NoArgsConstructor
-//@AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Schema(description = "用户角色关联实体类")
 public class SysUserRole extends BaseEntity implements Serializable {
