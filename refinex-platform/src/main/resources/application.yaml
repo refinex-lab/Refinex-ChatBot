@@ -5,9 +5,9 @@ spring:
     active: dev
   config:
     import:
-      - nacos:application.yml?group=${nacos.group:DEFAULT_GROUP}&namespace=${nacos.namespace:public}&refreshEnabled=true
-      - nacos:application-servlet.yml?group=${nacos.group:DEFAULT_GROUP}&namespace=${nacos.namespace:public}&refreshEnabled=true
-      - nacos:${spring.application.name}.yml?group=${nacos.group:DEFAULT_GROUP}&namespace=${nacos.namespace:}&refreshEnabled=true
+      - nacos:application.yaml?group=${nacos.group:DEFAULT_GROUP}&namespace=${nacos.namespace:public}&refreshEnabled=true
+      - nacos:application-servlet.yaml?group=${nacos.group:DEFAULT_GROUP}&namespace=${nacos.namespace:public}&refreshEnabled=true
+      - nacos:${spring.application.name}.yaml?group=${nacos.group:DEFAULT_GROUP}&namespace=${nacos.namespace:}&refreshEnabled=true
   cloud:
     nacos:
       config:

@@ -5,6 +5,8 @@ import cn.refinex.core.api.ApiResponse;
 import cn.refinex.core.api.ApiStatus;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -35,6 +37,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 @Order(-100)
 @RestControllerAdvice
+@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
+@ConditionalOnClass(name = "jakarta.servlet.http.HttpServletRequest")
 public class SaTokenExceptionHandler {
 
     /**

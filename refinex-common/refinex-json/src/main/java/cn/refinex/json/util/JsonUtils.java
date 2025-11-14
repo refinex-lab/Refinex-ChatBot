@@ -1,14 +1,14 @@
 package cn.refinex.json.util;
 
-import tools.jackson.core.JacksonException;
-import tools.jackson.core.type.TypeReference;
-import tools.jackson.databind.JavaType;
-import tools.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JacksonException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Objects;
 
 /**
- * JSON 工具类（基于 Jackson 3 / Spring Boot 4）, 使用 JDK 21 record 简化不可变结构。
+ * JSON 工具类, 使用 JDK 21 record 简化不可变结构。
  *
  * @author Refinex
  * @since 1.0.0

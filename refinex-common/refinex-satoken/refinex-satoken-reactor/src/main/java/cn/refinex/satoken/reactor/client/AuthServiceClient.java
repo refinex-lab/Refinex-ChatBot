@@ -1,31 +1,35 @@
 package cn.refinex.satoken.reactor.client;
 
 import cn.refinex.core.api.ApiResponse;
-import org.springframework.http.MediaType;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.service.annotation.GetExchange;
-import org.springframework.web.service.annotation.HttpExchange;
 
 import java.util.List;
 
+import static cn.refinex.core.constants.HttpServicesGroupConstants.REFINEX_PLATFORM_GROUP;
+
 /**
- * Platform 服务权限客户端
- *
- * @author Refinex
- * @since 1.0.0
+ * Platform 服务权限客户端（OpenFeign）
+ * <p>
+ * 使用 OpenFeign 以兼容 Spring Boot 3.x，替换 Spring Http Interface。
  */
-@HttpExchange(value = "/auth", accept = MediaType.APPLICATION_JSON_VALUE)
+@FeignClient(
+        name = REFINEX_PLATFORM_GROUP,
+        contextId = "authServiceClient",
+        path = "/auth"
+)
 public interface AuthServiceClient {
 
     /**
      * 获取用户权限列表
      */
-    @GetExchange("/permissions/{userId}")
+    @GetMapping("/permissions/{userId}")
     ApiResponse<List<String>> getUserPermissions(@PathVariable("userId") Long userId);
 
     /**
      * 获取用户角色列表
      */
-    @GetExchange("/roles/{userId}")
+    @GetMapping("/roles/{userId}")
     ApiResponse<List<String>> getUserRoles(@PathVariable("userId") Long userId);
 }

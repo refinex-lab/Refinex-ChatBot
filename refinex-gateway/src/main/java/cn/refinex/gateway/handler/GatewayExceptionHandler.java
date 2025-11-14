@@ -5,7 +5,7 @@ import cn.refinex.json.util.JsonUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NullMarked;
-import org.springframework.boot.webflux.error.ErrorWebExceptionHandler;
+import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
 import org.springframework.cloud.gateway.support.NotFoundException;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.buffer.DataBuffer;

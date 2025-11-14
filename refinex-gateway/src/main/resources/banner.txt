@@ -11,5 +11,5 @@ Spring Boot Version: ${spring-boot.version}
 Spring Application Name: ${spring.application.name}
 
 #========================================================
-# 🎉 Refinex Gateway 启动成功！ 端口：${server.port}
+# 🎉 Refinex Gateway 启动成功！
 #========================================================

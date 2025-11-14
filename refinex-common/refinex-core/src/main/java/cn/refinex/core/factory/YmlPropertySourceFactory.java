@@ -1,7 +1,6 @@
 package cn.refinex.core.factory;
 
 import cn.refinex.core.util.StringUtils;
-import org.apache.commons.lang3.Strings;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
@@ -40,7 +39,7 @@ public class YmlPropertySourceFactory extends DefaultPropertySourceFactory {
     @Override
     public PropertySource<?> createPropertySource(@Nullable String name, EncodedResource resource) throws IOException {
         String sourceName = resource.getResource().getFilename();
-        if (StringUtils.isNotBlank(sourceName) && Strings.CI.endsWithAny(sourceName, ".yml", ".yaml")) {
+        if (StringUtils.isNotBlank(sourceName) && StringUtils.endsWithAny(sourceName, ".yml", ".yaml")) {
             YamlPropertiesFactoryBean factory = new YamlPropertiesFactoryBean();
             factory.setResources(resource.getResource());
             factory.afterPropertiesSet();

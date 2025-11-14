@@ -3,6 +3,8 @@ package cn.refinex.satoken.common.autoconfigure;
 import cn.refinex.satoken.common.exception.handler.SaTokenExceptionHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
 
 /**
@@ -10,6 +12,8 @@ import org.springframework.context.annotation.Bean;
  */
 @Slf4j
 @AutoConfiguration
+@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
+@ConditionalOnClass(name = "jakarta.servlet.http.HttpServletRequest")
 public class SaTokenAutoConfiguration {
 
     /**

@@ -3,7 +3,6 @@ package cn.refinex.core.logging.handler;
 import cn.refinex.core.autoconfigure.properties.RefinexLoggingProperties;
 import cn.refinex.core.logging.model.RequestLogEntry;
 import cn.refinex.json.util.JsonUtils;
-import cn.refinex.json.util.JsonUtilsHolder;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -15,19 +14,22 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Slf4jRequestLogHandler implements RequestLogHandler {
 
-    private final JsonUtils jsonUtils = JsonUtilsHolder.get();
+    private final JsonUtils jsonUtils;
     private final boolean enabled;
 
     /**
      * 构造函数，初始化是否启用日志记录
      *
      * @param properties 日志配置属性
+     * @param jsonUtils  JSON 工具
      */
-    public Slf4jRequestLogHandler(RefinexLoggingProperties properties) {
+    public Slf4jRequestLogHandler(RefinexLoggingProperties properties, JsonUtils jsonUtils) {
+        this.jsonUtils = jsonUtils;
         this.enabled = properties == null || properties.getRequestLog().isEnabled();
     }
 
-    /* 处理请求日志
+    /**
+     * 处理请求日志
      *
      * @param entry   日志实体
      * @param persist 是否持久化

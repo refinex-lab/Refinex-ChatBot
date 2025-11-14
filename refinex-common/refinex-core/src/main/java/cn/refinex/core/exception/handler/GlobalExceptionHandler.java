@@ -9,6 +9,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
@@ -21,7 +23,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
@@ -47,6 +48,8 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @RestControllerAdvice
+@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
+@ConditionalOnClass(name = "jakarta.servlet.http.HttpServletRequest")
 public class GlobalExceptionHandler {
 
     /**
@@ -249,23 +252,6 @@ public class GlobalExceptionHandler {
         String errorMessage = String.format("不支持的媒体类型: %s，支持的媒体类型: %s", e.getContentType(), e.getSupportedMediaTypes());
         log.warn("不支持的媒体类型: URI=[{}], ContentType=[{}]", request.getRequestURI(), e.getContentType());
         return ApiResponse.error(ApiStatus.BAD_REQUEST, errorMessage);
-    }
-
-    /**
-     * 处理文件上传大小超限异常
-     * <p>
-     * 当上传的文件大小超过配置的最大限制时，会抛出 MaxUploadSizeExceededException 异常。
-     * 该异常通常需要在配置文件中配置文件上传的大小限制（如 spring.servlet.multipart.max-file-size）。
-     *
-     * @param e       文件上传大小超限异常对象
-     * @param request HTTP 请求对象
-     * @return 标准的 API 错误响应，说明文件大小超出限制
-     */
-    @ExceptionHandler(MaxUploadSizeExceededException.class)
-    @ResponseStatus(HttpStatus.CONTENT_TOO_LARGE)
-    public ApiResponse<Void> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException e, HttpServletRequest request) {
-        log.warn("文件上传大小超限: URI=[{}], MaxSize=[{}]", request.getRequestURI(), e.getMaxUploadSize());
-        return ApiResponse.error(ApiStatus.BAD_REQUEST, "上传文件大小超出限制，最大允许: " + formatFileSize(e.getMaxUploadSize()));
     }
 
     /**

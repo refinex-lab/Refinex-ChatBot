@@ -2,16 +2,14 @@ package cn.refinex.json.autoconfigure;
 
 import cn.refinex.json.util.JsonUtils;
 import cn.refinex.json.util.JsonUtilsHolder;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
-import tools.jackson.databind.ObjectMapper;
 
 /**
  * 将 Spring Boot 自动配置的 ObjectMapper 注入并构建 JsonUtils
- * <p>
- * 在 Spring Boot 4 中能直接拿到 auto-configured JsonMapper（JsonMapper extends ObjectMapper）
  *
  * @author Refinex
  * @since 1.0.0

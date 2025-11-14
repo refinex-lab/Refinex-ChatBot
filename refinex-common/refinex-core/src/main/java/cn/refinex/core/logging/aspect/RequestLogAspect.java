@@ -12,7 +12,6 @@ import cn.refinex.core.logging.user.RequestUserExtractor;
 import cn.refinex.core.util.ServletUtils;
 import cn.refinex.core.util.StringUtils;
 import cn.refinex.json.util.JsonUtils;
-import cn.refinex.json.util.JsonUtilsHolder;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -53,7 +52,7 @@ public class RequestLogAspect {
     private final RefinexLoggingProperties properties;
     private final String serviceName;
     private final AntPathMatcher antPathMatcher = new AntPathMatcher();
-    private final JsonUtils jsonUtils = JsonUtilsHolder.get();
+    private final JsonUtils jsonUtils;
 
     /**
      * 构造函数，初始化请求日志处理器、日志配置属性和服务名称
@@ -62,10 +61,11 @@ public class RequestLogAspect {
      * @param properties        日志配置属性
      * @param environment       环境变量
      */
-    public RequestLogAspect(RequestLogHandler requestLogHandler, RefinexLoggingProperties properties, Environment environment) {
+    public RequestLogAspect(RequestLogHandler requestLogHandler, RefinexLoggingProperties properties, Environment environment, JsonUtils jsonUtils) {
         this.requestLogHandler = requestLogHandler;
         this.properties = properties;
         this.serviceName = environment.getProperty("spring.application.name", "refinex-service");
+        this.jsonUtils = jsonUtils;
     }
 
     /**

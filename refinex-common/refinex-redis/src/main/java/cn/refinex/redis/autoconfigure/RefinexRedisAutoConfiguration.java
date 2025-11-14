@@ -2,18 +2,17 @@ package cn.refinex.redis.autoconfigure;
 
 import cn.hutool.core.util.ReflectUtil;
 import cn.refinex.redis.autoconfigure.properties.RefinexRedisProperties;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.jspecify.annotations.NonNull;
 import org.redisson.spring.starter.RedissonAutoConfigurationV2;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializer;
-import org.springframework.data.redis.support.collections.RedisProperties;
 
 /**
  * 基于 Redis 的自动配置类，优先于 {@link RedissonAutoConfigurationV2} 执行

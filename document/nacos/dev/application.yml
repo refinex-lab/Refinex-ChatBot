@@ -46,33 +46,35 @@ spring:
       # 全局启用启用虚拟线程(JDK 21)
       enabled: true
 
-  # HTTP 客户端配置(基于 Http Interface)
-  http:
-    client:
-      service:
-        # 全局配置 (应用于所有组)
-        read-timeout: 2s
-        connect-timeout: 1s
-        # 分组配置 (每个组可以有不同的超时设置)
-        group:
-          # 平台模块
+  # OpenFeign 配置（替换 Http Interface 客户端）
+  cloud:
+    openfeign:
+      # 使用 Apache HttpClient 5
+      httpclient:
+        hc5:
+          enabled: true
+      client:
+        config:
+          # 全局默认配置（毫秒）
+          default:
+            connectTimeout: 1000
+            readTimeout: 2000
+          # 分组配置（按服务设置 URL 与超时）
           refinex-platform:
             # 平台模块的基础 URL，内部调用不走网关
-            base-url: http://localhost:8082
-            read-timeout: 2s
-            connect-timeout: 1s
-          # 智能体模块
+            url: http://localhost:8082
+            connectTimeout: 1000
+            readTimeout: 2000
           refinex-ai:
             # 智能体模块的基础 URL，内部调用不走网关
-            base-url: http://localhost:8083
-            read-timeout: 2s
-            connect-timeout: 1s
-          # 知识库模块
+            url: http://localhost:8083
+            connectTimeout: 1000
+            readTimeout: 2000
           refinex-kb:
             # 知识库模块的基础 URL，内部调用不走网关
-            base-url: http://localhost:8084
-            read-timeout: 2s
-            connect-timeout: 1s
+            url: http://localhost:8084
+            connectTimeout: 1000
+            readTimeout: 2000
 
 # SaToken Config
 sa-token:
