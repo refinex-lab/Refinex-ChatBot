@@ -44,7 +44,7 @@ security:
       - /refinex-platform/auth/login
       - /refinex-platform/auth/logout
       - /refinex-platform/auth/refresh
-      - /refinex-platform/auth/captcha
+      - /refinex-platform/captcha
       - /refinex-platform/public/**
       - /refinex-ai/public/**
       - /refinex-kb/public/**

@@ -27,11 +27,8 @@ public class WebCorsFilter implements WebFilter, Ordered {
     /**
      * 允许的请求头，可以根据实际情况进行调整
      */
-    private static final String DEFAULT_ALLOWED_HEADERS = """
-            X-Requested-With, Content-Language, Content-Type,
-            "Authorization, clientid, credential, X-XSRF-TOKEN,
-            "isToken, token, Admin-Token, App-Token, Encrypt-Key, isEncrypt
-            """;
+    private static final String DEFAULT_ALLOWED_HEADERS =
+            "X-Requested-With,Content-Language,Content-Type,Authorization,clientid,credential,X-XSRF-TOKEN,isToken,token,Admin-Token,App-Token,Encrypt-Key,isEncrypt";
 
     /**
      * 允许的请求方法，可以根据实际情况进行调整
@@ -72,7 +69,8 @@ public class WebCorsFilter implements WebFilter, Ordered {
             headers.set(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, ALLOWED_METHODS);
 
             String requestHeaders = request.getHeaders().getFirst(HttpHeaders.ACCESS_CONTROL_REQUEST_HEADERS);
-            headers.set(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, StringUtils.hasText(requestHeaders) ? requestHeaders : DEFAULT_ALLOWED_HEADERS);
+            String allowHeaders = StringUtils.hasText(requestHeaders) ? sanitizeHeaderValue(requestHeaders) : DEFAULT_ALLOWED_HEADERS;
+            headers.set(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, allowHeaders);
             headers.set(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "*");
             headers.set(HttpHeaders.ACCESS_CONTROL_MAX_AGE, MAX_AGE_SECONDS);
             headers.set(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, Boolean.toString(hasOrigin));
@@ -88,6 +86,23 @@ public class WebCorsFilter implements WebFilter, Ordered {
 
         // 非跨域请求, 则继续过滤
         return chain.filter(exchange);
+    }
+
+    /**
+     * 清理非法的 Header 值字符，移除换行、回车和引号，压缩多余空格
+     */
+    private static String sanitizeHeaderValue(String value) {
+        if (!StringUtils.hasText(value)) {
+            return value;
+        }
+        // 移除 CR/LF 和双引号
+        String cleaned = value.replace("\r", "")
+                .replace("\n", "")
+                .replace("\"", "");
+        // 将逗号两侧空格标准化为单个逗号+单空格
+        cleaned = cleaned.replaceAll("\\s*,\\s*", ",");
+        // 去掉首尾空格
+        return cleaned.trim();
     }
 
     /**
