@@ -5,7 +5,6 @@
 
 import Link from "next/link";
 import {useRouter} from "next/navigation";
-import {useSession} from "next-auth/react";
 import {useActionState, useCallback, useEffect, useState} from "react";
 import {AuthForm} from "@/components/auth-form";
 import {AuthHeader} from "@/components/auth-header";
@@ -37,8 +36,6 @@ export default function Page() {
     }
   );
 
-  // 更新会话
-  const { update: updateSession } = useSession();
 
   const loadCaptcha = useCallback(async () => {
     setCaptchaLoading(true);
@@ -79,7 +76,6 @@ export default function Page() {
     } else if (state.status === "success") {
       toast({ type: "success", description: "账户创建成功，请登录！" });
       setIsSuccessful(true);
-      updateSession();
       setTimeout(() => {
         router.push("/login");
       }, 1200);
@@ -200,7 +196,7 @@ export default function Page() {
                 required
               />
               <button
-                className="flex h-[52px] w-28 items-center justify-center rounded-lg border bg-background p-1 text-sm text-gray-600 transition hover:border-gray-400 dark:bg-zinc-900"
+                className="flex h-10 w-28 items-center justify-center rounded-lg border bg-background p-1 text-sm text-gray-600 transition hover:border-gray-400 dark:bg-zinc-900"
                 onClick={loadCaptcha}
                 type="button"
               >
@@ -210,7 +206,7 @@ export default function Page() {
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     alt="验证码"
-                    className="h-full w-full rounded-md object-cover"
+                    className="h-full w-full rounded-md object-contain"
                     src={captcha.image}
                   />
                 )}

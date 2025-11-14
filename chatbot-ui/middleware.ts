@@ -1,6 +1,5 @@
-import { type NextRequest, NextResponse } from "next/server";
-import { getToken } from "next-auth/jwt";
-import { guestRegex, isDevelopmentEnvironment } from "./lib/constants";
+import {type NextRequest, NextResponse} from "next/server";
+import {AUTH_COOKIE_NAME} from "./lib/env";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -13,27 +12,34 @@ export async function middleware(request: NextRequest) {
     return new Response("pong", { status: 200 });
   }
 
-  if (pathname.startsWith("/api/auth")) {
-    return NextResponse.next();
-  }
+  // 无 next-auth 相关路由，直接走默认逻辑
 
-  const token = await getToken({
-    req: request,
-    secret: process.env.AUTH_SECRET,
-    secureCookie: !isDevelopmentEnvironment,
-  });
+  // 兼容后端登录态：检测 Sa-Token Cookie 是否存在
+  const isAuthenticated =
+    Boolean(request.cookies.get(AUTH_COOKIE_NAME)?.value) ||
+    Boolean(request.cookies.get("satoken")?.value);
 
-  if (!token) {
+  if (!isAuthenticated) {
+    // 未认证：允许访问登录/注册页与公共资源，避免重定向循环
+    if (
+      pathname === "/login" ||
+      pathname === "/register" ||
+      pathname.startsWith("/_next") ||
+      pathname.startsWith("/images") ||
+      pathname === "/favicon.ico" ||
+      pathname === "/robots.txt" ||
+      pathname === "/sitemap.xml"
+    ) {
+      return NextResponse.next();
+    }
+
     const redirectUrl = encodeURIComponent(request.url);
-
-    return NextResponse.redirect(
-      new URL(`/api/auth/guest?redirectUrl=${redirectUrl}`, request.url)
-    );
+    // 未认证：统一跳转登录页（不再支持访客模式）
+    return NextResponse.redirect(new URL(`/login?redirectUrl=${redirectUrl}`, request.url));
   }
 
-  const isGuest = guestRegex.test(token?.email ?? "");
-
-  if (token && !isGuest && ["/login", "/register"].includes(pathname)) {
+  // 已登录（后端或 NextAuth 会话），不再访问登录/注册页
+  if (isAuthenticated && ["/login", "/register"].includes(pathname)) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 

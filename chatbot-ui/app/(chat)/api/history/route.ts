@@ -1,7 +1,7 @@
-import type { NextRequest } from "next/server";
-import { auth } from "@/app/(auth)/auth";
-import { getChatsByUserId, deleteAllChatsByUserId } from "@/lib/db/queries";
-import { ChatSDKError } from "@/lib/errors";
+import type {NextRequest} from "next/server";
+import {cookies} from "next/headers";
+import {deleteAllChatsByUserId, getChatsByUserId} from "@/lib/db/queries";
+import {ChatSDKError} from "@/lib/errors";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
@@ -17,14 +17,14 @@ export async function GET(request: NextRequest) {
     ).toResponse();
   }
 
-  const session = await auth();
-
-  if (!session?.user) {
+  const cookieStore = await cookies();
+  const uid = cookieStore.get("RX_UID")?.value;
+  if (!uid) {
     return new ChatSDKError("unauthorized:chat").toResponse();
   }
 
   const chats = await getChatsByUserId({
-    id: session.user.id,
+    id: uid,
     limit,
     startingAfter,
     endingBefore,
@@ -34,13 +34,13 @@ export async function GET(request: NextRequest) {
 }
 
 export async function DELETE() {
-  const session = await auth();
-
-  if (!session?.user) {
+  const cookieStore = await cookies();
+  const uid = cookieStore.get("RX_UID")?.value;
+  if (!uid) {
     return new ChatSDKError("unauthorized:chat").toResponse();
   }
 
-  const result = await deleteAllChatsByUserId({ userId: session.user.id });
+  const result = await deleteAllChatsByUserId({ userId: uid });
 
   return Response.json(result, { status: 200 });
 }

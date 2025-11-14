@@ -5,7 +5,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import type {User} from "next-auth";
 import {useTheme} from "next-themes";
 import {useEffect, useState} from "react";
 import useSWRInfinite from "swr/infinite";
@@ -20,7 +19,8 @@ import {fetcher} from "@/lib/utils";
 /**
  * 应用侧边栏组件
  */
-export function AppSidebar({ user }: { user: User | undefined }) {
+type UserLike = { email?: string | null } | undefined;
+export function AppSidebar({ user }: { user: UserLike }) {
   const { setOpenMobile, state, toggleSidebar } = useSidebar();
   const [isHoveringLogo, setIsHoveringLogo] = useState(false);
   const { resolvedTheme } = useTheme();

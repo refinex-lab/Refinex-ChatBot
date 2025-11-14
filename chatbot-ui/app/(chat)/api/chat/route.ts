@@ -13,9 +13,10 @@ import {createResumableStreamContext, type ResumableStreamContext,} from "resuma
 import type {ModelCatalog} from "tokenlens/core";
 import {fetchModels} from "tokenlens/fetch";
 import {getUsage} from "tokenlens/helpers";
-import {auth, type UserType} from "@/app/(auth)/auth";
-import type {VisibilityType} from "@/components/visibility-selector";
+import {cookies} from "next/headers";
+import type {UserType} from "@/lib/ai/entitlements";
 import {entitlementsByUserType} from "@/lib/ai/entitlements";
+import type {VisibilityType} from "@/components/visibility-selector";
 import type {ChatModel} from "@/lib/ai/models";
 import {type RequestHints, systemPrompt} from "@/lib/ai/prompts";
 import {myProvider} from "@/lib/ai/providers";
@@ -105,16 +106,17 @@ export async function POST(request: Request) {
       selectedVisibilityType: VisibilityType;
     } = requestBody;
 
-    const session = await auth();
-
-    if (!session?.user) {
+    const cookieStore = await cookies();
+    const uid = cookieStore.get("RX_UID")?.value;
+    if (!uid) {
       return new ChatSDKError("unauthorized:chat").toResponse();
     }
 
-    const userType: UserType = session.user.type;
+    // 如果需要用户类型，可从后端补充；这里先设为普通用户
+    const userType: UserType = "regular" as UserType;
 
     const messageCount = await getMessageCountByUserId({
-      id: session.user.id,
+      id: uid,
       differenceInHours: 24,
     });
 
@@ -126,7 +128,7 @@ export async function POST(request: Request) {
     let messagesFromDb: DBMessage[] = [];
 
     if (chat) {
-      if (chat.userId !== session.user.id) {
+      if (chat.userId !== uid) {
         return new ChatSDKError("forbidden:chat").toResponse();
       }
       // Only fetch messages if chat already exists
@@ -138,7 +140,7 @@ export async function POST(request: Request) {
 
       await saveChat({
         id,
-        userId: session.user.id,
+        userId: uid,
         title,
         visibility: selectedVisibilityType,
       });
@@ -306,15 +308,15 @@ export async function DELETE(request: Request) {
     return new ChatSDKError("bad_request:api").toResponse();
   }
 
-  const session = await auth();
-
-  if (!session?.user) {
+  const cookieStore = await cookies();
+  const uid = cookieStore.get("RX_UID")?.value;
+  if (!uid) {
     return new ChatSDKError("unauthorized:chat").toResponse();
   }
 
   const chat = await getChatById({ id });
 
-  if (chat?.userId !== session.user.id) {
+  if (chat?.userId !== uid) {
     return new ChatSDKError("forbidden:chat").toResponse();
   }
 

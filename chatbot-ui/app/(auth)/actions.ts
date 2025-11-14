@@ -3,13 +3,12 @@
  */
 "use server";
 
-import {AuthError} from "next-auth";
 import {z} from "zod";
 
 import {PLATFORM_AUTH_BASE_URL} from "@/lib/env";
 import type {ApiResponse} from "@/lib/types/api";
-
-import {signIn} from "./auth";
+import {apiFetch} from "@/lib/http";
+import {cookies} from "next/headers";
 
 /**
  * 认证表单模式
@@ -65,16 +64,86 @@ export const login = async (
       rememberMe: formData.get("rememberMe") === "on",
     });
 
-    // 登录
-    await signIn("credentials", {
-      email: validatedData.email,
-      password: validatedData.password,
-      captchaUuid: validatedData.captchaUuid,
-      captchaCode: validatedData.captchaCode,
-      rememberMe: String(Boolean(validatedData.rememberMe)),
-      deviceType: "PC",
-      redirect: false,
+    // 调用后端登录
+    const response = await apiFetch(`${PLATFORM_AUTH_BASE_URL}/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: validatedData.email,
+        password: validatedData.password,
+        captchaUuid: validatedData.captchaUuid,
+        captchaCode: validatedData.captchaCode,
+        rememberMe: Boolean(validatedData.rememberMe),
+        deviceType: "PC",
+      }),
     });
+
+    if (!response.ok) {
+      const text = await response.text().catch(() => "");
+      return { status: "failed", message: text || "登录失败" };
+    }
+
+    type PlatformLoginUser = {
+      userId: number;
+      username: string;
+      nickname?: string;
+      avatar?: string;
+      email?: string;
+      mobile?: string;
+      roles?: string[];
+      permissions?: string[];
+    };
+    type PlatformLoginResponse = {
+      tokenName: string;
+      tokenValue: string;
+      expireIn: number;
+      user: PlatformLoginUser;
+    };
+
+    const result = (await response.json()) as ApiResponse<PlatformLoginResponse | null>;
+    if (!result || result.code !== 200 || !result.data) {
+      return { status: "failed", message: result?.msg || "登录失败" };
+    }
+
+    // 写入后端 Cookie
+    try {
+      const tokenName = result.data.tokenName || "satoken";
+      const tokenValue = result.data.tokenValue;
+      const expires = Math.max(60, result.data.expireIn || 0);
+      const cookieStore = await cookies();
+      cookieStore.set(tokenName, tokenValue, {
+        httpOnly: true,
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
+        path: "/",
+        maxAge: expires,
+      });
+      // 写入辅助标识，便于前端服务路由使用（仅服务端读取）
+      const uid = String(result.data.user?.userId ?? "");
+      const email = String(result.data.user?.email ?? "");
+      if (uid) {
+        cookieStore.set("RX_UID", uid, {
+          httpOnly: true,
+          sameSite: "lax",
+          secure: process.env.NODE_ENV === "production",
+          path: "/",
+          maxAge: expires,
+        });
+      }
+      if (email) {
+        cookieStore.set("RX_EMAIL", email, {
+          httpOnly: true,
+          sameSite: "lax",
+          secure: process.env.NODE_ENV === "production",
+          path: "/",
+          maxAge: expires,
+        });
+      }
+    } catch {
+      // ignore cookie errors
+    }
 
     // 返回成功状态
     return { status: "success" };
@@ -88,24 +157,8 @@ export const login = async (
       };
     }
 
-    if (error instanceof AuthError) {
-        let message: string;
-
-        if (typeof (error.cause as any)?.message === "string") {
-            message = (error.cause as any).message;
-        } else if (typeof error.message === "string") {
-            message = error.message;
-        } else {
-            message = "登录失败";
-        }
-
-      return {
-        status: "failed",
-        message,
-      };
-    }
     // 返回失败状态
-    return { status: "failed", message: "登录失败，请稍后再试" };
+    return { status: "failed", message: (error as Error)?.message || "登录失败，请稍后再试" };
   }
 };
 
@@ -142,7 +195,7 @@ export const register = async (
       captchaCode: formData.get("captchaCode"),
     });
 
-    const response = await fetch(`${PLATFORM_AUTH_BASE_URL}/register`, {
+    const response = await apiFetch(`${PLATFORM_AUTH_BASE_URL}/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

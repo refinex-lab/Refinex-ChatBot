@@ -6,7 +6,6 @@
 import {isToday, isYesterday, subMonths, subWeeks} from "date-fns";
 import {motion} from "framer-motion";
 import {useParams, useRouter} from "next/navigation";
-import type {User} from "next-auth";
 import {useState} from "react";
 import {toast} from "sonner";
 import useSWRInfinite from "swr/infinite";
@@ -103,7 +102,8 @@ export function getChatHistoryPaginationKey(
 /**
  * 侧边栏历史聊天记录组件
  */
-export function SidebarHistory({ user }: { user: User | undefined }) {
+type UserLike = { id?: string; email?: string | null } | undefined;
+export function SidebarHistory({ user }: { user: UserLike }) {
   const { setOpenMobile } = useSidebar();
   const { id } = useParams();
 

@@ -1,38 +1,26 @@
 import "server-only";
 
-import {
-  and,
-  asc,
-  count,
-  desc,
-  eq,
-  gt,
-  gte,
-  inArray,
-  lt,
-  type SQL,
-} from "drizzle-orm";
-import { drizzle } from "drizzle-orm/postgres-js";
+import {and, asc, count, desc, eq, gt, gte, inArray, lt, type SQL,} from "drizzle-orm";
+import {drizzle} from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import type { ArtifactKind } from "@/components/artifact";
-import type { VisibilityType } from "@/components/visibility-selector";
-import { ChatSDKError } from "../errors";
-import type { AppUsage } from "../usage";
-import { generateUUID } from "../utils";
+import type {ArtifactKind} from "@/components/artifact";
+import type {VisibilityType} from "@/components/visibility-selector";
+import {ChatSDKError} from "../errors";
+import type {AppUsage} from "../usage";
 import {
-  type Chat,
-  chat,
-  type DBMessage,
-  document,
-  message,
-  type Suggestion,
-  stream,
-  suggestion,
-  type User,
-  user,
-  vote,
+    type Chat,
+    chat,
+    type DBMessage,
+    document,
+    message,
+    stream,
+    type Suggestion,
+    suggestion,
+    type User,
+    user,
+    vote,
 } from "./schema";
-import { generateHashedPassword } from "./utils";
+import {generateHashedPassword} from "./utils";
 
 // Optionally, if not using email/pass login, you can
 // use the Drizzle adapter for Auth.js / NextAuth
@@ -63,22 +51,7 @@ export async function createUser(email: string, password: string) {
   }
 }
 
-export async function createGuestUser() {
-  const email = `guest-${Date.now()}`;
-  const password = generateHashedPassword(generateUUID());
-
-  try {
-    return await db.insert(user).values({ email, password }).returning({
-      id: user.id,
-      email: user.email,
-    });
-  } catch (_error) {
-    throw new ChatSDKError(
-      "bad_request:database",
-      "Failed to create guest user"
-    );
-  }
-}
+// Removed guest user support
 
 export async function saveChat({
   id,

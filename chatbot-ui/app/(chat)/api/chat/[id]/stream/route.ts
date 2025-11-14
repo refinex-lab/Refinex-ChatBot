@@ -1,15 +1,11 @@
-import { createUIMessageStream, JsonToSseTransformStream } from "ai";
-import { differenceInSeconds } from "date-fns";
-import { auth } from "@/app/(auth)/auth";
-import {
-  getChatById,
-  getMessagesByChatId,
-  getStreamIdsByChatId,
-} from "@/lib/db/queries";
-import type { Chat } from "@/lib/db/schema";
-import { ChatSDKError } from "@/lib/errors";
-import type { ChatMessage } from "@/lib/types";
-import { getStreamContext } from "../../route";
+import {createUIMessageStream, JsonToSseTransformStream} from "ai";
+import {differenceInSeconds} from "date-fns";
+import {cookies} from "next/headers";
+import {getChatById, getMessagesByChatId, getStreamIdsByChatId,} from "@/lib/db/queries";
+import type {Chat} from "@/lib/db/schema";
+import {ChatSDKError} from "@/lib/errors";
+import type {ChatMessage} from "@/lib/types";
+import {getStreamContext} from "../../route";
 
 export async function GET(
   _: Request,
@@ -28,9 +24,9 @@ export async function GET(
     return new ChatSDKError("bad_request:api").toResponse();
   }
 
-  const session = await auth();
-
-  if (!session?.user) {
+  const cookieStore = await cookies();
+  const uid = cookieStore.get("RX_UID")?.value;
+  if (!uid) {
     return new ChatSDKError("unauthorized:chat").toResponse();
   }
 
@@ -46,7 +42,7 @@ export async function GET(
     return new ChatSDKError("not_found:chat").toResponse();
   }
 
-  if (chat.visibility === "private" && chat.userId !== session.user.id) {
+  if (chat.visibility === "private" && chat.userId !== uid) {
     return new ChatSDKError("forbidden:chat").toResponse();
   }
 

@@ -51,3 +51,19 @@ export const PLATFORM_AUTH_BASE_URL = `${PLATFORM_SERVICE_BASE_URL}/auth`;
  * 平台验证码地址
  */
 export const PLATFORM_CAPTCHA_URL = `${PLATFORM_SERVICE_BASE_URL}/captcha`;
+
+/**
+ * DataSign 请求头名称（用于后端日志跟踪/验签）
+ * 默认：DataSign，可通过环境变量覆盖
+ */
+const PRIVATE_DATA_SIGN_HEADER = process.env.DATA_SIGN_HEADER;
+const PUBLIC_DATA_SIGN_HEADER = process.env.NEXT_PUBLIC_DATA_SIGN_HEADER;
+export const DATA_SIGN_HEADER = (PUBLIC_DATA_SIGN_HEADER ?? PRIVATE_DATA_SIGN_HEADER ?? "DataSign").trim();
+
+/**
+ * 后端认证 Cookie 名称（Sa-Token 名称）
+ * 默认：Authorization（与后端 sa-token.token-name 对齐），可通过环境覆盖
+ */
+const PRIVATE_AUTH_COOKIE_NAME = process.env.AUTH_COOKIE_NAME;
+const PUBLIC_AUTH_COOKIE_NAME = process.env.NEXT_PUBLIC_AUTH_COOKIE_NAME;
+export const AUTH_COOKIE_NAME = (PUBLIC_AUTH_COOKIE_NAME ?? PRIVATE_AUTH_COOKIE_NAME ?? "Authorization").trim();

@@ -1,14 +1,13 @@
 /**
  * 布局
  */
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import { Toaster } from "sonner";
-import { ThemeProvider } from "@/components/theme-provider";
-import { CodePreviewWrapper } from "@/components/code-preview-wrapper";
+import type {Metadata} from "next";
+import {Geist, Geist_Mono} from "next/font/google";
+import {Toaster} from "sonner";
+import {ThemeProvider} from "@/components/theme-provider";
+import {CodePreviewWrapper} from "@/components/code-preview-wrapper";
 
 import "./globals.css";
-import { SessionProvider } from "next-auth/react";
 
 /**
  * 元数据
@@ -111,8 +110,7 @@ export default function RootLayout({
           <Toaster position="top-center" />
           {/* 代码预览提供者 */}
           <CodePreviewWrapper>
-            {/* 会话提供者 */}
-            <SessionProvider>{children}</SessionProvider>
+            {children}
           </CodePreviewWrapper>
         </ThemeProvider>
       </body>

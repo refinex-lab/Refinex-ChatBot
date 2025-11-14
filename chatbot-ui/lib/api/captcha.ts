@@ -1,4 +1,5 @@
 import {PLATFORM_CAPTCHA_URL} from "@/lib/env";
+import {apiFetch} from "@/lib/http";
 import type {ApiResponse} from "@/lib/types/api";
 
 export type CaptchaPayload = {
@@ -11,7 +12,7 @@ export type CaptchaPayload = {
  * 请求验证码
  */
 export async function requestCaptcha(): Promise<CaptchaPayload> {
-  const response = await fetch(PLATFORM_CAPTCHA_URL, {
+  const response = await apiFetch(PLATFORM_CAPTCHA_URL, {
     method: "GET",
     cache: "no-store",
   });

@@ -7,7 +7,7 @@
     <springProperty scope="context" name="TOTAL_SIZE_CAP" source="refinex.logging.rolling.total-size-cap" defaultValue="10GB"/>
 
     <property name="LOG_PATH" value="${LOG_HOME}/${APP_NAME}"/>
-    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level trace=%X{traceId:-N/A} dataSign=%X{dataSign:-N/A} %logger{50}:%line - %msg%n"/>
+    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level trace[%X{traceId:-N/A}] dataSign[%X{dataSign:-N/A}] %logger{50}:%line - %msg%n"/>
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>

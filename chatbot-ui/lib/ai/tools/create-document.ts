@@ -1,15 +1,12 @@
-import { tool, type UIMessageStreamWriter } from "ai";
-import type { Session } from "next-auth";
-import { z } from "zod";
-import {
-  artifactKinds,
-  documentHandlersByArtifactKind,
-} from "@/lib/artifacts/server";
-import type { ChatMessage } from "@/lib/types";
-import { generateUUID } from "@/lib/utils";
+import {tool, type UIMessageStreamWriter} from "ai";
+import {z} from "zod";
+import type {AppSession} from "@/lib/artifacts/server";
+import {artifactKinds, documentHandlersByArtifactKind,} from "@/lib/artifacts/server";
+import type {ChatMessage} from "@/lib/types";
+import {generateUUID} from "@/lib/utils";
 
 type CreateDocumentProps = {
-  session: Session;
+  session: AppSession;
   dataStream: UIMessageStreamWriter<ChatMessage>;
 };
 

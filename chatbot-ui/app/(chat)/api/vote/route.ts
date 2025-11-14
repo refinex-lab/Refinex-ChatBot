@@ -1,6 +1,6 @@
-import { auth } from "@/app/(auth)/auth";
-import { getChatById, getVotesByChatId, voteMessage } from "@/lib/db/queries";
-import { ChatSDKError } from "@/lib/errors";
+import {cookies} from "next/headers";
+import {getChatById, getVotesByChatId, voteMessage} from "@/lib/db/queries";
+import {ChatSDKError} from "@/lib/errors";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -13,9 +13,9 @@ export async function GET(request: Request) {
     ).toResponse();
   }
 
-  const session = await auth();
-
-  if (!session?.user) {
+  const cookieStore = await cookies();
+  const uid = cookieStore.get("RX_UID")?.value;
+  if (!uid) {
     return new ChatSDKError("unauthorized:vote").toResponse();
   }
 
@@ -25,7 +25,7 @@ export async function GET(request: Request) {
     return new ChatSDKError("not_found:chat").toResponse();
   }
 
-  if (chat.userId !== session.user.id) {
+  if (chat.userId !== uid) {
     return new ChatSDKError("forbidden:vote").toResponse();
   }
 
@@ -49,9 +49,9 @@ export async function PATCH(request: Request) {
     ).toResponse();
   }
 
-  const session = await auth();
-
-  if (!session?.user) {
+  const cookieStore2 = await cookies();
+  const uid2 = cookieStore2.get("RX_UID")?.value;
+  if (!uid2) {
     return new ChatSDKError("unauthorized:vote").toResponse();
   }
 
@@ -61,7 +61,7 @@ export async function PATCH(request: Request) {
     return new ChatSDKError("not_found:vote").toResponse();
   }
 
-  if (chat.userId !== session.user.id) {
+  if (chat.userId !== uid2) {
     return new ChatSDKError("forbidden:vote").toResponse();
   }
 

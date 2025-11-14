@@ -1,6 +1,6 @@
-import { auth } from "@/app/(auth)/auth";
-import { getSuggestionsByDocumentId } from "@/lib/db/queries";
-import { ChatSDKError } from "@/lib/errors";
+import {cookies} from "next/headers";
+import {getSuggestionsByDocumentId} from "@/lib/db/queries";
+import {ChatSDKError} from "@/lib/errors";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -13,9 +13,9 @@ export async function GET(request: Request) {
     ).toResponse();
   }
 
-  const session = await auth();
-
-  if (!session?.user) {
+  const cookieStore = await cookies();
+  const uid = cookieStore.get("RX_UID")?.value;
+  if (!uid) {
     return new ChatSDKError("unauthorized:suggestions").toResponse();
   }
 
@@ -29,7 +29,7 @@ export async function GET(request: Request) {
     return Response.json([], { status: 200 });
   }
 
-  if (suggestion.userId !== session.user.id) {
+  if (suggestion.userId !== uid) {
     return new ChatSDKError("forbidden:api").toResponse();
   }
 

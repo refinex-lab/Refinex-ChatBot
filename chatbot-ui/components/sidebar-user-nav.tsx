@@ -6,12 +6,10 @@
 import {ChevronUp} from "lucide-react";
 import Image from "next/image";
 import {useRouter} from "next/navigation";
-import type {User} from "next-auth";
-import {signOut, useSession} from "next-auth/react";
 import {useTheme} from "next-themes";
 import {useEffect, useState} from "react";
 import {BsMoonStars} from "react-icons/bs";
-import {CiLogin, CiLogout, CiTrash} from "react-icons/ci";
+import {CiLogout, CiTrash} from "react-icons/ci";
 import {FiSun} from "react-icons/fi";
 import {toast} from "sonner";
 import {useSWRConfig} from "swr";
@@ -24,11 +22,9 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {SidebarMenu, SidebarMenuButton, SidebarMenuItem,} from "@/components/ui/sidebar";
-import {guestRegex} from "@/lib/constants";
-import {PLATFORM_AUTH_BASE_URL} from "@/lib/env";
+import {AUTH_COOKIE_NAME, PLATFORM_AUTH_BASE_URL} from "@/lib/env";
+import {apiFetch} from "@/lib/http";
 import {getChatHistoryPaginationKey} from "@/components/sidebar-history";
-import {LoaderIcon} from "./icons";
-import {toast as toastNotification} from "./toast";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -43,9 +39,9 @@ import {
 /**
  * 侧边栏用户导航组件
  */
-export function SidebarUserNav({ user }: { user: User }) {
+type UserLike = { email?: string | null };
+export function SidebarUserNav({ user }: { user: UserLike }) {
   const router = useRouter();
-  const { data, status } = useSession();
   const { setTheme, resolvedTheme } = useTheme();
   const { mutate } = useSWRConfig();
   const [showDeleteAllDialog, setShowDeleteAllDialog] = useState(false);
@@ -56,26 +52,11 @@ export function SidebarUserNav({ user }: { user: User }) {
     setMounted(true);
   }, []);
 
-  // 是否为游客
-  const isGuest = guestRegex.test(data?.user?.email ?? "");
-  const tokenName = data?.user?.tokenName ?? "satoken";
+  const tokenName = AUTH_COOKIE_NAME || "satoken";
 
   const handleSignOut = async () => {
-    if (status === "loading") {
-      toastNotification({
-        type: "error",
-        description: "检查认证状态中，请稍后再试！",
-      });
-      return;
-    }
-
-    if (isGuest) {
-      router.push("/login");
-      return;
-    }
-
     try {
-      await fetch(`${PLATFORM_AUTH_BASE_URL}/logout`, {
+      await apiFetch(`${PLATFORM_AUTH_BASE_URL}/logout`, {
         method: "POST",
         credentials: "include",
       });
@@ -83,9 +64,8 @@ export function SidebarUserNav({ user }: { user: User }) {
       console.error("退出登录失败", error);
     } finally {
       document.cookie = `${tokenName}=; Max-Age=0; path=/;`;
-      signOut({
-        redirectTo: "/",
-      });
+      document.cookie = `satoken=; Max-Age=0; path=/;`;
+      router.push("/login");
     }
   };
 
@@ -116,19 +96,6 @@ export function SidebarUserNav({ user }: { user: User }) {
           <DropdownMenu>
             {/* 下拉菜单触发器 */}
             <DropdownMenuTrigger asChild>
-              {status === "loading" ? (
-                <SidebarMenuButton className="h-10 justify-between bg-background data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
-                  <div className="flex flex-row gap-2">
-                    <div className="size-6 animate-pulse rounded-full bg-zinc-500/30" />
-                    <span className="animate-pulse rounded-md bg-zinc-500/30 text-transparent">
-                      加载认证状态中...
-                    </span>
-                  </div>
-                  <div className="animate-spin text-zinc-500">
-                    <LoaderIcon />
-                  </div>
-                </SidebarMenuButton>
-              ) : (
                 // 侧边栏菜单按钮
                 <SidebarMenuButton
                   className="h-10 bg-background data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
@@ -144,12 +111,11 @@ export function SidebarUserNav({ user }: { user: User }) {
                   />
                   {/* 用户邮箱 */}
                   <span className="truncate" data-testid="user-email">
-                    {isGuest ? "Guest" : user?.email}
+                    {user?.email}
                   </span>
                   {/* 下拉菜单箭头 */}
                   <ChevronUp className="ml-auto" />
                 </SidebarMenuButton>
-              )}
             </DropdownMenuTrigger>
             {/* 下拉菜单内容 */}
             <DropdownMenuContent
@@ -177,21 +143,17 @@ export function SidebarUserNav({ user }: { user: User }) {
               {/* 分割线 */}
               <DropdownMenuSeparator />
               {/* 删除所有聊天记录 */}
-              {!isGuest && (
-                <>
-                  <DropdownMenuItem
-                    className="cursor-pointer text-destructive focus:text-destructive"
-                    data-testid="user-nav-item-delete-all"
-                    onSelect={() => setShowDeleteAllDialog(true)}
-                  >
-                    <div className="flex items-center gap-2">
-                      <CiTrash className="size-4" />
-                      <span>删除所有聊天记录</span>
-                    </div>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                </>
-              )}
+              <DropdownMenuItem
+                className="cursor-pointer text-destructive focus:text-destructive"
+                data-testid="user-nav-item-delete-all"
+                onSelect={() => setShowDeleteAllDialog(true)}
+              >
+                <div className="flex items-center gap-2">
+                  <CiTrash className="size-4" />
+                  <span>删除所有聊天记录</span>
+                </div>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
               {/* 登录/登出按钮 */}
               <DropdownMenuItem asChild data-testid="user-nav-item-auth">
                 <button
@@ -199,17 +161,10 @@ export function SidebarUserNav({ user }: { user: User }) {
                   onClick={handleSignOut}
                   type="button"
                 >
-                  {isGuest ? (
-                    <>
-                      <CiLogin className="size-4" />
-                      <span>登录您的账户</span>
-                    </>
-                  ) : (
-                    <>
-                      <CiLogout className="size-4" />
-                      <span>登出</span>
-                    </>
-                  )}
+                  <>
+                    <CiLogout className="size-4" />
+                    <span>登出</span>
+                  </>
                 </button>
               </DropdownMenuItem>
             </DropdownMenuContent>
