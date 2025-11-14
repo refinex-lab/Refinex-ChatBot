@@ -22,8 +22,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {SidebarMenu, SidebarMenuButton, SidebarMenuItem,} from "@/components/ui/sidebar";
-import {AUTH_COOKIE_NAME, PLATFORM_AUTH_BASE_URL} from "@/lib/env";
-import {apiFetch} from "@/lib/http";
+import {AUTH_COOKIE_NAME} from "@/lib/env";
 import {getChatHistoryPaginationKey} from "@/components/sidebar-history";
 import {
     AlertDialog,
@@ -56,15 +55,31 @@ export function SidebarUserNav({ user }: { user: UserLike }) {
 
   const handleSignOut = async () => {
     try {
-      await apiFetch(`${PLATFORM_AUTH_BASE_URL}/logout`, {
-        method: "POST",
-        credentials: "include",
-      });
+      // 改为调用服务端代理路由，附带 Authorization 头并清理 HttpOnly Cookie
+      const resp = await fetch("/api/auth/logout", { method: "POST" });
+      let message = "退出登录成功";
+      try {
+        const data = await resp.json();
+        if (!resp.ok || data?.code !== 200) {
+          message = data?.msg || "退出登录失败";
+          // 失败提示
+          toast.error(message);
+        } else {
+          toast.success(message);
+        }
+      } catch {
+        // 解析失败时的兜底提示
+        if (!resp.ok) {
+          toast.error("退出登录失败");
+        } else {
+          toast.success(message);
+        }
+      }
     } catch (error) {
       console.error("退出登录失败", error);
+      toast.error("退出登录失败");
     } finally {
-      document.cookie = `${tokenName}=; Max-Age=0; path=/;`;
-      document.cookie = `satoken=; Max-Age=0; path=/;`;
+      // Cookie 已由服务端路由清理，这里仅做导航
       router.push("/login");
     }
   };
