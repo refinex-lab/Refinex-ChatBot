@@ -96,7 +96,7 @@ export function SidebarUserNav({ user }: { user: UserLike }) {
           <DropdownMenu>
             {/* 下拉菜单触发器 */}
             <DropdownMenuTrigger asChild>
-                // 侧边栏菜单按钮
+                {/* 侧边栏菜单按钮 */}
                 <SidebarMenuButton
                   className="h-10 bg-background data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                   data-testid="user-nav-button"
