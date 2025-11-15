@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
  * 验证码控制器
  *
  * @author Refinex
- * @since 2025-10-05
+ * @since 1.0.0
  */
 @SaIgnore
 @RestController

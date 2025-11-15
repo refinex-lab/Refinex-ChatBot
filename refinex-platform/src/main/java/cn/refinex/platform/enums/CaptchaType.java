@@ -56,11 +56,10 @@ public enum CaptchaType {
      */
     public static CaptchaType fromCode(String code) {
         for (CaptchaType type : values()) {
-            if (type.getCode().equals(code)) {
+            if (type.code.equals(code)) {
                 return type;
             }
         }
         throw new IllegalArgumentException("未知的验证码类型: " + code);
     }
 }
-

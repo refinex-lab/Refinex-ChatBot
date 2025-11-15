@@ -42,4 +42,3 @@ public enum EncryptAlgo {
         throw new IllegalArgumentException("Unknown EncryptAlgo: " + code);
     }
 }
-

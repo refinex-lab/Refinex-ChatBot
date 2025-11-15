@@ -8,6 +8,7 @@ import cn.refinex.platform.controller.auth.dto.response.LoginResponseDTO;
 import cn.refinex.platform.controller.auth.dto.response.UserProfileDTO;
 import cn.refinex.platform.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,7 @@ public class AuthController {
     @SaIgnore
     @PostMapping("/login")
     @Operation(summary = "用户登录")
+    @Parameter(name = "body", description = "登录参数")
     public ApiResponse<LoginResponseDTO> login(@Valid @RequestBody LoginRequestDTO request) {
         return ApiResponse.success(authService.login(request));
     }
@@ -48,6 +50,7 @@ public class AuthController {
     @SaIgnore
     @PostMapping("/register")
     @Operation(summary = "用户注册")
+    @Parameter(name = "body", description = "注册参数")
     public ApiResponse<Void> register(@Valid @RequestBody RegisterRequestDTO request) {
         authService.register(request);
         return ApiResponse.success();
@@ -62,6 +65,7 @@ public class AuthController {
     @SaIgnore
     @GetMapping("/roles/{userId}")
     @Operation(summary = "查询用户角色（供内部调用）")
+    @Parameter(name = "userId", description = "用户ID")
     public ApiResponse<List<String>> roles(@PathVariable("userId") Long userId) {
         return ApiResponse.success(authService.getUserRoles(userId));
     }
@@ -69,6 +73,7 @@ public class AuthController {
     @SaIgnore
     @GetMapping("/permissions/{userId}")
     @Operation(summary = "查询用户权限（供内部调用）")
+    @Parameter(name = "userId", description = "用户ID")
     public ApiResponse<List<String>> permissions(@PathVariable("userId") Long userId) {
         return ApiResponse.success(authService.getUserPermissions(userId));
     }

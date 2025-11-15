@@ -45,4 +45,3 @@ public enum SourceType {
         throw new IllegalArgumentException("Unknown SourceType: " + code);
     }
 }
-
