@@ -41,7 +41,8 @@ public class LoginAuditServiceImpl implements LoginAuditService {
      */
     @Async("loginLogExecutor")
     @Override
-    public void recordLoginSuccess(Long userId, String username, String loginIdentity, String loginIp, String deviceType, String userAgent) {
+    public void
+    recordLoginSuccess(Long userId, String username, String loginIdentity, String loginIp, String deviceType, String userAgent) {
         LocalDateTime now = LocalDateTime.now();
         LoginEvent event = LoginEvent.builder()
                 .userId(userId)
