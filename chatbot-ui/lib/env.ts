@@ -53,6 +53,16 @@ export const PLATFORM_AUTH_BASE_URL = `${PLATFORM_SERVICE_BASE_URL}/auth`;
 export const PLATFORM_CAPTCHA_URL = `${PLATFORM_SERVICE_BASE_URL}/captcha`;
 
 /**
+ * 平台文件服务基础地址
+ */
+export const PLATFORM_FILES_BASE_URL = `${PLATFORM_SERVICE_BASE_URL}/files`;
+
+/**
+ * 平台文件存储配置基础地址
+ */
+export const PLATFORM_STORAGE_CONFIG_BASE_URL = `${PLATFORM_FILES_BASE_URL}/storage/configs`;
+
+/**
  * DataSign 请求头名称（用于后端日志跟踪/验签）
  * 默认：DataSign，可通过环境变量覆盖
  */
