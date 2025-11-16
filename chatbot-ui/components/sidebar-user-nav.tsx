@@ -4,16 +4,10 @@
 "use client";
 
 import {ChevronUp} from "lucide-react";
-import Image from "next/image";
 import {useRouter} from "next/navigation";
-import {useTheme} from "next-themes";
 import {useEffect, useState} from "react";
-import {BsMoonStars} from "react-icons/bs";
-import {CiLogout, CiTrash} from "react-icons/ci";
-import {FiSun} from "react-icons/fi";
+import {CiLogout, CiSettings} from "react-icons/ci";
 import {toast} from "sonner";
-import {useSWRConfig} from "swr";
-import {unstable_serialize} from "swr/infinite";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -23,17 +17,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {SidebarMenu, SidebarMenuButton, SidebarMenuItem,} from "@/components/ui/sidebar";
 import {AUTH_COOKIE_NAME} from "@/lib/env";
-import {getChatHistoryPaginationKey} from "@/components/sidebar-history";
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-} from "./ui/alert-dialog";
+import {SettingsDialog} from "@/components/settings/settings-dialog";
+import {useUserProfile} from "@/lib/api/user";
 
 /**
  * 侧边栏用户导航组件
@@ -41,10 +26,10 @@ import {
 type UserLike = { email?: string | null };
 export function SidebarUserNav({ user }: { user: UserLike }) {
   const router = useRouter();
-  const { setTheme, resolvedTheme } = useTheme();
-  const { mutate } = useSWRConfig();
-  const [showDeleteAllDialog, setShowDeleteAllDialog] = useState(false);
+  const { data: profile } = useUserProfile();
   const [mounted, setMounted] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const defaultAvatar = "/images/user/default-avatar.svg";
 
   // 确保只在客户端渲染时使用主题，避免 hydration 错误
   useEffect(() => {
@@ -84,24 +69,6 @@ export function SidebarUserNav({ user }: { user: UserLike }) {
     }
   };
 
-  // 删除所有聊天记录
-  const handleDeleteAll = () => {
-    const deletePromise = fetch("/api/history", {
-      method: "DELETE",
-    });
-
-    toast.promise(deletePromise, {
-      loading: "删除所有聊天记录中...",
-      success: () => {
-        mutate(unstable_serialize(getChatHistoryPaginationKey));
-        router.push("/");
-        setShowDeleteAllDialog(false);
-        return "所有聊天记录删除成功";
-      },
-      error: "所有聊天记录删除失败",
-    });
-  };
-
   return (
     <>
       {/* 侧边栏菜单 */}
@@ -117,16 +84,14 @@ export function SidebarUserNav({ user }: { user: UserLike }) {
                   data-testid="user-nav-button"
                 >
                   {/* 用户头像 */}
-                  <Image
-                    alt={user.email ?? "User Avatar"}
-                    className="rounded-full"
-                    height={24}
-                    src={`https://avatar.vercel.sh/${user.email}`}
-                    width={24}
+                  <img
+                    alt={profile?.nickname || user.email || "User Avatar"}
+                    className="h-6 w-6 rounded-full border object-cover"
+                    src={profile?.avatar || defaultAvatar}
                   />
-                  {/* 用户邮箱 */}
+                  {/* 用户名或邮箱 */}
                   <span className="truncate" data-testid="user-email">
-                    {user?.email}
+                    {profile?.nickname || user?.email}
                   </span>
                   {/* 下拉菜单箭头 */}
                   <ChevronUp className="ml-auto" />
@@ -138,34 +103,15 @@ export function SidebarUserNav({ user }: { user: UserLike }) {
               data-testid="user-nav-menu"
               side="top"
             >
-              {/* 切换主题 */}
+              {/* 设置 */}
               <DropdownMenuItem
                 className="cursor-pointer"
-                data-testid="user-nav-item-theme"
-                onSelect={() =>
-                  setTheme(resolvedTheme === "dark" ? "light" : "dark")
-                }
+                data-testid="user-nav-item-settings"
+                onSelect={() => setShowSettings(true)}
               >
                 <div className="flex items-center gap-2">
-                  {mounted && resolvedTheme === "dark" ? (
-                    <FiSun className="size-4" />
-                  ) : (
-                    <BsMoonStars className="size-4" />
-                  )}
-                  <span>{`切换${mounted && resolvedTheme === "light" ? "暗色" : "亮色"}模式`}</span>
-                </div>
-              </DropdownMenuItem>
-              {/* 分割线 */}
-              <DropdownMenuSeparator />
-              {/* 删除所有聊天记录 */}
-              <DropdownMenuItem
-                className="cursor-pointer text-destructive focus:text-destructive"
-                data-testid="user-nav-item-delete-all"
-                onSelect={() => setShowDeleteAllDialog(true)}
-              >
-                <div className="flex items-center gap-2">
-                  <CiTrash className="size-4" />
-                  <span>删除所有聊天记录</span>
+                  <CiSettings className="size-4" />
+                  <span>设置</span>
                 </div>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
@@ -187,23 +133,8 @@ export function SidebarUserNav({ user }: { user: UserLike }) {
         </SidebarMenuItem>
       </SidebarMenu>
 
-      {/* 删除所有聊天记录对话框 */}
-      <AlertDialog onOpenChange={setShowDeleteAllDialog} open={showDeleteAllDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>您确定要删除所有聊天记录吗？</AlertDialogTitle>
-            <AlertDialogDescription>
-              此操作无法撤销。这将永久删除所有您的聊天记录并将其从我们的服务器中删除。
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>取消</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDeleteAll}>
-              继续
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      {/* 设置弹窗 */}
+      <SettingsDialog open={showSettings} onOpenChange={setShowSettings} />
     </>
   );
 }

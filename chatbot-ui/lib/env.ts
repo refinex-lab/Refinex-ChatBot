@@ -63,6 +63,11 @@ export const PLATFORM_FILES_BASE_URL = `${PLATFORM_SERVICE_BASE_URL}/files`;
 export const PLATFORM_STORAGE_CONFIG_BASE_URL = `${PLATFORM_FILES_BASE_URL}/storage/configs`;
 
 /**
+ * 平台用户基础地址
+ */
+export const PLATFORM_USER_BASE_URL = `${PLATFORM_SERVICE_BASE_URL}/user`;
+
+/**
  * DataSign 请求头名称（用于后端日志跟踪/验签）
  * 默认：DataSign，可通过环境变量覆盖
  */

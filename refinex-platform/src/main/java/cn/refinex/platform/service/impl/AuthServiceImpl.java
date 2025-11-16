@@ -410,7 +410,7 @@ public class AuthServiceImpl implements AuthService {
                 .nickname(user.getNickname())
                 .avatar(user.getAvatar())
                 .email(decryptEmail(user.getEmailCipher()))
-                .mobile(null)
+                .mobile(decryptMobile(user.getMobileCipher()))
                 .sex(user.getSex())
                 .accountStatus(user.getAccountStatus())
                 .status(user.getStatus())
@@ -435,6 +435,24 @@ public class AuthServiceImpl implements AuthService {
             return cryptoService.decrypt(cipher);
         } catch (Exception e) {
             log.warn("邮箱解密失败", e);
+            return null;
+        }
+    }
+
+    /**
+     * 解密用户手机号（从数据库存储的密文解密）
+     *
+     * @param cipher 加密后的手机号密文
+     * @return 解密后的手机号
+     */
+    private String decryptMobile(String cipher) {
+        if (StringUtils.isBlank(cipher)) {
+            return null;
+        }
+        try {
+            return cryptoService.decrypt(cipher);
+        } catch (Exception e) {
+            log.warn("手机号解密失败", e);
             return null;
         }
     }

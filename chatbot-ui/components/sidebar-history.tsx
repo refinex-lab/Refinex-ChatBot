@@ -221,7 +221,7 @@ export function SidebarHistory({ user }: { user: UserLike }) {
       <SidebarGroup>
         <SidebarGroupContent>
           <div className="flex w-full flex-row items-center justify-center gap-2 px-2 text-sm text-zinc-500">
-            您的聊天记录将在这里显示，一旦您开始聊天！
+            暂无聊天记录，开始新的对话吧！
           </div>
         </SidebarGroupContent>
       </SidebarGroup>
