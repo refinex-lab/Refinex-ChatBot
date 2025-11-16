@@ -6,8 +6,7 @@
  * - 上传/分片上传使用 multipart/form-data，与后端参数保持一致
  * - 下载返回 Blob，业务方自行处理 URL.createObjectURL 或保存
  */
-import {apiFetch} from "@/lib/http";
-import {PLATFORM_FILES_BASE_URL,} from "@/lib/env";
+import {platformApi} from "@/lib/http";
 import type {ApiResponse} from "@/lib/types/api";
 
 // ---------------- Types ----------------
@@ -80,7 +79,7 @@ export async function uploadFile(params: UploadFileParams): Promise<SysFile> {
   if (typeof params.maxWidth === "number") form.append("maxWidth", String(params.maxWidth));
   if (typeof params.quality === "number") form.append("quality", String(params.quality));
 
-  const resp = await apiFetch(`${PLATFORM_FILES_BASE_URL}/upload`, {
+  const resp = await platformApi(`/files/upload`, {
     method: "POST",
     body: form,
   });
@@ -94,7 +93,7 @@ export async function uploadFile(params: UploadFileParams): Promise<SysFile> {
  * 获取文件元信息
  */
 export async function getFileMeta(id: number): Promise<SysFile> {
-  const resp = await apiFetch(`${PLATFORM_FILES_BASE_URL}/${id}`, { method: "GET", cache: "no-store" });
+  const resp = await platformApi(`/files/${id}`, { method: "GET", cache: "no-store" });
   const json = (await resp.json()) as ApiResponse<SysFile | null>;
   if (json.code !== 200 || !json.data) throw new Error(json.msg || "获取文件信息失败");
   return json.data;
@@ -104,7 +103,7 @@ export async function getFileMeta(id: number): Promise<SysFile> {
  * 下载文件为 Blob
  */
 export async function downloadFile(id: number): Promise<Blob> {
-  const resp = await apiFetch(`${PLATFORM_FILES_BASE_URL}/${id}/download`, { method: "GET" });
+  const resp = await platformApi(`/files/${id}/download`, { method: "GET" });
   if (!resp.ok) throw new Error("下载文件失败");
   return await resp.blob();
 }
@@ -113,7 +112,7 @@ export async function downloadFile(id: number): Promise<Blob> {
  * 删除文件
  */
 export async function deleteFile(id: number): Promise<void> {
-  const resp = await apiFetch(`${PLATFORM_FILES_BASE_URL}/${id}`, { method: "DELETE" });
+  const resp = await platformApi(`/files/${id}`, { method: "DELETE" });
   if (!resp.ok) {
     let msg = "删除文件失败";
     try {
@@ -136,7 +135,7 @@ export type InitiateMultipartParams = {
  * 初始化分片上传
  */
 export async function initiateMultipart(params: InitiateMultipartParams): Promise<MultipartSession> {
-  const resp = await apiFetch(`${PLATFORM_FILES_BASE_URL}/multipart/initiate`, {
+  const resp = await platformApi(`/files/multipart/initiate`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(params),
@@ -165,7 +164,7 @@ export async function uploadPart(params: UploadPartParams): Promise<MultipartPar
   form.append("partNumber", String(params.partNumber));
   form.append("file", params.part);
 
-  const resp = await apiFetch(`${PLATFORM_FILES_BASE_URL}/multipart/upload-part`, {
+  const resp = await platformApi(`/files/multipart/upload-part`, {
     method: "POST",
     body: form,
   });
@@ -190,7 +189,7 @@ export type CompleteMultipartParams = {
  * 完成分片上传
  */
 export async function completeMultipart(params: CompleteMultipartParams): Promise<SysFile> {
-  const resp = await apiFetch(`${PLATFORM_FILES_BASE_URL}/multipart/complete`, {
+  const resp = await platformApi(`/files/multipart/complete`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(params),
@@ -210,7 +209,7 @@ export type AbortMultipartParams = {
  * 终止分片上传
  */
 export async function abortMultipart(params: AbortMultipartParams): Promise<void> {
-  const resp = await apiFetch(`${PLATFORM_FILES_BASE_URL}/multipart/abort`, {
+  const resp = await platformApi(`/files/multipart/abort`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(params),
@@ -224,4 +223,3 @@ export async function abortMultipart(params: AbortMultipartParams): Promise<void
     throw new Error(msg);
   }
 }
-

@@ -7,11 +7,13 @@ import {Dialog, DialogClose, DialogContent, DialogTitle} from "@/components/ui/d
 import {AccountSettings} from "@/components/settings/account-settings";
 import {GeneralSettings} from "@/components/settings/general-settings";
 import {DataSettings} from "@/components/settings/data-settings";
+import {StorageSettings} from "@/components/settings/storage-settings";
 import {useState} from "react";
 import {X} from "lucide-react";
 import {CiSettings} from "react-icons/ci";
 import {TbDatabaseStar} from "react-icons/tb";
 import {RiAccountCircleLine} from "react-icons/ri";
+import {MdOutlineCloudDownload} from "react-icons/md";
 
 export function SettingsDialog({
   open,
@@ -21,7 +23,7 @@ export function SettingsDialog({
   onOpenChange: (open: boolean) => void;
 }) {
   // 当前选中的设置项
-  const [active, setActive] = useState<"general" | "data" | "account">("account");
+  const [active, setActive] = useState<"general" | "data" | "storage" | "account">("account");
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -62,6 +64,14 @@ export function SettingsDialog({
                 </button>
                 <button
                   className="flex items-center gap-2 rounded-lg px-3 py-2 text-left text-sm hover:bg-accent/60 data-[active=true]:bg-accent/60 data-[active=true]:ring-1 data-[active=true]:ring-[color:var(--brand-color)]"
+                  data-active={active === "storage"}
+                  onClick={() => setActive("storage")}
+                >
+                  <MdOutlineCloudDownload className="size-4" />
+                  <span>存储管理</span>
+                </button>
+                <button
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-left text-sm hover:bg-accent/60 data-[active=true]:bg-accent/60 data-[active=true]:ring-1 data-[active=true]:ring-[color:var(--brand-color)]"
                   data-active={active === "account"}
                   onClick={() => setActive("account")}
                 >
@@ -75,6 +85,7 @@ export function SettingsDialog({
             <div className="flex-1 min-h-0 h-full overflow-y-auto">
             {active === "general" && <GeneralSettings />}
             {active === "data" && <DataSettings onClose={() => onOpenChange(false)} />}
+            {active === "storage" && <StorageSettings />}
             {active === "account" && <AccountSettings />}
           </div>
           </div>

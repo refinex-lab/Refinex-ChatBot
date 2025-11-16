@@ -1,8 +1,8 @@
 /**
  * 存储配置 API（对接 refinex-platform StorageConfigController）
+ * 通过 Next 代理路由调用，避免 HttpOnly Cookie 问题
  */
-import {apiFetch} from "@/lib/http";
-import {PLATFORM_STORAGE_CONFIG_BASE_URL} from "@/lib/env";
+import {platformApi} from "@/lib/http";
 import type {ApiResponse} from "@/lib/types/api";
 
 export type StorageConfig = {
@@ -62,7 +62,7 @@ export type StorageConfigUpdateRequest = {
  * 列表
  */
 export async function listStorageConfigs(): Promise<StorageConfig[]> {
-  const resp = await apiFetch(PLATFORM_STORAGE_CONFIG_BASE_URL, { method: "GET", cache: "no-store" });
+  const resp = await platformApi(`/files/storage/configs`, { method: "GET", cache: "no-store" });
   const json = (await resp.json()) as ApiResponse<StorageConfig[] | null>;
   if (json.code !== 200 || !json.data) throw new Error(json.msg || "获取存储配置失败");
   return json.data;
@@ -72,7 +72,7 @@ export async function listStorageConfigs(): Promise<StorageConfig[]> {
  * 按编码查询
  */
 export async function getStorageConfig(code: string): Promise<StorageConfig | null> {
-  const resp = await apiFetch(`${PLATFORM_STORAGE_CONFIG_BASE_URL}/${encodeURIComponent(code)}`, { method: "GET", cache: "no-store" });
+  const resp = await platformApi(`/files/storage/configs/${encodeURIComponent(code)}`, { method: "GET", cache: "no-store" });
   const json = (await resp.json()) as ApiResponse<StorageConfig | null>;
   if (json.code === 200) return json.data ?? null;
   if (json.code === 404) return null;
@@ -83,7 +83,7 @@ export async function getStorageConfig(code: string): Promise<StorageConfig | nu
  * 新增
  */
 export async function createStorageConfig(req: StorageConfigCreateRequest): Promise<void> {
-  const resp = await apiFetch(PLATFORM_STORAGE_CONFIG_BASE_URL, {
+  const resp = await platformApi(`/files/storage/configs`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(req),
@@ -98,7 +98,7 @@ export async function createStorageConfig(req: StorageConfigCreateRequest): Prom
  * 更新
  */
 export async function updateStorageConfig(code: string, req: StorageConfigUpdateRequest): Promise<void> {
-  const resp = await apiFetch(`${PLATFORM_STORAGE_CONFIG_BASE_URL}/${encodeURIComponent(code)}`, {
+  const resp = await platformApi(`/files/storage/configs/${encodeURIComponent(code)}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(req),
@@ -113,7 +113,7 @@ export async function updateStorageConfig(code: string, req: StorageConfigUpdate
  * 删除
  */
 export async function deleteStorageConfig(code: string): Promise<void> {
-  const resp = await apiFetch(`${PLATFORM_STORAGE_CONFIG_BASE_URL}/${encodeURIComponent(code)}`, {
+  const resp = await platformApi(`/files/storage/configs/${encodeURIComponent(code)}`, {
     method: "DELETE",
   });
   if (!resp.ok) {
@@ -121,4 +121,3 @@ export async function deleteStorageConfig(code: string): Promise<void> {
     throw new Error(json.msg || "删除存储配置失败");
   }
 }
-

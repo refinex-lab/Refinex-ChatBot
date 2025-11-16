@@ -17,6 +17,7 @@ import cn.refinex.platform.repository.SysFileDataRepository;
 import cn.refinex.platform.repository.SysFileRepository;
 import cn.refinex.platform.service.FileService;
 import cn.refinex.platform.service.StorageConfigService;
+import cn.refinex.satoken.common.helper.LoginHelper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -82,6 +83,8 @@ public class FileServiceImpl implements FileService {
             boolean isDb = StorageType.fromCode(config.getStorageType()) == StorageType.DB;
             FileStorageClient client = storageFactory.getClient(config);
 
+            Long userId = LoginHelper.getUserId();
+
             // 组装元数据（若为 DB 存储，提前分配ID）
             SysFile sysFile = new SysFile();
             sysFile.setStorageCode(config.getStorageCode());
@@ -97,9 +100,9 @@ public class FileServiceImpl implements FileService {
             sysFile.setTitle(options.title());
             sysFile.setSort(0);
             sysFile.setStatus(1);
-            sysFile.setCreateBy(null);
+            sysFile.setCreateBy(userId);
             sysFile.setCreateTime(LocalDateTime.now());
-            sysFile.setUpdateBy(null);
+            sysFile.setUpdateBy(userId);
             sysFile.setUpdateTime(LocalDateTime.now());
             sysFile.setDeleted(0);
             sysFile.setRemark(null);
@@ -297,6 +300,7 @@ public class FileServiceImpl implements FileService {
         SysStorageConfig config = storageConfigService.getByCodeOrDefault(request.storageCode())
                 .orElseThrow(() -> new BusinessException("存储配置不存在"));
         FileStorageClient client = storageFactory.getClient(config);
+        Long userId = LoginHelper.getUserId();
 
         try {
             client.completeMultipartUpload(config, request.objectKey(), request.uploadId(), request.etags());
@@ -317,7 +321,9 @@ public class FileServiceImpl implements FileService {
             file.setTitle(request.title());
             file.setSort(0);
             file.setStatus(1);
+            file.setCreateBy(userId);
             file.setCreateTime(LocalDateTime.now());
+            file.setUpdateBy(userId);
             file.setUpdateTime(LocalDateTime.now());
             file.setDeleted(0);
 

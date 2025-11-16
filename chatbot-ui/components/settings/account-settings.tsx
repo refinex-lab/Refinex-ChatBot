@@ -322,27 +322,53 @@ export function AccountSettings() {
           open={true}
           src={cropSrc}
           onClose={() => setCropSrc(null)}
-        onCropped={async (blob) => {
-          const uploading = uploadFile({
-            file: blob,
-            bizType: "USER_AVATAR",
-            title: "avatar",
-            compress: true,
-            maxWidth: 512,
-            quality: 0.9,
-          });
-          toast.promise(uploading, {
-            loading: "上传头像中...",
-            success: "头像上传成功",
-            error: "头像上传失败",
-          });
-          const res = await uploading;
-          const url = res.uri && /^https?:\/\//i.test(res.uri)
-            ? res.uri
-            : (res.id ? `${PLATFORM_FILES_BASE_URL}/${res.id}/download` : "");
-          setProfile((prev) => ({ ...prev, avatar: url }));
-          setCropSrc(null);
-        }}
+          onCropped={async (blob) => {
+            // 1) 上传头像文件
+            const uploading = uploadFile({
+              file: blob,
+              bizType: "USER_AVATAR",
+              title: "avatar",
+              compress: true,
+              maxWidth: 512,
+              quality: 0.9,
+            });
+            toast.promise(uploading, {
+              loading: "上传头像中...",
+              success: "头像上传成功",
+              error: "头像上传失败",
+            });
+            const res = await uploading;
+            const url =
+              res.uri && /^https?:\/\//i.test(res.uri)
+                ? res.uri
+                : res.id
+                ? `${PLATFORM_FILES_BASE_URL}/${res.id}/download`
+                : "";
+
+            // 2) 立即写入用户资料（后端 sys_user.avatar）
+            const saving = updateProfile({ avatar: url });
+            toast.promise(saving, {
+              loading: "更新头像中...",
+              success: "头像已更新",
+              error: (e) => e?.message || "更新头像失败",
+            });
+            try {
+              const updated = await saving;
+              setProfile({
+                nickname: updated.nickname ?? "",
+                sex: (updated.sex as any) ?? undefined,
+                avatar: updated.avatar ?? "",
+                email: updated.email ?? "",
+                mobile: updated.mobile ?? "",
+              });
+              // 同步全局用户信息（侧边栏等会刷新）
+              try {
+                await mutate();
+              } catch {}
+            } finally {
+              setCropSrc(null);
+            }
+          }}
       />
       )}
     </>

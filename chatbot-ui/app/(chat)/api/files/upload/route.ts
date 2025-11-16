@@ -1,67 +1,37 @@
-import {put} from "@vercel/blob";
 import {NextResponse} from "next/server";
-import {z} from "zod";
-
 import {cookies} from "next/headers";
+import {AUTH_COOKIE_NAME, PLATFORM_SERVICE_BASE_URL} from "@/lib/env";
+import {apiFetch} from "@/lib/http";
 
-// Use Blob instead of File since File is not available in Node.js environment
-const FileSchema = z.object({
-  file: z
-    .instanceof(Blob)
-    .refine((file) => file.size <= 5 * 1024 * 1024, {
-      message: "File size should be less than 5MB",
-    })
-    // Update the file type based on the kind of files you want to accept
-    .refine((file) => ["image/jpeg", "image/png"].includes(file.type), {
-      message: "File type should be JPEG or PNG",
-    }),
-});
+const BASE = `${PLATFORM_SERVICE_BASE_URL}/files`;
 
+/**
+ * 代理到平台文件上传接口（multipart/form-data 透传）
+ * 说明：用平台存储替代 vercel/blob，保持统一鉴权与日志
+ */
 export async function POST(request: Request) {
-  const cookieStore = await cookies();
-  const uid = cookieStore.get("RX_UID")?.value;
-  if (!uid) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  if (request.body === null) {
-    return new Response("Request body is empty", { status: 400 });
-  }
-
   try {
-    const formData = await request.formData();
-    const file = formData.get("file") as Blob;
+    const cookieStore = await cookies();
+    const token =
+      cookieStore.get(AUTH_COOKIE_NAME)?.value ||
+      cookieStore.get("satoken")?.value ||
+      "";
 
-    if (!file) {
-      return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
-    }
+    const form = await request.formData();
+    const headers = new Headers();
+    if (token) headers.set("Authorization", `Bearer ${token}`);
+    // 不设置 Content-Type，交由 fetch 自动生成 boundary
 
-    const validatedFile = FileSchema.safeParse({ file });
-
-    if (!validatedFile.success) {
-      const errorMessage = validatedFile.error.errors
-        .map((error) => error.message)
-        .join(", ");
-
-      return NextResponse.json({ error: errorMessage }, { status: 400 });
-    }
-
-    // Get filename from formData since Blob doesn't have name property
-    const filename = (formData.get("file") as File).name;
-    const fileBuffer = await file.arrayBuffer();
-
-    try {
-      const data = await put(`${filename}`, fileBuffer, {
-        access: "public",
-      });
-
-      return NextResponse.json(data);
-    } catch (_error) {
-      return NextResponse.json({ error: "Upload failed" }, { status: 500 });
-    }
-  } catch (_error) {
+    const resp = await apiFetch(`${BASE}/upload`, {
+      method: "POST",
+      headers,
+      body: form,
+    });
+    const body = await resp.json().catch(() => ({}));
+    return NextResponse.json(body, { status: resp.status });
+  } catch (e) {
     return NextResponse.json(
-      { error: "Failed to process request" },
+      { code: 500, msg: e instanceof Error ? e.message : "上传失败" },
       { status: 500 }
     );
   }

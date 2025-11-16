@@ -13,12 +13,11 @@ import cn.refinex.platform.infra.file.storage.impl.S3FileStorageClient;
 import cn.refinex.platform.repository.SysStorageConfigRepository;
 import cn.refinex.platform.service.StorageConfigService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -43,7 +42,6 @@ public class StorageConfigServiceImpl implements StorageConfigService {
      * @return 存储配置配置
      */
     @Override
-    @Cacheable(cacheNames = "storageConfigEntityByCode", key = "#storageCode == null || #storageCode.isBlank() ? '__default__' : #storageCode", unless = "#result == null || #result.isEmpty()")
     public Optional<SysStorageConfig> getByCodeOrDefault(String storageCode) {
         if (storageCode == null || storageCode.isBlank()) {
             return repository.findDefaultActive();
@@ -57,7 +55,6 @@ public class StorageConfigServiceImpl implements StorageConfigService {
      * @return 存储配置列表
      */
     @Override
-    @Cacheable(cacheNames = "storageConfigList", key = "'all'")
     public List<StorageConfigResponseDTO> list() {
         return repository.listAll().stream().map(converter::toResponse).toList();
     }
@@ -69,7 +66,6 @@ public class StorageConfigServiceImpl implements StorageConfigService {
      * @return 存储配置
      */
     @Override
-    @Cacheable(cacheNames = "storageConfigDtoByCode", key = "#code", unless = "#result == null || #result.isEmpty()")
     public Optional<StorageConfigResponseDTO> getByCode(String code) {
         return repository.findByCode(code).map(converter::toResponse);
     }
@@ -81,7 +77,6 @@ public class StorageConfigServiceImpl implements StorageConfigService {
      * @param operatorId 操作人 ID
      */
     @Override
-    @CacheEvict(cacheNames = {"storageConfigList", "storageConfigDtoByCode", "storageConfigEntityByCode"}, allEntries = true)
     public void create(StorageConfigCreateRequestDTO req, Long operatorId) {
         if (repository.findByCode(req.storageCode()).isPresent()) {
             throw new BusinessException("存储编码已存在: " + req.storageCode());
@@ -106,7 +101,6 @@ public class StorageConfigServiceImpl implements StorageConfigService {
      * @param req  请求参数
      */
     @Override
-    @CacheEvict(cacheNames = {"storageConfigList", "storageConfigDtoByCode", "storageConfigEntityByCode"}, allEntries = true)
     public void update(String code, StorageConfigUpdateRequestDTO req, Long operatorId) {
         SysStorageConfig exist = repository.findByCode(code).orElseThrow(() -> new BusinessException("存储配置不存在: " + code));
         SysStorageConfig cfg = buildUpdateEntity(exist, req, operatorId, code);
@@ -130,7 +124,6 @@ public class StorageConfigServiceImpl implements StorageConfigService {
      * @param operatorId 操作人ID
      */
     @Override
-    @CacheEvict(cacheNames = {"storageConfigList", "storageConfigDtoByCode", "storageConfigEntityByCode"}, allEntries = true)
     public void delete(String code, Long operatorId) {
         Optional<SysStorageConfig> existOpt = repository.findByCode(code);
         if (existOpt.isEmpty()) {
@@ -196,7 +189,11 @@ public class StorageConfigServiceImpl implements StorageConfigService {
         cfg.setBasePath(Optional.ofNullable(req.basePath()).orElse(exist.getBasePath()));
         cfg.setBaseUrl(Optional.ofNullable(req.baseUrl()).orElse(exist.getBaseUrl()));
         cfg.setSessionPolicy(Optional.ofNullable(req.sessionPolicy()).orElse(exist.getSessionPolicy()));
-        cfg.setIsDefault(req.isDefault() == 1 ? 1 : 0);
+        if (Objects.isNull(req.isDefault())) {
+            cfg.setIsDefault(exist.getIsDefault());
+        } else {
+            cfg.setIsDefault(req.isDefault() == 1 ? 1 : 0);
+        }
         cfg.setExtConfig(Optional.ofNullable(req.extConfig()).orElse(exist.getExtConfig()));
         cfg.setStatus(Optional.ofNullable(req.status()).orElse(exist.getStatus()));
         cfg.setRemark(Optional.ofNullable(req.remark()).orElse(exist.getRemark()));
