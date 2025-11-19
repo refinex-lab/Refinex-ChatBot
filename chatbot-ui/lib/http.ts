@@ -106,3 +106,13 @@ export function platformApi(path: string, init?: RequestInit) {
   const p = path.startsWith("/") ? path : `/${path}`;
   return apiFetch(`/api${p}`, init);
 }
+
+/**
+ * AI 服务代理请求：
+ * - 统一走 Next 代理 `/api/ai`
+ * - 继承 apiFetch 能力
+ */
+export function aiApi(path: string, init?: RequestInit) {
+  const p = path.startsWith("/") ? path : `/${path}`;
+  return apiFetch(`/api/ai${p}`, init);
+}

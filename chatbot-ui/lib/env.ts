@@ -43,6 +43,11 @@ if (!aiPrefix) {
 export const PLATFORM_SERVICE_BASE_URL = `${baseUrl}/${platformPrefix}`;
 
 /**
+ * AI 服务基础地址 (带网关前缀)
+ */
+export const AI_SERVICE_BASE_URL = `${baseUrl}/${aiPrefix}`;
+
+/**
  * 平台认证基础地址
  */
 export const PLATFORM_AUTH_BASE_URL = `${PLATFORM_SERVICE_BASE_URL}/auth`;
