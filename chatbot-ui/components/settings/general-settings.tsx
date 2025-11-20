@@ -10,7 +10,7 @@ import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/c
 type AccentColor = "default" | "blue" | "green" | "yellow" | "pink" | "orange";
 
 const ACCENT_MAP: Record<AccentColor, string> = {
-  default: "#b4b4b4", // tailwind blue-500 作为默认
+  default: "#000000", // tailwind blue-500 作为默认
   blue: "#3b82f6",
   green: "#22c55e",
   yellow: "#eab308",

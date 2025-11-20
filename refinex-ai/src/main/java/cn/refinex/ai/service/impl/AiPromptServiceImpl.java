@@ -28,6 +28,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
+import static cn.refinex.core.util.StringUtils.trimToNull;
+
 /**
  * AI 提示词服务实现
  *
@@ -67,9 +69,9 @@ public class AiPromptServiceImpl implements AiPromptService {
     @Override
     public PageResponse<AiPromptResponseDTO> page(AiPromptPageRequest request) {
         AiPromptPageRequest query = Objects.isNull(request) ? new AiPromptPageRequest() : request;
-        String category = filterCategory(query.getCategory());
+        String category = trimToNull(query.getCategory());
         String templateFormat = filterTemplateFormat(query.getTemplateFormat());
-        String keyword = sanitizeKeyword(query.getKeyword());
+        String keyword = trimToNull(query.getKeyword());
         Long userId = LoginHelper.getUserId();
         PageResponse<AiPrompt> page = repository.page(category, query.getStatus(), templateFormat, keyword, query, userId);
         return page.map(converter::toResponse);
@@ -335,26 +337,6 @@ public class AiPromptServiceImpl implements AiPromptService {
     }
 
     /**
-     * 清理关键字
-     *
-     * @param keyword 关键字
-     * @return 清理后的关键字
-     */
-    private String sanitizeKeyword(String keyword) {
-        return StringUtils.hasText(keyword) ? keyword.trim() : null;
-    }
-
-    /**
-     * 过滤分类
-     *
-     * @param category 分类
-     * @return 过滤后的分类
-     */
-    private String filterCategory(String category) {
-        return StringUtils.hasText(category) ? category.trim() : null;
-    }
-
-    /**
      * 过滤模板格式
      *
      * @param templateFormat 模板格式
@@ -365,16 +347,6 @@ public class AiPromptServiceImpl implements AiPromptService {
             return null;
         }
         return parseTemplateFormat(templateFormat).getCode();
-    }
-
-    /**
-     * 过滤文本
-     *
-     * @param text 文本
-     * @return 过滤后的文本
-     */
-    private String trimToNull(String text) {
-        return StringUtils.hasText(text) ? text.trim() : null;
     }
 
     /**

@@ -10,11 +10,14 @@ import {DataSettings} from "@/components/settings/data-settings";
 import {StorageSettings} from "@/components/settings/storage-settings";
 import {PromptSettings} from "@/components/settings/prompt-settings";
 import {useState} from "react";
+import {ProviderSettings} from "@/components/settings/provider-settings";
+import {ModelSettings} from "@/components/settings/model-settings";
 import {X} from "lucide-react";
 import {CiSettings} from "react-icons/ci";
 import {TbDatabaseStar} from "react-icons/tb";
 import {RiAccountCircleLine} from "react-icons/ri";
 import {MdOutlineCloudDownload, MdOutlineTipsAndUpdates} from "react-icons/md";
+import {LuBrain, LuCircuitBoard} from "react-icons/lu";
 
 export function SettingsDialog({
   open,
@@ -24,7 +27,7 @@ export function SettingsDialog({
   onOpenChange: (open: boolean) => void;
 }) {
   // 当前选中的设置项
-  const [active, setActive] = useState<"general" | "data" | "storage" | "prompt" | "account">("account");
+  const [active, setActive] = useState<"general" | "data" | "storage" | "provider" | "model" | "prompt" | "account">("account");
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -73,6 +76,22 @@ export function SettingsDialog({
                 </button>
                 <button
                   className="flex items-center gap-2 rounded-lg px-3 py-2 text-left text-sm hover:bg-accent/60 data-[active=true]:bg-accent/60 data-[active=true]:ring-1 data-[active=true]:ring-[color:var(--brand-color)]"
+                  data-active={active === "provider"}
+                  onClick={() => setActive("provider")}
+                >
+                  <LuBrain className="size-4" />
+                  <span>模型供应商</span>
+                </button>
+                <button
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-left text-sm hover:bg-accent/60 data-[active=true]:bg-accent/60 data-[active=true]:ring-1 data-[active=true]:ring-[color:var(--brand-color)]"
+                  data-active={active === "model"}
+                  onClick={() => setActive("model")}
+                >
+                  <LuCircuitBoard className="size-4" />
+                  <span>模型配置</span>
+                </button>
+                <button
+                  className="flex items-center gap-2 rounded-lg px-3 py-2 text-left text-sm hover:bg-accent/60 data-[active=true]:bg-accent/60 data-[active=true]:ring-1 data-[active=true]:ring-[color:var(--brand-color)]"
                   data-active={active === "prompt"}
                   onClick={() => setActive("prompt")}
                 >
@@ -95,6 +114,8 @@ export function SettingsDialog({
             {active === "general" && <GeneralSettings />}
             {active === "data" && <DataSettings onClose={() => onOpenChange(false)} />}
             {active === "storage" && <StorageSettings />}
+            {active === "provider" && <ProviderSettings />}
+            {active === "model" && <ModelSettings />}
             {active === "prompt" && <PromptSettings />}
             {active === "account" && <AccountSettings />}
           </div>

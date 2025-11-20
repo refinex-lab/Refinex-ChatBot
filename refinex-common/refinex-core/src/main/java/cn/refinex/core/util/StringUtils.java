@@ -83,6 +83,19 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     }
 
     /**
+     * 修剪字符串并转换为空字符串（null）
+     *
+     * @param text 文本
+     * @return 修剪后的字符串（null）
+     */
+    public static String trimToNull(String text) {
+        if (isBlank(text)) {
+            return null;
+        }
+        return text.trim();
+    }
+
+    /**
      * 截取字符串
      *
      * @param str   原字符串

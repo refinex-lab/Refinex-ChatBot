@@ -122,7 +122,7 @@ export function PromptSettings() {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="border-b px-6 py-4">
+      <div className="border-b px-6 py-3">
         <div className="flex items-center gap-2 text-lg font-semibold">
           {/* <MdOutlineTipsAndUpdates className="size-5 text-amber-500" /> */}
           提示词管理
@@ -712,7 +712,7 @@ function PromptEditorDialog({ state, open, onClose, onSuccess }: PromptEditorDia
         </div>
       </DialogContent>
     </Dialog>
-  );
+  )
 }
 
 function TextareaField({

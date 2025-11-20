@@ -14,6 +14,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
@@ -43,6 +44,7 @@ public class RefinexLoggingAutoConfiguration {
     @ConditionalOnClass(NamedParameterJdbcTemplate.class)
     @ConditionalOnBean(NamedParameterJdbcTemplate.class)
     @ConditionalOnProperty(prefix = "refinex.logging.request-log", name = "persist", havingValue = "true", matchIfMissing = true)
+    @Primary
     public RequestLogHandler jdbcRequestLogHandler(NamedParameterJdbcTemplate jdbcTemplate, RefinexLoggingProperties properties) {
         return new JdbcRequestLogHandler(jdbcTemplate, properties);
     }
