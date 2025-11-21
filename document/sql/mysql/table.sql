@@ -383,6 +383,28 @@ CREATE TABLE IF NOT EXISTS ai_prompt
 CREATE INDEX idx_ai_prompt_category ON ai_prompt (category);
 
 -- 结构化输出 Schema 表
+
+/*
+    目的：集中存储 “结构化输出规范”
+    说明：本质上就是把你期望 AI 返回的数据结构（JSON Schema、Proto、XML、YAML 等）作为配置落表，schema_code/schema_name
+         方便在代码和管理界面引用，schema_type 说明这是哪种 schema 语言，schema_json 则保存具体的 schema 描述
+         （例如 JSON-Schema 的 properties/required），version 与 strict_mode 控制演进和返回值校验强度。这样一来，你可以
+         在同一份配置里描述不同业务场景下的输出格式，比如“内容审核结果”“表格转换结果”“SQL 生成结果”等，让 Agent 或 Prompt 引
+         擎能复用这些结构定义，而不是把 schema 硬编码在提示词里。
+    Agent 与 Schema 的关系：
+        在 ai_agent 表中，output_schema_id 用来关联特定的 ai_schema 记录，当 Agent 需要产出结构化数据（例如 JSON 里必须
+        有 title、summary、tags），就通过这个外键绑定相应的 schema。运行时 Agent 承载的 Prompt/工具链会读取 schema 信息：
+        一方面在提示词中告知模型“必须按此结构返回”，另一方面在拿到结果后可依据 schema 做 JSON-Schema 校验或字段格式化，从而
+        降低 LLM 随意输出导致的解析失败。
+    实际价值：
+        - 支持 可配置的结构化输出：新业务若需要新的返回形态，只需在 ai_schema 新增一条记录并让 Agent 指向它，无需改后端代码。
+        - 方便 严格校验：strict_mode=1 时可以对模型返回做自动验证，不符合 schema 就触发重试/告警，由相关 Advisor（如 VALIDATOR/RETRY）介入。
+        - 为后续 多种序列化协议 做准备：虽然当前主要是 JSON，但 schema_type 允许后面扩展到 ProtoBuf、XML、YAML，以便对接不同调用方或工具链。
+    总结：
+        ai_schema 的“真正用意”就是把“模型该如何结构化回答”的规则抽象成独立资源，Agent 通过 output_schema_id 选择规则，
+        进而实现可配置、可校验的结构化 AI 输出。
+*/
+
 CREATE TABLE IF NOT EXISTS ai_schema
 (
     id            BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',

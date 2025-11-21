@@ -1,2 +1,27 @@
 server:
   port: 8083
+
+spring:
+  application:
+    name: refinex-ai
+  ai:
+    openai:
+      enabled: false
+      chat:
+        enabled: false
+    anthropic:
+      enabled: false
+      chat:
+        enabled: false
+    deepseek:
+      enabled: false
+      chat:
+        enabled: false
+    zhipuai:
+      enabled: false
+      chat:
+        enabled: false
+    dashscope:
+      enabled: false
+      chat:
+        enabled: false

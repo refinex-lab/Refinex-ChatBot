@@ -14,6 +14,44 @@
     <description>Refinex ChatBot AI module</description>
 
     <dependencies>
+        <!-- Chat Model -->
+        <!-- Anthropic Chat: https://docs.spring.io/spring-ai/reference/api/chat/anthropic-chat.html -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-model-anthropic</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!-- DeepSeek Chat: https://docs.spring.io/spring-ai/reference/api/chat/deepseek-chat.html -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-model-deepseek</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!-- OpenAI Chat: https://docs.spring.io/spring-ai/reference/api/chat/openai-chat.html -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-model-openai</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!-- ZhiPu AI Chat: https://docs.spring.io/spring-ai/reference/api/chat/zhipuai-chat.html -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-model-zhipuai</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!-- DashScope Chat: https://docs.spring.io/spring-ai/reference/api/chat/dashscope-chat.html -->
+        <dependency>
+            <groupId>com.alibaba.cloud.ai</groupId>
+            <artifactId>spring-ai-alibaba-starter-dashscope</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Tika Document Reader: https://docs.spring.io/spring-ai/reference/api/etl-pipeline.html#_documentreaders -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-tika-document-reader</artifactId>
+        </dependency>
+
         <!-- Web: Web 模块，包含 Web 相关组件 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
