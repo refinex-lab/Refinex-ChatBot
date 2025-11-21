@@ -2,26 +2,27 @@ server:
   port: 8083
 
 spring:
-  application:
-    name: refinex-ai
+  autoconfigure:
+    exclude:
+      # 禁用 AI 模块的 Qdrant, 手动创建
+      - org.springframework.ai.vectorstore.qdrant.autoconfigure.QdrantVectorStoreAutoConfiguration
+      # 禁用 AI 模块的 Milvus, 手动创建
+      - org.springframework.ai.vectorstore.milvus.autoconfigure.MilvusVectorStoreAutoConfiguration
+
+  # 配置 AI 模块的 API Key(随便配置一个值，启动不报错即可，实际是手动创建的)
   ai:
-    openai:
-      enabled: false
-      chat:
-        enabled: false
-    anthropic:
-      enabled: false
-      chat:
-        enabled: false
-    deepseek:
-      enabled: false
-      chat:
-        enabled: false
-    zhipuai:
-      enabled: false
-      chat:
-        enabled: false
+    # 通义千问
     dashscope:
-      enabled: false
-      chat:
-        enabled: false
+      api-key: sk-8888888888888888888888888888
+    # 智谱
+    zhipuai:
+      api-key: sk-8888888888888888888888888888
+    # OpenAI
+    openai:
+      api-key: sk-8888888888888888888888888888
+    # Anthropic
+    anthropic:
+      api-key: sk-8888888888888888888888888888
+    # DeepSeek
+    deepseek:
+      api-key: sk-8888888888888888888888888888
